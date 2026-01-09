@@ -1,0 +1,51 @@
+{
+  "sedes": [
+    {
+      "id": "1",
+      "nombre": "Ayuntamiento de Madrid",
+      "descripcion": "Sede electrónica del Ayuntamiento de Madrid",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "nombre": "Comunidad Autónoma de Madrid",
+      "descripcion": "Sede electrónica de la Comunidad de Madrid",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "userSedes": [
+    {
+      "userId": "1",
+      "sedeId": "1",
+      "role": "administrador"
+    },
+    {
+      "userId": "1",
+      "sedeId": "2",
+      "role": "administrador"
+    },
+    {
+      "userId": "2",
+      "sedeId": "1",
+      "role": "administrado"
+    },
+    {
+      "userId": "2",
+      "sedeId": "2",
+      "role": "administrado"
+    }
+  ],
+  "notifications": [
+    {
+      "sedeId": "1",
+      "title": "Jorge cagaste",
+      "message": "estás jodido",
+      "priority": "medium",
+      "createdBy": "1",
+      "id": "1767961518451",
+      "createdAt": "2026-01-09T12:25:18.451Z"
+    }
+  ],
+  "tramiteTypes": [],
+  "solicitudes": []
+}
