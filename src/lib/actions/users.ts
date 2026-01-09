@@ -4,27 +4,27 @@ import { readDB, writeDB } from '@/lib/db';
 import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
-const addUserToSedeSchema = v.object({
-    userSede: v.object({
+const addUserToHeadquartersSchema = v.object({
+    userHeadquarters: v.object({
         userId: v.string(),
-        sedeId: v.string(),
-        role: v.picklist(['administrador', 'administrado']),
+        headquartersId: v.string(),
+        role: v.picklist(['admin', 'citizen']),
     }),
 });
 
-export const addUserToSede = adminAction
-    .inputSchema(addUserToSedeSchema)
-    .action(async ({ parsedInput: { userSede } }) => {
+export const addUserToHeadquarters = adminAction
+    .inputSchema(addUserToHeadquartersSchema)
+    .action(async ({ parsedInput: { userHeadquarters } }) => {
       const db = await readDB();
       // Check if exists
-      const exists = db.userSedes.some(
-        (us) => us.userId === userSede.userId && us.sedeId === userSede.sedeId
+      const exists = db.userHeadquarters.some(
+        (uh) => uh.userId === userHeadquarters.userId && uh.headquartersId === userHeadquarters.headquartersId
       );
       
       if (!exists) {
-          db.userSedes.push(userSede);
+          db.userHeadquarters.push(userHeadquarters);
           await writeDB(db);
       }
       
-      return userSede;
+      return userHeadquarters;
     });

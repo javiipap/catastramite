@@ -3,11 +3,11 @@
 import { readDB } from './index';
 import type { Notification } from '@/lib/types';
 
-export async function getNotifications(sedeId: string): Promise<Notification[]> {
+export async function getNotifications(headquartersId: string): Promise<Notification[]> {
   const db = await readDB();
-  return db.notifications.filter((n) => n.sedeId === sedeId);
+  return db.notifications.filter((n) => n.headquartersId === headquartersId);
 }
 
-export async function getNotificationsByParams(params: { sedeId: string }): Promise<Notification[]> {
-  return getNotifications(params.sedeId);
+export async function getNotificationsByParams(params: { headquartersId: string }): Promise<Notification[]> {
+  return getNotifications(params.headquartersId);
 }

@@ -1,19 +1,19 @@
 'use server';
 
 import { readDB } from './index';
-import type { Solicitud } from '@/lib/types';
+import type { Request } from '@/lib/types';
 
-export async function getSolicitudes(sedeId: string): Promise<Solicitud[]> {
+export async function getRequests(headquartersId: string): Promise<Request[]> {
   const db = await readDB();
-  return db.solicitudes.filter((s) => s.sedeId === sedeId);
+  return db.requests.filter((r) => r.headquartersId === headquartersId);
 }
 
-export async function getUserSolicitudes(sedeId: string, userId: string): Promise<Solicitud[]> {
+export async function getUserRequests(headquartersId: string, userId: string): Promise<Request[]> {
   const db = await readDB();
-  const userSolicitudes = db.solicitudes.filter(s => s.solicitanteId === userId && s.sedeId === sedeId);
-  return userSolicitudes;
+  const userRequests = db.requests.filter(r => r.applicantId === userId && r.headquartersId === headquartersId);
+  return userRequests;
 }
 
-export async function getSolicitudesByParams(params: { sedeId: string }): Promise<Solicitud[]> {
-  return getSolicitudes(params.sedeId);
+export async function getRequestsByParams(params: { headquartersId: string }): Promise<Request[]> {
+  return getRequests(params.headquartersId);
 }

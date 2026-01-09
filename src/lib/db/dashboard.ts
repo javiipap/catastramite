@@ -1,52 +1,52 @@
 'use server';
 
-import { getSede } from './headquarters';
-import { getTramites } from './procedures';
-import { getSolicitudes, getUserSolicitudes } from './requests';
-import { Sede, TramiteType, Solicitud } from '@/lib/types';
+import { getHeadquartersById } from './headquarters';
+import { getProcedures } from './procedures';
+import { getRequests, getUserRequests } from './requests';
+import { Headquarters, Procedure, Request } from '@/lib/types';
 
 export interface DashboardData {
-  sede: Sede | undefined;
-  tramites: TramiteType[];
-  solicitudes: Solicitud[];
+  headquarters: Headquarters | undefined;
+  procedures: Procedure[];
+  requests: Request[];
 }
 
 import { getUserRole } from './users';
 
-export async function getAdminDashboardData(params: { sedeId: string }, userId: string): Promise<DashboardData> {
-  const { sedeId } = params;
+export async function getAdminDashboardData(params: { headquartersId: string }, userId: string): Promise<DashboardData> {
+  const { headquartersId } = params;
   
   // 1. Verify Role
-  const role = await getUserRole(userId, sedeId);
-  if (role !== 'administrador') {
+  const role = await getUserRole(userId, headquartersId);
+  if (role !== 'admin') {
       throw new Error('Unauthorized: User is not an administrator');
   }
 
   // 2. Fetch Data (Parallel)
-  const [sede, tramites, solicitudes] = await Promise.all([
-    getSede(sedeId),
-    getTramites(sedeId),
-    getSolicitudes(sedeId), // Admin sees all
+  const [headquarters, procedures, requests] = await Promise.all([
+    getHeadquartersById(headquartersId),
+    getProcedures(headquartersId),
+    getRequests(headquartersId), // Admin sees all
   ]);
 
-  return { sede, tramites, solicitudes };
+  return { headquarters, procedures, requests };
 }
 
-export async function getCitizenDashboardData(params: { sedeId: string }, userId: string): Promise<DashboardData> {
-  const { sedeId } = params;
+export async function getCitizenDashboardData(params: { headquartersId: string }, userId: string): Promise<DashboardData> {
+  const { headquartersId } = params;
 
   // 1. Verify Role (or just association)
-  const role = await getUserRole(userId, sedeId);
+  const role = await getUserRole(userId, headquartersId);
   if (!role) {
-      throw new Error('Unauthorized: User is not associated with this sede');
+      throw new Error('Unauthorized: User is not associated with this headquarters');
   }
 
   // 2. Fetch Data
-  const [sede, tramites, solicitudes] = await Promise.all([
-    getSede(sedeId),
-    getTramites(sedeId),
-    getUserSolicitudes(sedeId, userId), // Citizen sees only own
+  const [headquarters, procedures, requests] = await Promise.all([
+    getHeadquartersById(headquartersId),
+    getProcedures(headquartersId),
+    getUserRequests(headquartersId, userId), // Citizen sees only own
   ]);
 
-  return { sede, tramites, solicitudes };
+  return { headquarters, procedures, requests };
 }

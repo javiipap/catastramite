@@ -1,41 +1,41 @@
 import fs from 'fs/promises';
 import path from 'path';
-import type { Sede, UserSede, Notification, TramiteType, Solicitud } from '../types';
+import type { Headquarters, UserHeadquarters, Notification, Procedure, Request } from '../types';
 
 const DB_PATH = path.join(process.cwd(), 'data.json');
 
 export interface DB {
-  sedes: Sede[];
-  userSedes: UserSede[];
+  headquarters: Headquarters[];
+  userHeadquarters: UserHeadquarters[];
   notifications: Notification[];
-  tramiteTypes: TramiteType[];
-  solicitudes: Solicitud[];
+  procedures: Procedure[];
+  requests: Request[];
 }
 
 const INITIAL_DB: DB = {
-  sedes: [
+  headquarters: [
     {
       id: "1",
-      nombre: "Ayuntamiento de Madrid",
-      descripcion: "Sede electrónica del Ayuntamiento de Madrid",
+      name: "Ayuntamiento de Madrid",
+      description: "Sede electrónica del Ayuntamiento de Madrid",
       createdAt: new Date("2025-01-01"),
     },
     {
       id: "2",
-      nombre: "Comunidad Autónoma de Madrid",
-      descripcion: "Sede electrónica de la Comunidad de Madrid",
+      name: "Comunidad Autónoma de Madrid",
+      description: "Sede electrónica de la Comunidad de Madrid",
       createdAt: new Date("2025-01-01"),
     },
   ],
-  userSedes: [
-    { userId: "1", sedeId: "1", role: "administrador" },
-    { userId: "1", sedeId: "2", role: "administrador" },
-    { userId: "2", sedeId: "1", role: "administrado" },
-    { userId: "2", sedeId: "2", role: "administrado" },
+  userHeadquarters: [
+    { userId: "1", headquartersId: "1", role: "admin" },
+    { userId: "1", headquartersId: "2", role: "admin" },
+    { userId: "2", headquartersId: "1", role: "citizen" },
+    { userId: "2", headquartersId: "2", role: "citizen" },
   ],
   notifications: [],
-  tramiteTypes: [],
-  solicitudes: [],
+  procedures: [],
+  requests: [],
 };
 
 // Helper to handle Date parsing from JSON

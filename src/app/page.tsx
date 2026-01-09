@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context"
 import { LoginForm } from "@/components/login-form"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { getUserSedes } from "@/lib/db/users"
+import { getUserHeadquarters } from "@/lib/db/users"
 
 export default function HomePage() {
   const { user, isLoading } = useAuth()
@@ -14,22 +14,22 @@ export default function HomePage() {
     const checkRedirect = async () => {
         if (!isLoading && user) {
             try {
-                // Fetch user sedes using the server action
-                const userSedes = await getUserSedes(user.id)
+                // Fetch user headquarters using the server action
+                const userHeadquarters = await getUserHeadquarters(user.id)
 
-                if (userSedes.length > 0) {
-                    const firstSede = userSedes[0]
-                    if (firstSede.role === "administrador") {
-                        router.push(`/admin/${firstSede.sedeId}/dashboard`)
+                if (userHeadquarters.length > 0) {
+                    const firstHeadquarters = userHeadquarters[0]
+                    if (firstHeadquarters.role === "admin") {
+                        router.push(`/admin/${firstHeadquarters.headquartersId}/dashboard`)
                     } else {
-                        router.push(`/ciudadano/${firstSede.sedeId}/dashboard`)
+                        router.push(`/citizen/${firstHeadquarters.headquartersId}/dashboard`)
                     }
                 } else {
-                    // No sedes, redirect to sede management
-                    router.push("/admin/sedes")
+                    // No headquarters, redirect to headquarters management
+                    router.push("/admin/headquarters")
                 }
             } catch (error) {
-                console.error("Failed to fetch sedes", error)
+                console.error("Failed to fetch headquarters", error)
             }
         }
     }
@@ -42,7 +42,7 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center bg-muted">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Cargando...</p>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
     )

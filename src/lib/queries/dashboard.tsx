@@ -16,13 +16,13 @@ import { getAdminDashboardData, getCitizenDashboardData, DashboardData } from '@
 // takes params object. We can include userId in params.
 
 export const { Provider: AdminDashboardProvider, useStore: useAdminDashboardStore } =
-  createQueryStore<DashboardData, { sedeId: string, userId: string }>({
+  createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
     baseQueryKey: ['admin-dashboard'],
-    clientFetcher: async ({ sedeId, userId }) => getAdminDashboardData({ sedeId }, userId),
+    clientFetcher: async ({ headquartersId, userId }) => getAdminDashboardData({ headquartersId }, userId),
   });
 
 export const { Provider: CitizenDashboardProvider, useStore: useCitizenDashboardStore } =
-  createQueryStore<DashboardData, { sedeId: string, userId: string }>({
+  createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
     baseQueryKey: ['citizen-dashboard'],
-    clientFetcher: async ({ sedeId, userId }) => getCitizenDashboardData({ sedeId }, userId),
+    clientFetcher: async ({ headquartersId, userId }) => getCitizenDashboardData({ headquartersId }, userId),
   });

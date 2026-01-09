@@ -1,51 +1,41 @@
 {
-  "sedes": [
+  "headquarters": [
     {
       "id": "1",
-      "nombre": "Ayuntamiento de Madrid",
-      "descripcion": "Sede electrónica del Ayuntamiento de Madrid",
+      "name": "Ayuntamiento de Madrid",
+      "description": "Sede electrónica del Ayuntamiento de Madrid",
       "createdAt": "2025-01-01T00:00:00.000Z"
     },
     {
       "id": "2",
-      "nombre": "Comunidad Autónoma de Madrid",
-      "descripcion": "Sede electrónica de la Comunidad de Madrid",
+      "name": "Comunidad Autónoma de Madrid",
+      "description": "Sede electrónica de la Comunidad de Madrid",
       "createdAt": "2025-01-01T00:00:00.000Z"
     }
   ],
-  "userSedes": [
+  "userHeadquarters": [
     {
       "userId": "1",
-      "sedeId": "1",
-      "role": "administrador"
+      "headquartersId": "1",
+      "role": "admin"
     },
     {
       "userId": "1",
-      "sedeId": "2",
-      "role": "administrador"
+      "headquartersId": "2",
+      "role": "admin"
     },
     {
       "userId": "2",
-      "sedeId": "1",
-      "role": "administrado"
+      "headquartersId": "1",
+      "role": "citizen"
     },
     {
       "userId": "2",
-      "sedeId": "2",
-      "role": "administrado"
+      "headquartersId": "2",
+      "role": "citizen"
     }
   ],
-  "notifications": [
-    {
-      "sedeId": "1",
-      "title": "Jorge cagaste",
-      "message": "estás jodido",
-      "priority": "medium",
-      "createdBy": "1",
-      "id": "1767961518451",
-      "createdAt": "2026-01-09T12:25:18.451Z"
-    }
-  ],
-  "tramiteTypes": [],
-  "solicitudes": []
+  "notifications": [],
+  "procedures": [],
+  "requests": []
 }

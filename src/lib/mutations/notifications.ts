@@ -15,7 +15,7 @@ export function useCreateNotification() {
         if (previousNotifications) {
             const optNotif: any = {
                 id: "temp-" + Date.now(),
-                sedeId: newItem.sedeId,
+                headquartersId: newItem.headquartersId,
                 title: newItem.title,
                 message: newItem.message,
                 priority: newItem.priority,

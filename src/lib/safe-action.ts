@@ -5,20 +5,20 @@ export const actionClient = createSafeActionClient();
 
 export const adminAction = actionClient
   .use(async ({ next, clientInput }) => {
-    const input = clientInput as { userId?: string; sedeId?: string } | undefined;
+    const input = clientInput as { userId?: string; headquartersId?: string } | undefined;
     const uid = input?.userId;
-    const sid = input?.sedeId;
+    const hqid = input?.headquartersId;
 
-    if (!uid || !sid) {
+    if (!uid || !hqid) {
         throw new Error("Missing credentials for admin action");
     }
 
-    const role = await getUserRole(uid, sid);
-    if (role !== 'administrador') {
+    const role = await getUserRole(uid, hqid);
+    if (role !== 'admin') {
         throw new Error("Unauthorized: Admin access required");
     }
 
-    return next({ ctx: { userId: uid, sedeId: sid } });
+    return next({ ctx: { userId: uid, headquartersId: hqid } });
   });
 
 export const citizenAction = actionClient

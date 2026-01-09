@@ -5,9 +5,9 @@ import { getNotifications } from '@/lib/db/notifications';
 import { Notification } from '@/lib/types';
 
 export const { Provider: NotificationsProvider, useStore: useNotificationsStore } =
-  createQueryStore<Notification[], { sedeId: string }>({
+  createQueryStore<Notification[], { headquartersId: string }>({
     baseQueryKey: ['notifications'],
-    clientFetcher: async ({ sedeId }) => {
-      return getNotifications(sedeId);
+    clientFetcher: async ({ headquartersId }) => {
+      return getNotifications(headquartersId);
     },
   });

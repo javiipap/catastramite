@@ -1,13 +1,13 @@
 'use server';
 
-import type { TramiteType } from '@/lib/types';
+import type { Procedure } from '@/lib/types';
 import { readDB } from './index';
 
-export async function getTramites(sedeId: string): Promise<TramiteType[]> {
+export async function getProcedures(headquartersId: string): Promise<Procedure[]> {
   const db = await readDB();
-  return db.tramiteTypes.filter((t) => t.sedeId === sedeId);
+  return db.procedures.filter((p) => p.headquartersId === headquartersId);
 }
 
-export async function getTramitesByParams(params: { sedeId: string }): Promise<TramiteType[]> {
-  return getTramites(params.sedeId);
+export async function getProceduresByParams(params: { headquartersId: string }): Promise<Procedure[]> {
+  return getProcedures(params.headquartersId);
 }

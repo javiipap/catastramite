@@ -6,7 +6,7 @@ import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 const addNotificationSchema = v.object({
-  sedeId: v.string(),
+  headquartersId: v.string(),
   title: v.string(),
   message: v.string(),
   priority: v.picklist(["low", "medium", "high"]),
@@ -15,11 +15,11 @@ const addNotificationSchema = v.object({
 
 export const addNotification = adminAction
     .inputSchema(addNotificationSchema)
-    .action(async ({ parsedInput: { sedeId, title, message, priority, userId } }) => {
+    .action(async ({ parsedInput: { headquartersId, title, message, priority, userId } }) => {
         const db = await readDB();
         const newNotification: Notification = {
             id: Date.now().toString(),
-            sedeId,
+            headquartersId,
             title,
             message,
             priority,

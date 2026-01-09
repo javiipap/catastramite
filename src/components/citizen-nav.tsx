@@ -3,34 +3,34 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, FolderOpen, Bell } from "lucide-react"
+import { Home, FileText, FolderOpen, Bell } from "lucide-react"
 
-interface AdminNavProps {
+interface CitizenNavProps {
   headquartersId: string
 }
 
-export function AdminNav({ headquartersId }: AdminNavProps) {
+export function CitizenNav({ headquartersId }: CitizenNavProps) {
   const pathname = usePathname()
 
   const navItems = [
     {
-      title: "Dashboard",
-      href: `/admin/${headquartersId}/dashboard`,
-      icon: LayoutDashboard,
+      title: "Home",
+      href: `/citizen/${headquartersId}/dashboard`,
+      icon: Home,
     },
     {
       title: "Notifications",
-      href: `/admin/${headquartersId}/notifications`,
+      href: `/citizen/${headquartersId}/notifications`,
       icon: Bell,
     },
     {
-      title: "Procedures",
-      href: `/admin/${headquartersId}/procedures`,
+      title: "Available Procedures",
+      href: `/citizen/${headquartersId}/procedures`,
       icon: FileText,
     },
     {
-      title: "Requests",
-      href: `/admin/${headquartersId}/requests`,
+      title: "My Requests",
+      href: `/citizen/${headquartersId}/requests`,
       icon: FolderOpen,
     },
   ]

@@ -11,8 +11,8 @@ const _geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'Sede Electrónica | Administración Digital',
-  description: 'Plataforma de gestión de trámites administrativos',
+  title: 'E-Government Portal | Digital Administration',
+  description: 'Administrative procedure management platform',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="en">
       <body className={cn(
         "min-h-screen bg-background font-sans antialiased",
         _geist.variable,

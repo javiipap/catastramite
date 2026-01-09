@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 // import { useDataStore } from "@/lib/data-store"
-import { addUserToSede } from "@/lib/actions/users"
+import { addUserToHeadquarters } from "@/lib/actions/users"
 import { useSearchParams, useRouter } from "next/navigation"
 import { verifyInviteToken } from "@/lib/tokens"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-// import { addUserToSede } from "@/lib/data-actions" // Duplicate removed
 
 export function LoginForm() {
   const [isLogin, setIsLogin] = useState(true)
@@ -23,23 +22,22 @@ export function LoginForm() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [inviteSedeId, setInviteSedeId] = useState<string | null>(null)
+  const [inviteHeadquartersId, setInviteHeadquartersId] = useState<string | null>(null)
 
   const { login, register } = useAuth()
-  // const { addUserToSede } = useDataStore() // Legacy
   const searchParams = useSearchParams()
   const router = useRouter()
 
   useEffect(() => {
     const token = searchParams.get("token")
     if (token) {
-      const sedeId = verifyInviteToken(token)
-      if (sedeId) {
-        setInviteSedeId(sedeId)
+      const headquartersId = verifyInviteToken(token)
+      if (headquartersId) {
+        setInviteHeadquartersId(headquartersId)
         setIsLogin(false) // Switch to register mode
-        setSuccess("Has sido invitado a unirte a una sede. Regístrate para continuar.")
+        setSuccess("You have been invited to join a headquarters. Register to continue.")
       } else {
-        setError("El enlace de invitación ha expirado o no es válido.")
+        setError("The invitation link has expired or is invalid.")
       }
     }
   }, [searchParams])
@@ -55,23 +53,23 @@ export function LoginForm() {
         await login(email, password)
       } else {
         const newUser = await register(email, password, name)
-        if (inviteSedeId) {
-            // Use server action to join sede
-            await addUserToSede({
-                userSede: {
+        if (inviteHeadquartersId) {
+            // Use server action to join headquarters
+            await addUserToHeadquarters({
+                userHeadquarters: {
                     userId: newUser.id,
-                    sedeId: inviteSedeId,
-                    role: "administrado"
+                    headquartersId: inviteHeadquartersId,
+                    role: "citizen"
                 }
             })
         }
-        setSuccess("Registro exitoso. Redirigiendo...")
+        setSuccess("Registration successful. Redirecting...")
         setTimeout(() => setSuccess(""), 3000)
       }
       // Redirect handled by page effect or just reload to pick up state
       window.location.reload() // Simple way to refresh auth state in app
     } catch (_err) {
-      setError(isLogin ? "Credenciales inválidas." : "Error al registrar usuario. Puede que el correo ya exista.")
+      setError(isLogin ? "Invalid credentials." : "Error registering user. Email might already exist.")
     } finally {
       setIsLoading(false)
     }
@@ -81,24 +79,24 @@ export function LoginForm() {
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          {isLogin ? "Sede Electrónica" : "Crear Cuenta"}
+          {isLogin ? "E-Government Portal" : "Create Account"}
         </CardTitle>
         <CardDescription className="text-center">
-          {inviteSedeId 
-            ? "Regístrate para aceptar la invitación" 
+          {inviteHeadquartersId 
+            ? "Register to accept the invitation" 
             : isLogin 
-              ? "Ingrese sus credenciales para acceder" 
-              : "Complete el formulario para registrarse"}
+              ? "Enter your credentials to access" 
+              : "Complete the form to register"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div className="space-y-2">
-              <Label htmlFor="name">Nombre Completo</Label>
+              <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
-                placeholder="Juan Pérez"
+                placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -106,18 +104,18 @@ export function LoginForm() {
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Correo electrónico</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
-              placeholder="correo@ejemplo.com"
+              placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
@@ -138,12 +136,12 @@ export function LoginForm() {
           )}
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading 
-              ? "Procesando..." 
+              ? "Processing..." 
               : isLogin 
-                ? "Iniciar Sesión" 
-                : inviteSedeId 
-                  ? "Registrarse y Unirse" 
-                  : "Registrarse"}
+                ? "Login" 
+                : inviteHeadquartersId 
+                  ? "Register and Join" 
+                  : "Register"}
           </Button>
           
           <div className="text-center text-sm">
@@ -156,17 +154,17 @@ export function LoginForm() {
                 setSuccess("")
               }}
             >
-              {isLogin ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
+              {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
             </button>
           </div>
         </form>
         {isLogin && (
           <div className="mt-6 space-y-2 text-sm text-muted-foreground">
-            <p className="font-medium">Usuarios de demostración:</p>
+            <p className="font-medium">Demo Users:</p>
             <div className="space-y-1 text-xs">
-              <p>Administrador: admin@sede.gov</p>
-              <p>Administrado: usuario@correo.com</p>
-              <p className="italic">Cualquier contraseña funciona</p>
+              <p>Admin: admin@sede.gov</p>
+              <p>Citizen: usuario@correo.com</p>
+              <p className="italic">Any password works</p>
             </div>
           </div>
         )}

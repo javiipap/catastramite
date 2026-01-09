@@ -1,28 +1,28 @@
 'use server';
 
 import { readDB } from './index';
-import type { Sede } from '@/lib/types';
+import type { Headquarters } from '@/lib/types';
 
-export async function getSedes(): Promise<Sede[]> {
+export async function getHeadquarters(): Promise<Headquarters[]> {
   const db = await readDB();
-  return db.sedes.map(sede => ({
-    ...sede,
-    userSedes: db.userSedes.filter(us => us.sedeId === sede.id)
+  return db.headquarters.map(hq => ({
+    ...hq,
+    userHeadquarters: db.userHeadquarters.filter(uh => uh.headquartersId === hq.id)
   }));
 }
 
-export async function getSede(id: string): Promise<Sede | undefined> {
+export async function getHeadquartersById(id: string): Promise<Headquarters | undefined> {
   const db = await readDB();
-  const sede = db.sedes.find((s) => s.id === id);
-  if (sede) {
+  const headquarters = db.headquarters.find((h) => h.id === id);
+  if (headquarters) {
      return {
-         ...sede,
-         userSedes: db.userSedes.filter(us => us.sedeId === sede.id)
+         ...headquarters,
+         userHeadquarters: db.userHeadquarters.filter(uh => uh.headquartersId === headquarters.id)
      }
   }
   return undefined;
 }
 
-export async function getSedeByParams(params: { sedeId: string }): Promise<Sede | undefined> {
-  return getSede(params.sedeId);
+export async function getHeadquartersByParams(params: { headquartersId: string }): Promise<Headquarters | undefined> {
+  return getHeadquartersById(params.headquartersId);
 }

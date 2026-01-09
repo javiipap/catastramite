@@ -1,16 +1,16 @@
-export type UserRole = "administrador" | "administrado"
+export type UserRole = "admin" | "citizen"
 
-export interface Sede {
+export interface Headquarters {
   id: string
-  nombre: string
-  descripcion?: string
+  name: string
+  description?: string
   createdAt: Date
-  userSedes?: UserSede[]
+  userHeadquarters?: UserHeadquarters[]
 }
 
-export interface UserSede {
+export interface UserHeadquarters {
   userId: string
-  sedeId: string
+  headquartersId: string
   role: UserRole
 }
 
@@ -20,40 +20,40 @@ export interface User {
   name: string
 }
 
-export interface TramiteType {
+export interface Procedure {
   id: string
-  sedeId: string
-  nombre: string
-  descripcion: string
-  campos: CampoFormulario[]
+  headquartersId: string
+  name: string
+  description: string
+  fields: FormField[]
   createdAt: Date
   createdBy: string
 }
 
-export interface CampoFormulario {
+export interface FormField {
   id: string
-  nombre: string
-  tipo: "texto" | "numero" | "fecha" | "email" | "textarea" | "select"
-  requerido: boolean
-  opciones?: string[]
+  name: string
+  type: "text" | "number" | "date" | "email" | "textarea" | "select"
+  required: boolean
+  options?: string[]
 }
 
-export interface Solicitud {
+export interface Request {
   id: string
-  sedeId: string
-  tramiteTypeId: string
-  tramiteTypeNombre: string
-  solicitanteId: string
-  solicitanteNombre: string
-  estado: "pendiente" | "en_revision" | "aprobada" | "rechazada"
-  datos: Record<string, unknown>
+  headquartersId: string
+  procedureId: string
+  procedureName: string
+  applicantId: string
+  applicantName: string
+  status: "pending" | "in_review" | "approved" | "rejected"
+  data: Record<string, unknown>
   createdAt: Date
   updatedAt: Date
 }
 
 export interface Notification {
   id: string
-  sedeId: string
+  headquartersId: string
   title: string
   message: string
   priority: "low" | "medium" | "high"
