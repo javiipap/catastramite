@@ -20,8 +20,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react"
 import { Bell, Plus, Calendar } from "lucide-react"
 import { addNotification as addNotificationAction } from "@/lib/actions/notifications"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
+import { useCreateNotification } from "@/lib/mutations/notifications"
 
 export default function AdminNotificacionesPage() {
   const { data: currentSede } = useSedeStore()
@@ -34,23 +35,7 @@ export default function AdminNotificacionesPage() {
   const [message, setMessage] = useState("")
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium")
 
-  const addMutation = useMutation({
-    mutationFn: async (notification: Omit<import("@/lib/types").Notification, "id" | "createdAt">) => {
-        if (!user) throw new Error("No user")
-        return addNotificationAction(notification, user.id)
-    },
-    onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["notifications"] })
-        setIsOpen(false)
-        setTitle("")
-        setMessage("")
-        setPriority("medium")
-        toast.success("Notificación publicada")
-    },
-    onError: () => {
-        toast.error("Error al publicar notificación")
-    }
-  })
+  const addMutation = useCreateNotification()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,7 +45,14 @@ export default function AdminNotificacionesPage() {
         title,
         message,
         priority,
-        createdBy: user.id,
+        userId: user.id,
+      }, {
+          onSuccess: () => {
+               setIsOpen(false)
+               setTitle("")
+               setMessage("")
+               setPriority("medium")
+          }
       })
     }
   }

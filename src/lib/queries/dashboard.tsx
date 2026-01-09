@@ -10,7 +10,7 @@
 // The new Page architecture should probably fetch data on the server or use the new actions directly with useQuery.
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getAdminDashboardData, getCitizenDashboardData, DashboardData } from '@/lib/actions/dashboard';
+import { getAdminDashboardData, getCitizenDashboardData, DashboardData } from '@/lib/db/dashboard';
 
 // We need a way to pass userId to these. The current createQueryStore helper
 // takes params object. We can include userId in params.

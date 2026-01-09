@@ -1,8 +1,8 @@
 'use server';
 
-import { getSede } from './sedes';
-import { getTramites } from './tramites';
-import { getSolicitudes, getUserSolicitudes } from './solicitudes';
+import { getSede } from './headquarters';
+import { getTramites } from './procedures';
+import { getSolicitudes, getUserSolicitudes } from './requests';
 import { Sede, TramiteType, Solicitud } from '@/lib/types';
 
 export interface DashboardData {

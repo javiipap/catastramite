@@ -58,9 +58,11 @@ export function LoginForm() {
         if (inviteSedeId) {
             // Use server action to join sede
             await addUserToSede({
-                userId: newUser.id,
-                sedeId: inviteSedeId,
-                role: "administrado"
+                userSede: {
+                    userId: newUser.id,
+                    sedeId: inviteSedeId,
+                    role: "administrado"
+                }
             })
         }
         setSuccess("Registro exitoso. Redirigiendo...")

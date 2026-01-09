@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context"
 import { LoginForm } from "@/components/login-form"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { getUserSedes } from "@/lib/actions/users"
+import { getUserSedes } from "@/lib/db/users"
 
 export default function HomePage() {
   const { user, isLoading } = useAuth()

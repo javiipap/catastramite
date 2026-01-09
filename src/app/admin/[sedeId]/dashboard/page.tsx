@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/lib/auth-context"
 import { useQuery } from "@tanstack/react-query"
-import { getAdminDashboardData } from "@/lib/actions/dashboard"
+import { getAdminDashboardData } from "@/lib/db/dashboard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, FolderOpen, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
 import { useParams } from "next/navigation"

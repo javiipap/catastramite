@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/lib/auth-context"
 import { useQuery } from "@tanstack/react-query"
-import { getCitizenDashboardData } from "@/lib/actions/dashboard"
+import { getCitizenDashboardData } from "@/lib/db/dashboard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, FolderOpen, Bell, ArrowRight } from "lucide-react"

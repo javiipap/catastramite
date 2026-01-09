@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { getUserSedeObjects } from "@/lib/actions/users"
+import { getUserSedeObjects } from "@/lib/db/users"
 import { useParams, useRouter, usePathname } from "next/navigation"
 
 export function SedeSelector() {

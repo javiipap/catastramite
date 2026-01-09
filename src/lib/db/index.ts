@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Sede, UserSede, Notification, TramiteType, Solicitud } from './types';
+import type { Sede, UserSede, Notification, TramiteType, Solicitud } from '../types';
 
 const DB_PATH = path.join(process.cwd(), 'data.json');
 

@@ -20,9 +20,10 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { addTramiteType as addAction } from "@/lib/actions/tramites"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import type { CampoFormulario } from "@/lib/types"
+import { useCreateTramite } from "@/lib/mutations/tramites"
 
 export default function AdminTramitesPage() {
   const { data: currentSede } = useSedeStore()
@@ -45,21 +46,7 @@ export default function AdminTramitesPage() {
   // So `tramiteTypes` IS the sedeTramites.
   const sedeTramites = tramiteTypes; 
 
-  const addMutation = useMutation({
-    mutationFn: async (tramite: Omit<import("@/lib/types").TramiteType, "id" | "createdAt">) => {
-        if (!user) throw new Error("No user")
-        return addAction(tramite, user.id)
-    },
-    onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["tramites"] })
-        setNombre("")
-        setDescripcion("")
-        setCampos([])
-        setIsOpen(false)
-        toast.success("Tipo de trámite creado")
-    },
-    onError: () => toast.error("Error al crear trámite")
-  })
+  const addMutation = useCreateTramite()
 
   const handleAddCampo = () => {
     if (nuevoCampo.nombre) {
@@ -82,7 +69,14 @@ export default function AdminTramitesPage() {
         // Logic in action: const id = Math.random()...
         // Logic in View was: `${i + 1}`. I'll stick to view logic for now.
         campos: campos.map((c, i) => ({ ...c, id: `${i + 1}` })),
-        createdBy: user.id,
+        userId: user.id,
+      }, {
+           onSuccess: () => {
+               setNombre("")
+               setDescripcion("")
+               setCampos([])
+               setIsOpen(false)
+           }
       })
     }
   }

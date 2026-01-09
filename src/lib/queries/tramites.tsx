@@ -1,7 +1,7 @@
 'use client';
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getTramites } from '@/lib/actions/tramites';
+import { getTramites } from '@/lib/db/procedures';
 import { TramiteType } from '@/lib/types';
 
 export const { Provider: TramitesProvider, useStore: useTramitesStore } =

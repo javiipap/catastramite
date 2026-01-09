@@ -3,7 +3,7 @@
 import { createQueryStore } from "@/lib/store/create-query"
 import { Solicitud } from "@/lib/types"
 
-import { getSolicitudes } from "@/lib/actions/solicitudes"
+import { getSolicitudes } from "@/lib/db/requests"
 
 export const { 
   Provider: SolicitudesProvider, 

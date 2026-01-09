@@ -1,7 +1,7 @@
 'use client';
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getSedes, getSede } from '@/lib/actions/sedes';
+import { getSedes, getSede } from '@/lib/db/headquarters';
 import { Sede } from '@/lib/types';
 
 export const { Provider: SedesProvider, useStore: useSedesStore } =

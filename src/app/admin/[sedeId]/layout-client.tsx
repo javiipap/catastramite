@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminNav } from "@/components/admin-nav"
 import { useSedeStore } from "@/lib/queries/sedes"
-import { getUserRole } from "@/lib/actions/users" 
+import { getUserRole } from "@/lib/db/users" 
 
 export function SedeAdminLayoutClient({
   children,

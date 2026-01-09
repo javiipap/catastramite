@@ -22,8 +22,9 @@ import {
 import { useRouter } from "next/navigation"
 import { createSede } from "@/lib/actions/sedes"
 import { generateInviteToken } from "@/lib/tokens"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
+import { useCreateSede } from "@/lib/mutations/sedes"
 
 export default function SedesPage() {
   const { data: sedes } = useSedesStore()
@@ -41,24 +42,17 @@ export default function SedesPage() {
     sede.userSedes?.some(us => us.userId === user?.id)
   )
 
-  const createMutation = useMutation({
-    mutationFn: async (name: string) => {
-        if (!user) throw new Error("No user")
-        return createSede({ nombre: name, descripcion: "" }, user.id)
-    },
-    onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["sedes"] })
-        setIsOpen(false)
-        setNewSedeName("")
-        toast.success("Sede creada con éxito")
-    },
-    onError: () => toast.error("Error al crear sede")
-  })
+  const createMutation = useCreateSede()
 
   const handleCreateSede = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newSedeName.trim()) {
-      createMutation.mutate(newSedeName)
+    if (newSedeName.trim() && user) {
+      createMutation.mutate({ nombre: newSedeName, descripcion: "", userId: user.id }, {
+         onSuccess: () => {
+             setIsOpen(false)
+             setNewSedeName("")
+         }
+      })
     }
   }
 

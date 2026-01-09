@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSedeStore } from "@/lib/queries/sedes"
-import { getUserRole } from "@/lib/actions/users"
+import { getUserRole } from "@/lib/db/users"
 import { CiudadanoHeader } from "@/components/ciudadano-header"
 import { CiudadanoNav } from "@/components/ciudadano-nav"
 

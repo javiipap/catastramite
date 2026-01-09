@@ -3,31 +3,43 @@
 import { readDB, writeDB } from '@/lib/db';
 import { TramiteType } from '@/lib/types';
 
-export async function getTramites(sedeId: string): Promise<TramiteType[]> {
-  const db = await readDB();
-  return db.tramiteTypes.filter((t) => t.sedeId === sedeId);
-}
+import { adminAction } from '@/lib/safe-action';
+import * as v from 'valibot';
 
-import { getUserRole } from './users';
+// Definition for CampoFormulario schema
+const CampoFormularioSchema = v.object({
+  id: v.string(),
+  nombre: v.string(),
+  tipo: v.picklist(["texto", "numero", "fecha", "email", "textarea", "select"]),
+  requerido: v.boolean(),
+  opciones: v.optional(v.array(v.string())),
+});
 
-export async function addTramiteType(tramite: Omit<TramiteType, 'id' | 'createdAt'>, userId: string): Promise<TramiteType> {
-  const role = await getUserRole(userId, tramite.sedeId);
-  if (role !== 'administrador') {
-      throw new Error('Unauthorized: Only administrators can create tramites');
-  }
+const addTramiteTypeSchema = v.object({
+  sedeId: v.string(),
+  nombre: v.string(),
+  descripcion: v.string(),
+  campos: v.array(CampoFormularioSchema),
+  userId: v.string() // Explicit userId for admin check and creation
+});
 
-  const db = await readDB();
-  const newTramite: TramiteType = {
-    ...tramite,
-    id: Date.now().toString(),
-    createdAt: new Date(),
-  };
-  
-  db.tramiteTypes.push(newTramite);
-  await writeDB(db);
-  return newTramite;
-}
+export const addTramiteType = adminAction
+    .inputSchema(addTramiteTypeSchema)
+    .action(async ({ parsedInput: { sedeId, nombre, descripcion, campos, userId } }) => {
+        // Role check already done by middleware via userId/sedeId
+        const db = await readDB();
+        const newTramite: TramiteType = {
+            id: Date.now().toString(),
+            sedeId,
+            nombre,
+            descripcion,
+            campos,
+            createdAt: new Date(),
+            createdBy: userId, // Use userId as createdBy
+        };
+        
+        db.tramiteTypes.push(newTramite);
+        await writeDB(db);
+        return newTramite;
+    });
 
-export async function getTramitesByParams(params: { sedeId: string }): Promise<TramiteType[]> {
-  return getTramites(params.sedeId);
-}

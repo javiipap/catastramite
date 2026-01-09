@@ -11,9 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
-import { addSolicitud as addAction } from "@/lib/actions/solicitudes"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
+import { useCreateSolicitud } from "@/lib/mutations/solicitudes"
 
 export default function CiudadanoTramitePage() {
   const params = useParams()
@@ -32,17 +30,7 @@ export default function CiudadanoTramitePage() {
 
 
   
-  const addMutation = useMutation({
-    mutationFn: async (solicitud: Omit<import("@/lib/types").Solicitud, "id" | "createdAt" | "updatedAt">) => {
-        if (!user) throw new Error("No user")
-        return addAction(solicitud, user.id)
-    },
-    onSuccess: () => {
-        toast.success("Solicitud presentada con éxito")
-        router.push(`/ciudadano/${params.sedeId}/solicitudes`)
-    },
-    onError: () => toast.error("Error al presentar solicitud")
-  })
+  const addMutation = useCreateSolicitud()
 
   if (!tramite) {
     return (
@@ -64,7 +52,7 @@ export default function CiudadanoTramitePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (user) {
+    if (user && tramite) {
         addMutation.mutate({
         tramiteTypeId: tramite.id,
         tramiteTypeNombre: tramite.nombre,
@@ -73,6 +61,11 @@ export default function CiudadanoTramitePage() {
         solicitanteNombre: user.name,
         estado: "pendiente",
         datos: formData,
+        userId: user.id
+      }, {
+          onSuccess: () => {
+              router.push(`/ciudadano/${params.sedeId}/solicitudes`)
+          }
       })
     }
   }

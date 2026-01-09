@@ -10,8 +10,9 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { Solicitud } from "@/lib/types"
 import { updateSolicitudEstado as updateAction } from "@/lib/actions/solicitudes"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
+import { useUpdateSolicitudInfo } from "@/lib/mutations/solicitudes"
 
 import { useAuth } from "@/lib/auth-context"
 
@@ -26,20 +27,7 @@ export default function AdminSolicitudesPage() {
 
   const solicitudesFiltradas = filtro === "todas" ? solicitudes : solicitudes.filter((s) => s.estado === filtro)
 
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, estado }: { id: string; estado: Solicitud["estado"] }) => {
-        if (!user) throw new Error("No user")
-        return updateAction(id, estado, user.id)
-    },
-    onSuccess: (updated) => {
-        queryClient.invalidateQueries({ queryKey: ["solicitudes"] })
-        if (selectedSolicitud?.id === updated.id) {
-            setSelectedSolicitud(updated)
-        }
-        toast.success("Estado actualizado")
-    },
-    onError: () => toast.error("Error al actualizar estado")
-  })
+  const updateMutation = useUpdateSolicitudInfo()
 
   const getEstadoBadge = (estado: Solicitud["estado"]) => {
     const styles = {
@@ -116,7 +104,7 @@ export default function AdminSolicitudesPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "en_revision" })}
+                      onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "en_revision", sedeId: currentSede.id })}
                     >
                       Marcar en Revisión
                     </Button>
@@ -126,7 +114,7 @@ export default function AdminSolicitudesPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "aprobada" })}
+                        onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "aprobada", sedeId: currentSede.id })}
                         className="text-green-700 hover:text-green-800"
                       >
                         Aprobar
@@ -134,7 +122,7 @@ export default function AdminSolicitudesPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "rechazada" })}
+                        onClick={() => updateMutation.mutate({ id: solicitud.id, estado: "rechazada", sedeId: currentSede.id })}
                         className="text-red-700 hover:text-red-800"
                       >
                         Rechazar
@@ -211,7 +199,9 @@ export default function AdminSolicitudesPage() {
                 <div className="flex gap-2 pt-4 border-t">
                   <Button
                     onClick={() => {
-                      updateMutation.mutate({ id: selectedSolicitud.id, estado: "aprobada" })
+                        if (currentSede) {
+                            updateMutation.mutate({ id: selectedSolicitud.id, estado: "aprobada", sedeId: currentSede.id })
+                        }
                     //   setSelectedSolicitud(null) // Kepping open to show result? Or close? Original closed it.
                     }}
                     className="flex-1"
@@ -221,7 +211,9 @@ export default function AdminSolicitudesPage() {
                   <Button
                     variant="destructive"
                     onClick={() => {
-                        updateMutation.mutate({ id: selectedSolicitud.id, estado: "rechazada" })
+                        if (currentSede) {
+                            updateMutation.mutate({ id: selectedSolicitud.id, estado: "rechazada", sedeId: currentSede.id })
+                        }
                         // setSelectedSolicitud(null)
                     }}
                     className="flex-1"
