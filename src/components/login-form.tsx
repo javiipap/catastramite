@@ -59,7 +59,7 @@ export function LoginForm() {
                 userHeadquarters: {
                     userId: newUser.id,
                     headquartersId: inviteHeadquartersId,
-                    role: "citizen"
+                    role: 'slave'
                 }
             })
         }

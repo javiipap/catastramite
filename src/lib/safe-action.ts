@@ -14,14 +14,14 @@ export const adminAction = actionClient
     }
 
     const role = await getUserRole(uid, hqid);
-    if (role !== 'admin') {
+    if (role !== 'master') {
         throw new Error("Unauthorized: Admin access required");
     }
 
     return next({ ctx: { userId: uid, headquartersId: hqid } });
   });
 
-export const citizenAction = actionClient
+export const slaveAction = actionClient
   .use(async ({ next, clientInput }) => {
     const input = clientInput as { userId?: string } | undefined;
     const uid = input?.userId;

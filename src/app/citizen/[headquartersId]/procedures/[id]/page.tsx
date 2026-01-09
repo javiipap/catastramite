@@ -29,7 +29,7 @@ export default function CitizenProcedurePage() {
   if (!procedure) {
     return (
       <div className="space-y-6">
-        <Link href={`/citizen/${params.headquartersId}/procedures`}>
+        <Link href={`/slave/${params.headquartersId}/procedures`}>
           <Button variant="ghost">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Procedures
@@ -58,7 +58,7 @@ export default function CitizenProcedurePage() {
         userId: user.id
       }, {
           onSuccess: () => {
-              router.push(`/citizen/${params.headquartersId}/requests`)
+              router.push(`/slave/${params.headquartersId}/requests`)
           }
       })
     }
@@ -74,7 +74,7 @@ export default function CitizenProcedurePage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <Link href={`/citizen/${params.headquartersId}/procedures`}>
+      <Link href={`/slave/${params.headquartersId}/procedures`}>
         <Button variant="ghost">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Procedures
@@ -117,7 +117,7 @@ export default function CitizenProcedurePage() {
               <Button type="submit" disabled={!isFormValid || addMutation.isPending} className="flex-1">
                 {addMutation.isPending ? "Submitting..." : "Submit Request"}
               </Button>
-              <Link href={`/citizen/${params.headquartersId}/procedures`} className="flex-1">
+              <Link href={`/slave/${params.headquartersId}/procedures`} className="flex-1">
                 <Button type="button" variant="outline" className="w-full bg-transparent">
                   Cancel
                 </Button>

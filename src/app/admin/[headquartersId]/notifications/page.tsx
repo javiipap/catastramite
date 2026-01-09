@@ -62,7 +62,7 @@ export default function AdminNotificationsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Notifications</h2>
-          <p className="text-muted-foreground">Manage announcements for citizens</p>
+          <p className="text-muted-foreground">Manage announcements for slaves</p>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
@@ -75,7 +75,7 @@ export default function AdminNotificationsPage() {
             <DialogHeader>
               <DialogTitle>Create Notification</DialogTitle>
               <DialogDescription>
-                This notification will be visible to all citizens of this headquarters.
+                This notification will be visible to all slaves of this headquarters.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit}>

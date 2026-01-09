@@ -6,8 +6,8 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { getUserRole } from "@/lib/db/users"
-import { CitizenHeader } from "@/components/citizen-header"
-import { CitizenNav } from "@/components/citizen-nav"
+import { CitizenHeader } from "@/components/slave-header"
+import { CitizenNav } from "@/components/slave-nav"
 
 export function CitizenLayoutClient({
   children,
@@ -33,7 +33,7 @@ export function CitizenLayoutClient({
         if (!isLoading && headquartersId && user) {
              const role = await getUserRole(user.id, headquartersId)
              // Allow everyone or specific logic? 
-             // Initially we allow "citizen" or "admin".
+             // Initially we allow 'slave' or 'master'.
              // If not member, maybe should auto-join or error?
              // Since we use getUserRole, it returns null if not associated.
              

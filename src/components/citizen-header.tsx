@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { CitizenNav } from "@/components/citizen-nav"
+import { CitizenNav } from "@/components/slave-nav"
 import { Menu } from "lucide-react"
 
 interface CitizenHeaderProps {

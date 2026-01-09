@@ -18,7 +18,7 @@ export async function getAdminDashboardData(params: { headquartersId: string }, 
   
   // 1. Verify Role
   const role = await getUserRole(userId, headquartersId);
-  if (role !== 'admin') {
+  if (role !== 'master') {
       throw new Error('Unauthorized: User is not an administrator');
   }
 

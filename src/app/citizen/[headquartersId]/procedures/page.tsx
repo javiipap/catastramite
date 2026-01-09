@@ -37,7 +37,7 @@ export default function CitizenProceduresPage() {
                   <p>Requirements: {procedure.fields.length} fields to complete</p>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link href={`/citizen/${headquartersId}/procedures/${procedure.id}`}>Start Procedure</Link>
+                  <Link href={`/slave/${headquartersId}/procedures/${procedure.id}`}>Start Procedure</Link>
                 </Button>
               </CardContent>
             </Card>

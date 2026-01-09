@@ -15,22 +15,22 @@ export function CitizenNav({ headquartersId }: CitizenNavProps) {
   const navItems = [
     {
       title: "Home",
-      href: `/citizen/${headquartersId}/dashboard`,
+      href: `/slave/${headquartersId}/dashboard`,
       icon: Home,
     },
     {
       title: "Notifications",
-      href: `/citizen/${headquartersId}/notifications`,
+      href: `/slave/${headquartersId}/notifications`,
       icon: Bell,
     },
     {
       title: "Available Procedures",
-      href: `/citizen/${headquartersId}/procedures`,
+      href: `/slave/${headquartersId}/procedures`,
       icon: FileText,
     },
     {
       title: "My Requests",
-      href: `/citizen/${headquartersId}/requests`,
+      href: `/slave/${headquartersId}/requests`,
       icon: FolderOpen,
     },
   ]

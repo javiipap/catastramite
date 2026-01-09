@@ -14,9 +14,9 @@ export function useCreateRequest() {
              return
         }
         toast.success("Request submitted successfully")
-        // Invalidate both citizen and admin lists
+        // Invalidate both slave and admin lists
         queryClient.invalidateQueries({ queryKey: ["requests"] })
-        queryClient.invalidateQueries({ queryKey: ["citizen-dashboard"] })
+        queryClient.invalidateQueries({ queryKey: ["slave-dashboard"] })
     },
     onError: () => {
        toast.error("Failed to submit request")
