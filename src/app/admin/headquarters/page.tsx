@@ -71,10 +71,10 @@ export default function HeadquartersPage() {
   const handleEnterHeadquarters = (headquartersId: string) => {
      // Check role to determine destination
      const relation = headquarters.find(h => h.id === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
-     if (relation?.role === "admin") {
+     if (relation?.role === 'master') {
          router.push(`/admin/${headquartersId}/dashboard`)
      } else {
-         router.push(`/citizen/${headquartersId}/dashboard`)
+         router.push(`/slave/${headquartersId}/dashboard`)
      }
   }
 
@@ -149,8 +149,8 @@ export default function HeadquartersPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {userHeadquarters.map((h) => {
             const relation = h.userHeadquarters?.find(uh => uh.userId === user.id)
-            const role = relation?.role || "citizen"
-            const isAdmin = role === "admin"
+            const role = relation?.role || 'slave'
+            const isAdmin = role === 'master'
 
             return (
               <Card key={h.id} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">

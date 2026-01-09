@@ -32,7 +32,7 @@ export function AdminLayoutClient({
     const checkAccess = async () => {
         if (!isLoading && headquartersId && user) {
              const role = await getUserRole(user.id, headquartersId)
-             if (role !== "admin") {
+             if (role !== 'master') {
                 router.push("/")
              }
         } else if (!isLoading && !user) {

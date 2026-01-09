@@ -23,6 +23,6 @@ export const { Provider: AdminDashboardProvider, useStore: useAdminDashboardStor
 
 export const { Provider: CitizenDashboardProvider, useStore: useCitizenDashboardStore } =
   createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
-    baseQueryKey: ['citizen-dashboard'],
+    baseQueryKey: ['slave-dashboard'],
     clientFetcher: async ({ headquartersId, userId }) => getCitizenDashboardData({ headquartersId }, userId),
   });

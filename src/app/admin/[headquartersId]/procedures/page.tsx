@@ -83,7 +83,7 @@ export default function AdminProceduresPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Procedures</h2>
-          <p className="text-muted-foreground">Manage available procedures for citizens</p>
+          <p className="text-muted-foreground">Manage available procedures for slaves</p>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>

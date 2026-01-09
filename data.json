@@ -17,22 +17,22 @@
     {
       "userId": "1",
       "headquartersId": "1",
-      "role": "admin"
+      "role": "master"
     },
     {
       "userId": "1",
       "headquartersId": "2",
-      "role": "admin"
+      "role": "master"
     },
     {
       "userId": "2",
       "headquartersId": "1",
-      "role": "citizen"
+      "role": "slave"
     },
     {
       "userId": "2",
       "headquartersId": "2",
-      "role": "citizen"
+      "role": "slave"
     }
   ],
   "notifications": [],

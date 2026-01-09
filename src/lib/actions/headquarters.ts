@@ -2,7 +2,7 @@
 
 import { readDB, writeDB } from '@/lib/db';
 import { Headquarters } from '@/lib/types';
-import { adminAction, citizenAction } from '@/lib/safe-action';
+import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 const createHeadquartersSchema = v.object({
@@ -11,7 +11,7 @@ const createHeadquartersSchema = v.object({
   userId: v.string(),
 });
 
-export const createHeadquarters = citizenAction
+export const createHeadquarters = slaveAction
     .inputSchema(createHeadquartersSchema)
     .action(async ({ parsedInput: { name, description, userId } }) => {
         const db = await readDB();
@@ -28,14 +28,14 @@ export const createHeadquarters = citizenAction
         db.userHeadquarters.push({
             userId,
             headquartersId: newHeadquarters.id,
-            role: 'admin'
+            role: 'master'
         });
         
         await writeDB(db);
         // Return with relation
         return {
             ...newHeadquarters,
-            userHeadquarters: [{ userId, headquartersId: newHeadquarters.id, role: 'admin' }]
+            userHeadquarters: [{ userId, headquartersId: newHeadquarters.id, role: 'master' }]
         };
     });
 

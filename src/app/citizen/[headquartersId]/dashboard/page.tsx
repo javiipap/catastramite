@@ -15,7 +15,7 @@ export default function CitizenDashboardPage() {
   const headquartersId = params.headquartersId as string
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['citizen-dashboard', headquartersId, user?.id],
+    queryKey: ['slave-dashboard', headquartersId, user?.id],
     queryFn: () => {
         if (!user || !headquartersId) return null
         return getCitizenDashboardData({ headquartersId }, user.id)
@@ -46,7 +46,7 @@ export default function CitizenDashboardPage() {
       description: "Active services",
       icon: FileText,
       color: "text-blue-600",
-      href: `/citizen/${currentHeadquarters?.id}/procedures`,
+      href: `/slave/${currentHeadquarters?.id}/procedures`,
     },
     {
       title: "My Requests",
@@ -54,7 +54,7 @@ export default function CitizenDashboardPage() {
       description: "Management history",
       icon: FolderOpen,
       color: "text-green-600",
-      href: `/citizen/${currentHeadquarters?.id}/requests`,
+      href: `/slave/${currentHeadquarters?.id}/requests`,
     },
     {
       title: "Notice Board",
@@ -62,7 +62,7 @@ export default function CitizenDashboardPage() {
       description: "Important notices",
       icon: Bell,
       color: "text-yellow-600",
-      href: `/citizen/${currentHeadquarters?.id}/notifications`,
+      href: `/slave/${currentHeadquarters?.id}/notifications`,
     },
   ]
 
@@ -100,7 +100,7 @@ export default function CitizenDashboardPage() {
               <CardTitle>My Recent Requests</CardTitle>
               <CardDescription>Status of your latest procedures</CardDescription>
             </div>
-            <Link href={`/citizen/${currentHeadquarters?.id}/requests`}>
+            <Link href={`/slave/${currentHeadquarters?.id}/requests`}>
               <Button variant="ghost" size="sm">
                 View all <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -110,7 +110,7 @@ export default function CitizenDashboardPage() {
             {myRequests.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
                 <p>You have no active requests</p>
-                <Link href={`/citizen/${currentHeadquarters?.id}/procedures`}>
+                <Link href={`/slave/${currentHeadquarters?.id}/procedures`}>
                   <Button variant="link" className="mt-2 text-primary">
                     Start a procedure
                   </Button>
@@ -155,7 +155,7 @@ export default function CitizenDashboardPage() {
               <CardTitle>Available Procedures</CardTitle>
               <CardDescription>Featured services</CardDescription>
             </div>
-            <Link href={`/citizen/${currentHeadquarters?.id}/procedures`}>
+            <Link href={`/slave/${currentHeadquarters?.id}/procedures`}>
               <Button variant="ghost" size="sm">
                 View all <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -175,7 +175,7 @@ export default function CitizenDashboardPage() {
                             <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
                         </div>
                         <Button variant="outline" size="sm" asChild>
-                            <Link href={`/citizen/${currentHeadquarters?.id}/procedures/${procedure.id}`}>Start</Link>
+                            <Link href={`/slave/${currentHeadquarters?.id}/procedures/${procedure.id}`}>Start</Link>
                         </Button>
                     </div>
                  ))}

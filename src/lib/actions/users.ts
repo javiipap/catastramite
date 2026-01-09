@@ -8,7 +8,7 @@ const addUserToHeadquartersSchema = v.object({
     userHeadquarters: v.object({
         userId: v.string(),
         headquartersId: v.string(),
-        role: v.picklist(['admin', 'citizen']),
+        role: v.picklist(['master', 'slave']),
     }),
 });
 

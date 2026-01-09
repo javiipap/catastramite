@@ -19,10 +19,10 @@ export default function HomePage() {
 
                 if (userHeadquarters.length > 0) {
                     const firstHeadquarters = userHeadquarters[0]
-                    if (firstHeadquarters.role === "admin") {
+                    if (firstHeadquarters.role === 'master') {
                         router.push(`/admin/${firstHeadquarters.headquartersId}/dashboard`)
                     } else {
-                        router.push(`/citizen/${firstHeadquarters.headquartersId}/dashboard`)
+                        router.push(`/slave/${firstHeadquarters.headquartersId}/dashboard`)
                     }
                 } else {
                     // No headquarters, redirect to headquarters management

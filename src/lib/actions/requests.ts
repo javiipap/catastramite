@@ -2,7 +2,7 @@
 
 import { readDB, writeDB } from '@/lib/db';
 import { Request } from '@/lib/types';
-import { adminAction, citizenAction } from '@/lib/safe-action';
+import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 import { getUserRole } from '@/lib/db/users';
 
@@ -17,7 +17,7 @@ const addRequestSchema = v.object({
   userId: v.string(), 
 });
 
-export const addRequest = citizenAction
+export const addRequest = slaveAction
     .inputSchema(addRequestSchema)
     .action(async ({ parsedInput: request }) => {
         const { userId } = request;
