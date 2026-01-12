@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/db';
+import { useCases } from '@/use-cases';
 import { Headquarters } from '@/lib/types';
 import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
@@ -21,7 +21,7 @@ export const createHeadquarters = slaveAction
             createdAt: new Date(),
         };
         
-        await db.createHeadquarters(newHeadquarters, userId);
+        await useCases.headquarters.createHeadquarters(newHeadquarters, userId);
         
         // Return with relation
         return {
@@ -47,5 +47,5 @@ export const updateHeadquarters = adminAction
             updates.description = description;
         }
 
-        return db.updateHeadquarters(id, updates);
+        return useCases.headquarters.updateHeadquarters(id, updates);
     });

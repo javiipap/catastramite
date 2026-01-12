@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/db';
+import { useCases } from '@/use-cases';
 import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
@@ -15,6 +15,6 @@ const addUserToHeadquartersSchema = v.object({
 export const addUserToHeadquarters = adminAction
     .inputSchema(addUserToHeadquartersSchema)
     .action(async ({ parsedInput: { userHeadquarters } }) => {
-      await db.addUserToHeadquarters(userHeadquarters);
+      await useCases.users.addUserToHeadquarters(userHeadquarters);
       return userHeadquarters;
     });

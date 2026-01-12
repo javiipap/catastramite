@@ -1,8 +1,7 @@
 'use server';
 
-import { db } from '@/lib/db';
+import { useCases } from '@/use-cases';
 import { Procedure } from '@/lib/types';
-
 import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
@@ -37,6 +36,6 @@ export const addProcedure = adminAction
             createdBy: userId, // Use userId as createdBy
         };
         
-        return db.createProcedure(newProcedure);
+        return useCases.procedures.createProcedure(newProcedure);
     });
 

@@ -1,6 +1,6 @@
 'use server';
 
-import { db } from '@/lib/db';
+import { useCases } from '@/use-cases';
 import { Notification as AppNotification } from '@/lib/types';
 import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
@@ -26,5 +26,5 @@ export const addNotification = adminAction
             createdBy: userId
         };
         
-        return db.createNotification(newNotification);
+        return useCases.notifications.createNotification(newNotification);
     });

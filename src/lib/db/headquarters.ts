@@ -1,15 +1,14 @@
 'use server';
 
-import { db } from './index';
+import { useCases } from '@/use-cases';
 import type { Headquarters } from '@/lib/types';
 
 export async function getHeadquarters(): Promise<Headquarters[]> {
-  return db.getHeadquarters();
+  return useCases.headquarters.getHeadquarters();
 }
 
-
 export async function getHeadquartersById(id: string): Promise<Headquarters | undefined> {
-  return db.getHeadquartersById(id);
+  return useCases.headquarters.getHeadquartersById(id);
 }
 
 export async function getHeadquartersByParams(params: { headquartersId: string }): Promise<Headquarters | undefined> {

@@ -1,10 +1,9 @@
 'use server';
 
-import { db } from '@/lib/db';
+import { useCases } from '@/use-cases';
 import { Request as AppRequest } from '@/lib/types';
 import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
-import { getUserRole } from '@/lib/db/users';
 
 const addRequestSchema = v.object({
   headquartersId: v.string(),
@@ -27,7 +26,7 @@ export const addRequest = slaveAction
             throw new Error('Unauthorized: Cannot create request for another user');
         }
 
-        const role = await getUserRole(userId, request.headquartersId);
+        const role = await useCases.users.getUserRole(userId, request.headquartersId);
         if (!role) {
             throw new Error('Unauthorized: User not associated with headquarters');
         }
@@ -45,7 +44,7 @@ export const addRequest = slaveAction
             updatedAt: new Date(),
         };
         
-        return db.createRequest(newRequest);
+        return useCases.requests.createRequest(newRequest);
     });
 
 const updateRequestStatusSchema = v.object({
@@ -60,6 +59,6 @@ export const updateRequestStatus = adminAction
     .action(async ({ parsedInput: { id, status, headquartersId } }) => {
         // Role checked by middleware using input.headquartersId
 
-        return db.updateRequestStatus(id, status, headquartersId);
+        return useCases.requests.updateRequestStatus(id, status, headquartersId);
     });
 
