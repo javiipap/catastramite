@@ -26,8 +26,7 @@ export default function AdminNotificationsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: notifications } = useNotificationsStore()
   const { user } = useAuth()
-  const queryClient = useQueryClient()
-  
+
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [message, setMessage] = useState("")
@@ -45,12 +44,12 @@ export default function AdminNotificationsPage() {
         priority,
         userId: user.id,
       }, {
-          onSuccess: () => {
-               setIsOpen(false)
-               setTitle("")
-               setMessage("")
-               setPriority("medium")
-          }
+        onSuccess: () => {
+          setIsOpen(false)
+          setTitle("")
+          setMessage("")
+          setPriority("medium")
+        }
       })
     }
   }
@@ -93,17 +92,17 @@ export default function AdminNotificationsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                    <label htmlFor="priority" className="text-sm font-medium">Priority</label>
-                    <Select value={priority} onValueChange={(v) => setPriority(v as any)}>
-                        <SelectTrigger>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="low">Low</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                    </Select>
+                  <label htmlFor="priority" className="text-sm font-medium">Priority</label>
+                  <Select value={priority} onValueChange={(v) => setPriority(v as any)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="message" className="text-sm font-medium">
@@ -124,7 +123,7 @@ export default function AdminNotificationsPage() {
                   Cancel
                 </Button>
                 <Button type="submit" disabled={addMutation.isPending}>
-                    {addMutation.isPending ? "Publishing..." : "Publish"}
+                  {addMutation.isPending ? "Publishing..." : "Publish"}
                 </Button>
               </DialogFooter>
             </form>
@@ -148,20 +147,20 @@ export default function AdminNotificationsPage() {
               <Card key={notification.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                     <CardTitle className="text-lg flex items-center gap-2">
-                        {notification.title}
-                        {notification.priority === "high" && <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">High</span>}
-                     </CardTitle>
-                     <span className="text-xs font-normal text-muted-foreground flex items-center">
-                       <Calendar className="mr-1 h-3 w-3" />
-                       {new Date(notification.createdAt).toLocaleDateString("en-US", {
-                         year: "numeric",
-                         month: "long",
-                         day: "numeric",
-                         hour: "2-digit",
-                         minute: "2-digit",
-                       })}
-                     </span>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      {notification.title}
+                      {notification.priority === "high" && <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">High</span>}
+                    </CardTitle>
+                    <span className="text-xs font-normal text-muted-foreground flex items-center">
+                      <Calendar className="mr-1 h-3 w-3" />
+                      {new Date(notification.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
                   </div>
                 </CardHeader>
                 <CardContent>

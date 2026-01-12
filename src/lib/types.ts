@@ -62,3 +62,9 @@ export interface Notification {
   createdAt: Date
   createdBy: string
 }
+
+export interface DashboardData {
+  headquarters: Headquarters | undefined;
+  procedures: Procedure[];
+  requests: Request[];
+}

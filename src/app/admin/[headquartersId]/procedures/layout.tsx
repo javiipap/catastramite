@@ -1,5 +1,5 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { getProceduresByParams } from "@/lib/db/procedures"
+import { useCases } from "@/use-cases"
 import { ProceduresProvider } from "@/lib/queries/procedures"
 
-export default withServerData(getProceduresByParams, ProceduresProvider);
+export default withServerData(useCases.procedures.getProceduresByParams, ProceduresProvider);

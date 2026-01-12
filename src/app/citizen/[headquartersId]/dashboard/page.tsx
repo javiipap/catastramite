@@ -1,39 +1,15 @@
 "use client"
 
 import { useAuth } from "@/lib/auth-context"
-import { useQuery } from "@tanstack/react-query"
-import { getSlaveDashboardData } from "@/lib/db/dashboard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, FolderOpen, Bell, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { useParams } from "next/navigation"
+import { useSlaveDashboardStore } from '@/lib/queries/dashboard'
 
 export default function SlaveDashboardPage() {
   const { user } = useAuth()
-  const params = useParams()
-  const headquartersId = params.headquartersId as string
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['slave-dashboard', headquartersId, user?.id],
-    queryFn: () => {
-        if (!user || !headquartersId) return null
-        return getSlaveDashboardData({ headquartersId }, user.id)
-    },
-    enabled: !!user && !!headquartersId
-  })
-
-  if (isLoading || !data) {
-      return (
-        <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      )
-  }
-  
-  if (error) {
-     return <div className="p-4 text-red-500">Error loading dashboard: {(error as Error).message}</div>
-  }
+  const { data } = useSlaveDashboardStore();
 
   const { headquarters: currentHeadquarters, procedures: headquartersProcedures, requests: headquartersRequests } = data
 
@@ -130,15 +106,14 @@ export default function SlaveDashboardPage() {
                         </p>
                       </div>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          request.status === "pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : request.status === "in_review"
-                              ? "bg-orange-100 text-orange-800"
-                              : request.status === "approved"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                        }`}
+                        className={`text-xs px-2 py-1 rounded-full ${request.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : request.status === "in_review"
+                            ? "bg-orange-100 text-orange-800"
+                            : request.status === "approved"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
                       >
                         {request.status.replace("_", " ")}
                       </span>
@@ -162,25 +137,25 @@ export default function SlaveDashboardPage() {
             </Link>
           </CardHeader>
           <CardContent>
-             {headquartersProcedures.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">
-                    <p>No procedures available at the moment</p>
-                </div>
-             ) : (
-               <div className="space-y-4">
-                 {headquartersProcedures.slice(0, 5).map((procedure) => (
-                    <div key={procedure.id} className="flex items-start justify-between border-b pb-4 last:border-0 last:pb-0">
-                        <div>
-                            <p className="font-medium">{procedure.name}</p>
-                            <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
-                        </div>
-                        <Button variant="outline" size="sm" asChild>
-                            <Link href={`/slave/${currentHeadquarters?.id}/procedures/${procedure.id}`}>Start</Link>
-                        </Button>
+            {headquartersProcedures.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground">
+                <p>No procedures available at the moment</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {headquartersProcedures.slice(0, 5).map((procedure) => (
+                  <div key={procedure.id} className="flex items-start justify-between border-b pb-4 last:border-0 last:pb-0">
+                    <div>
+                      <p className="font-medium">{procedure.name}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
                     </div>
-                 ))}
-               </div>
-             )}
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/slave/${currentHeadquarters?.id}/procedures/${procedure.id}`}>Start</Link>
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

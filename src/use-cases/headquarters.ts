@@ -2,6 +2,8 @@
 import { DatabaseAdapter } from "@/lib/db/types";
 import { Headquarters } from "@/lib/types";
 
+import { getCurrentUserId } from "@/lib/server-auth";
+
 export class HeadquartersUseCases {
     constructor(private db: DatabaseAdapter) {}
 
@@ -14,6 +16,12 @@ export class HeadquartersUseCases {
     }
 
     async getHeadquartersByParams(params: { headquartersId: string }): Promise<Headquarters | undefined> {
+        const userId = await getCurrentUserId();
+        if (!userId) throw new Error("Unauthorized");
+
+        const role = await this.db.getUserRole(userId, params.headquartersId);
+        if (!role) throw new Error("Unauthorized: Access denied");
+
         return this.db.getHeadquartersById(params.headquartersId);
     }
     

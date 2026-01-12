@@ -1,9 +1,9 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { getHeadquartersByParams } from "@/lib/db/headquarters"
+import { useCases } from "@/use-cases"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
 import { AdminLayoutClient } from "./layout-client"
 
-const DataProvider = withServerData(getHeadquartersByParams, HeadquartersProvider);
+const DataProvider = withServerData(useCases.headquarters.getHeadquartersByParams, HeadquartersProvider);
 
 export default async function AdminLayout({
   children,
@@ -14,9 +14,9 @@ export default async function AdminLayout({
 }) {
   return (
     <DataProvider params={params}>
-       <AdminLayoutClient params={params}>
-         {children}
-       </AdminLayoutClient>
+      <AdminLayoutClient params={params}>
+        {children}
+      </AdminLayoutClient>
     </DataProvider>
   )
 }

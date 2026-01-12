@@ -1,40 +1,13 @@
-"use client"
+'use client'
 
-import { useAuth } from "@/lib/auth-context"
-import { useQuery } from "@tanstack/react-query"
-import { getAdminDashboardData } from "@/lib/db/dashboard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, FolderOpen, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
-import { useParams } from "next/navigation"
+import { useAdminDashboardStore } from '@/lib/queries/dashboard'
 
 export default function AdminDashboardPage() {
-  const { user } = useAuth()
-  const params = useParams()
-  const headquartersId = params.headquartersId as string
+  const store = useAdminDashboardStore();
+  const { headquarters: currentHeadquarters, procedures: headquartersProcedures, requests: headquartersRequests } = store.data;
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['admin-dashboard', headquartersId, user?.id],
-    queryFn: () => {
-        if (!user || !headquartersId) return null
-        return getAdminDashboardData({ headquartersId }, user.id)
-    },
-    enabled: !!user && !!headquartersId
-  })
-
-  if (isLoading || !data) {
-      return (
-        <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      )
-  }
-
-  if (error) {
-     return <div className="p-4 text-red-500">Error loading dashboard: {(error as Error).message}</div>
-  }
-
-  const { headquarters: currentHeadquarters, procedures: headquartersProcedures, requests: headquartersRequests } = data
-  
   const pending = headquartersRequests.filter((s) => s.status === "pending").length
   const reviewing = headquartersRequests.filter((s) => s.status === "in_review").length
   const approved = headquartersRequests.filter((s) => s.status === "approved").length
@@ -131,15 +104,14 @@ export default function AdminDashboardPage() {
                         <p className="text-xs text-muted-foreground">{request.applicantName}</p>
                       </div>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          request.status === "pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : request.status === "in_review"
-                              ? "bg-orange-100 text-orange-800"
-                              : request.status === "approved"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                        }`}
+                        className={`text-xs px-2 py-1 rounded-full ${request.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : request.status === "in_review"
+                            ? "bg-orange-100 text-orange-800"
+                            : request.status === "approved"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
                       >
                         {request.status.replace("_", " ")}
                       </span>
@@ -149,7 +121,6 @@ export default function AdminDashboardPage() {
             )}
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>Active Procedures</CardTitle>

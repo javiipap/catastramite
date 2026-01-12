@@ -27,7 +27,6 @@ export default function AdminProceduresPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: procedures } = useProceduresStore()
   const { user } = useAuth()
-  const queryClient = useQueryClient()
 
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState("")
@@ -39,10 +38,7 @@ export default function AdminProceduresPage() {
     required: true,
   })
 
-  // Filter is redundant if we assume layout provides correct context, but keeping logical consistency is fine
-  // Actually no, `useProceduresStore` comes from `withServerData` which ALREADY filters by headquartersId on server.
-  // So `procedures` IS the headquartersProcedures.
-  const headquartersProcedures = procedures; 
+  const headquartersProcedures = procedures;
 
   const addMutation = useCreateProcedure()
 
@@ -66,12 +62,12 @@ export default function AdminProceduresPage() {
         fields: fields.map((c, i) => ({ ...c, id: `${i + 1}` })),
         userId: user.id,
       }, {
-           onSuccess: () => {
-               setName("")
-               setDescription("")
-               setFields([])
-               setIsOpen(false)
-           }
+        onSuccess: () => {
+          setName("")
+          setDescription("")
+          setFields([])
+          setIsOpen(false)
+        }
       })
     }
   }

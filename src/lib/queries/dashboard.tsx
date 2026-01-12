@@ -1,28 +1,17 @@
 'use client';
 
-// This store is deprecated or needs to be refactored to support passing userId.
-// Since createQueryStore makes a static client fetcher, we can't easily pass the user ID from the component 
-// unless we change the store signature or just use the actions directly in the components via standard React Query or SWR.
-// However, to maintain the pattern, we'll create separate stores if needed, or better yet,
-// since we now moved logic to Page components (Server Views) or using React Query directly in Client Components,
-// let's verify where useDashboardStore is used.
-// It was used in DashboardView, which is now replaced by Page.
-// The new Page architecture should probably fetch data on the server or use the new actions directly with useQuery.
-
 import { createQueryStore } from '@/lib/store/create-query';
-import { getAdminDashboardData, getSlaveDashboardData, DashboardData } from '@/lib/db/dashboard';
-
-// We need a way to pass userId to these. The current createQueryStore helper
-// takes params object. We can include userId in params.
+import { getAdminDashboardDataAction, getSlaveDashboardDataAction } from '@/lib/actions/dashboard';
+import { DashboardData } from '@/lib/types';
 
 export const { Provider: AdminDashboardProvider, useStore: useAdminDashboardStore } =
-  createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
+  createQueryStore<DashboardData, { headquartersId: string }>({
     baseQueryKey: ['admin-dashboard'],
-    clientFetcher: async ({ headquartersId, userId }) => getAdminDashboardData({ headquartersId }, userId),
+    clientFetcher: async ({ headquartersId }) => getAdminDashboardDataAction({ headquartersId }),
   });
 
 export const { Provider: SlaveDashboardProvider, useStore: useSlaveDashboardStore } =
-  createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
+  createQueryStore<DashboardData, { headquartersId: string }>({
     baseQueryKey: ['slave-dashboard'],
-    clientFetcher: async ({ headquartersId, userId }) => getSlaveDashboardData({ headquartersId }, userId),
+    clientFetcher: async ({ headquartersId }) => getSlaveDashboardDataAction({ headquartersId }),
   });

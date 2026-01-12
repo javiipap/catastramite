@@ -28,14 +28,13 @@ export default function HeadquartersPage() {
   const { data: headquarters } = useHeadquartersListStore()
   const { user } = useAuth()
   const router = useRouter()
-  
+
   const [isOpen, setIsOpen] = useState(false)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [newHeadquartersName, setNewHeadquartersName] = useState("")
-  // const [selectedHeadquartersId, setSelectedHeadquartersId] = useState<string | null>(null)
   const [inviteLink, setInviteLink] = useState<string | null>(null)
 
-  const userHeadquarters = headquarters.filter((h) => 
+  const userHeadquarters = headquarters.filter((h) =>
     h.userHeadquarters?.some(uh => uh.userId === user?.id)
   )
 
@@ -45,10 +44,10 @@ export default function HeadquartersPage() {
     e.preventDefault()
     if (newHeadquartersName.trim() && user) {
       createMutation.mutate({ name: newHeadquartersName, description: "", userId: user.id }, {
-         onSuccess: () => {
-             setIsOpen(false)
-             setNewHeadquartersName("")
-         }
+        onSuccess: () => {
+          setIsOpen(false)
+          setNewHeadquartersName("")
+        }
       })
     }
   }
@@ -69,13 +68,13 @@ export default function HeadquartersPage() {
   }
 
   const handleEnterHeadquarters = (headquartersId: string) => {
-     // Check role to determine destination
-     const relation = headquarters.find(h => h.id === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
-     if (relation?.role === 'master') {
-         router.push(`/admin/${headquartersId}/dashboard`)
-     } else {
-         router.push(`/slave/${headquartersId}/dashboard`)
-     }
+    // Check role to determine destination
+    const relation = headquarters.find(h => h.id === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
+    if (relation?.role === 'master') {
+      router.push(`/admin/${headquartersId}/dashboard`)
+    } else {
+      router.push(`/slave/${headquartersId}/dashboard`)
+    }
   }
 
   if (!user) return null
@@ -159,9 +158,9 @@ export default function HeadquartersPage() {
                   <div className="flex justify-between items-start">
                     <CardTitle className="line-clamp-1 text-xl">{h.name}</CardTitle>
                     {isAdmin ? (
-                        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">Admin</span>
+                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">Admin</span>
                     ) : (
-                        <span className="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium">User</span>
+                      <span className="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium">User</span>
                     )}
                   </div>
                   <CardDescription>Electronic Headquarters</CardDescription>
@@ -169,8 +168,8 @@ export default function HeadquartersPage() {
                 <CardContent className="flex-1">
                   <div className="text-sm text-muted-foreground space-y-2">
                     <p className="flex items-center gap-2">
-                        <Building2 className="h-4 w-4" />
-                        ID: <span className="font-mono text-xs">{h.id.substring(0,8)}...</span>
+                      <Building2 className="h-4 w-4" />
+                      ID: <span className="font-mono text-xs">{h.id.substring(0, 8)}...</span>
                     </p>
                   </div>
                 </CardContent>
@@ -180,7 +179,7 @@ export default function HeadquartersPage() {
                   </Button>
                   {isAdmin && (
                     <Button variant="outline" size="icon" onClick={() => handleInvite(h.id)} title="Invite users">
-                        <LinkIcon className="h-4 w-4" />
+                      <LinkIcon className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -192,28 +191,28 @@ export default function HeadquartersPage() {
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Invite User</DialogTitle>
-                <DialogDescription>Generate a secure link to invite users to this headquarters.</DialogDescription>
-            </DialogHeader>
-            <div className="py-4 space-y-4">
-                {inviteLink ? (
-                    <div className="space-y-2">
-                        <Label>Invitation Link</Label>
-                        <div className="flex gap-2">
-                            <Input value={inviteLink} readOnly />
-                            <Button size="icon" onClick={copyToClipboard}>
-                                <Lock className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground">This link expires in 24 hours.</p>
-                    </div>
-                ) : (
-                    <div className="flex justify-center p-4">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                    </div>
-                )}
-            </div>
+          <DialogHeader>
+            <DialogTitle>Invite User</DialogTitle>
+            <DialogDescription>Generate a secure link to invite users to this headquarters.</DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            {inviteLink ? (
+              <div className="space-y-2">
+                <Label>Invitation Link</Label>
+                <div className="flex gap-2">
+                  <Input value={inviteLink} readOnly />
+                  <Button size="icon" onClick={copyToClipboard}>
+                    <Lock className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">This link expires in 24 hours.</p>
+              </div>
+            ) : (
+              <div className="flex justify-center p-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>

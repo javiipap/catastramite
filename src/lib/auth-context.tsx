@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import Cookies from "js-cookie"
 import type { User } from "./types"
 
 interface AuthContextType {
@@ -45,17 +46,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Verificar si hay una sesión guardada
     const savedUser = localStorage.getItem("sede_user")
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const parsedUser = JSON.parse(savedUser)
+      setUser(parsedUser)
+      Cookies.set("sede_user_id", parsedUser.id, { expires: 7 })
     }
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, _password: string) => {
+  /* import Cookies from 'js-cookie' (needs to be at top) */
+
+  // ... inside login
+    const login = async (email: string, _password: string) => {
     // Simulación de login
     const foundUser = allUsers.find((u) => u.email === email)
     if (foundUser) {
       setUser(foundUser)
       localStorage.setItem("sede_user", JSON.stringify(foundUser))
+      Cookies.set("sede_user_id", foundUser.id, { expires: 7 }) // Set cookie
     } else {
       throw new Error("Credenciales inválidas")
     }
@@ -79,12 +86,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUser(newUser)
     localStorage.setItem("sede_user", JSON.stringify(newUser))
+    Cookies.set("sede_user_id", newUser.id, { expires: 7 })
     return newUser
   }
-
+  
   const logout = () => {
     setUser(null)
     localStorage.removeItem("sede_user")
+    Cookies.remove("sede_user_id") // Remove cookie
   }
 
   return (

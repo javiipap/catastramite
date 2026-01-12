@@ -1,10 +1,9 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { getHeadquartersByParams } from "@/lib/db/headquarters"
+import { useCases } from "@/use-cases"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
-
 import { SlaveLayoutClient } from "./layout-client"
 
-const DataProvider = withServerData(getHeadquartersByParams, HeadquartersProvider);
+const DataProvider = withServerData(useCases.headquarters.getHeadquartersByParams, HeadquartersProvider);
 
 export default async function SlaveHeadquartersLayout({
   children,
@@ -15,9 +14,9 @@ export default async function SlaveHeadquartersLayout({
 }) {
   return (
     <DataProvider params={params}>
-       <SlaveLayoutClient params={params}>
-         {children}
-       </SlaveLayoutClient>
+      <SlaveLayoutClient params={params}>
+        {children}
+      </SlaveLayoutClient>
     </DataProvider>
   )
 }

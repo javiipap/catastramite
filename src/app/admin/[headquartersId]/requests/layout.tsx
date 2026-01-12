@@ -1,5 +1,5 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { getRequestsByParams } from "@/lib/db/requests"
+import { useCases } from "@/use-cases"
 import { RequestsProvider } from "@/lib/queries/requests"
 
-export default withServerData(getRequestsByParams, RequestsProvider);
+export default withServerData(useCases.requests.getAdminRequestsByParams, RequestsProvider);
