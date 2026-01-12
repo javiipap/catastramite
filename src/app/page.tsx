@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context"
 import { LoginForm } from "@/components/login-form"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { getUserHeadquartersAction } from "@/lib/actions/users"
+import { getUserHeadquartersRelationsAction } from "@/lib/actions/headquarters"
 
 export default function HomePage() {
   const { user, isLoading } = useAuth()
@@ -15,7 +15,7 @@ export default function HomePage() {
       if (!isLoading && user) {
         try {
           // Fetch user headquarters using the server action
-          const result = await getUserHeadquartersAction({ userId: user.id })
+          const result = await getUserHeadquartersRelationsAction({ userId: user.id })
 
           if (result?.data && result.data.length > 0) {
             const firstHeadquarters = result.data[0]

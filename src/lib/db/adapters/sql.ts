@@ -72,7 +72,14 @@ export class SqlAdapter implements DatabaseAdapter {
     const hqs = await Promise.all(
       hqIds.map((id) => this.getHeadquartersById(id))
     );
-    return hqs.filter((h): h is Headquarters => !!h);
+    return hqs
+      .filter((h): h is Headquarters => !!h)
+      .map((h) => ({
+        ...h,
+        userHeadquarters: userHqs.filter(
+          (uh) => uh.headquartersId === h.headquartersId
+        ),
+      }));
   }
 
   async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
@@ -91,11 +98,6 @@ export class SqlAdapter implements DatabaseAdapter {
   }
 
   // --- Headquarters ---
-
-  async getHeadquarters(): Promise<Headquarters[]> {
-    const results = await db.select().from(headquarters).all();
-    return results.map(this.mapToHeadquarters);
-  }
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
     const result = await db

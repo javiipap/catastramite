@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 // import { useDataStore } from "@/lib/data-store"
-import { addUserToHeadquarters } from "@/lib/actions/users"
+import { addUserToHeadquarters } from "@/lib/actions/headquarters"
 import { useSearchParams, useRouter } from "next/navigation"
 import { verifyInviteToken } from "@/lib/tokens"
 import { Button } from "@/components/ui/button"
@@ -54,14 +54,14 @@ export function LoginForm() {
       } else {
         const newUser = await register(email, password, name)
         if (inviteHeadquartersId) {
-            // Use server action to join headquarters
-            await addUserToHeadquarters({
-                userHeadquarters: {
-                    userId: newUser.id,
-                    headquartersId: inviteHeadquartersId,
-                    role: 'slave'
-                }
-            })
+          // Use server action to join headquarters
+          await addUserToHeadquarters({
+            userHeadquarters: {
+              userId: newUser.id,
+              headquartersId: inviteHeadquartersId,
+              role: 'slave'
+            }
+          })
         }
         setSuccess("Registration successful. Redirecting...")
         setTimeout(() => setSuccess(""), 3000)
@@ -82,10 +82,10 @@ export function LoginForm() {
           {isLogin ? "E-Government Portal" : "Create Account"}
         </CardTitle>
         <CardDescription className="text-center">
-          {inviteHeadquartersId 
-            ? "Register to accept the invitation" 
-            : isLogin 
-              ? "Enter your credentials to access" 
+          {inviteHeadquartersId
+            ? "Register to accept the invitation"
+            : isLogin
+              ? "Enter your credentials to access"
               : "Complete the form to register"}
         </CardDescription>
       </CardHeader>
@@ -135,15 +135,15 @@ export function LoginForm() {
             </Alert>
           )}
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading 
-              ? "Processing..." 
-              : isLogin 
-                ? "Login" 
-                : inviteHeadquartersId 
-                  ? "Register and Join" 
+            {isLoading
+              ? "Processing..."
+              : isLogin
+                ? "Login"
+                : inviteHeadquartersId
+                  ? "Register and Join"
                   : "Register"}
           </Button>
-          
+
           <div className="text-center text-sm">
             <button
               type="button"

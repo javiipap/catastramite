@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { getUserHeadquartersObjectsAction } from "@/lib/actions/users"
+import { getUserHeadquartersObjectsAction } from "@/lib/actions/headquarters"
 import { useParams, useRouter, usePathname } from "next/navigation"
 
 export function HeadquartersSelector() {

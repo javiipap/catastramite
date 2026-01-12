@@ -3,7 +3,7 @@
 import { useState } from "react"
 import type React from "react"
 
-import { useHeadquartersListStore } from "@/lib/queries/headquarters"
+import { useAdminHeadquartersListStore } from "@/lib/queries/headquarters"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
 
 export default function HeadquartersPage() {
-  const { data: headquarters } = useHeadquartersListStore()
+  const { data: headquarters } = useAdminHeadquartersListStore()
   const { user } = useAuth()
   const router = useRouter()
 
@@ -34,9 +34,10 @@ export default function HeadquartersPage() {
   const [newHeadquartersName, setNewHeadquartersName] = useState("")
   const [inviteLink, setInviteLink] = useState<string | null>(null)
 
-  const userHeadquarters = headquarters.filter((h) =>
-    h.userHeadquarters?.some(uh => uh.userId === user?.id)
-  )
+  // const userHeadquarters = headquarters
+  // We trust the query returns only ours, but we keep the variable assignment for compatibility
+  // Also we need to ensure the `userHeadquarters` array is populated (we just fixed that in adapters)
+  const userHeadquarters = headquarters;
 
   const createMutation = useCreateHeadquarters()
 

@@ -1,14 +1,14 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { DatabaseAdapter } from '../types';
-import { 
-  Headquarters, 
-  UserHeadquarters, 
-  Procedure, 
-  Request as AppRequest, 
+import {
+  Headquarters,
+  UserHeadquarters,
+  Procedure,
+  Request as AppRequest,
   Notification as AppNotification,
   UserRole,
-  RequestStatus
+  RequestStatus,
 } from '@/lib/types';
 
 const DB_PATH = path.join(process.cwd(), 'data.json');
@@ -24,23 +24,23 @@ interface DB {
 const INITIAL_DB: DB = {
   headquarters: [
     {
-      headquartersId: "1",
-      name: "Ayuntamiento de Madrid",
-      description: "Sede electrónica del Ayuntamiento de Madrid",
-      createdAt: new Date("2025-01-01"),
+      headquartersId: '1',
+      name: 'Ayuntamiento de Madrid',
+      description: 'Sede electrónica del Ayuntamiento de Madrid',
+      createdAt: new Date('2025-01-01'),
     },
     {
-      headquartersId: "2",
-      name: "Comunidad Autónoma de Madrid",
-      description: "Sede electrónica de la Comunidad de Madrid",
-      createdAt: new Date("2025-01-01"),
+      headquartersId: '2',
+      name: 'Comunidad Autónoma de Madrid',
+      description: 'Sede electrónica de la Comunidad de Madrid',
+      createdAt: new Date('2025-01-01'),
     },
   ],
   userHeadquarters: [
-    { userId: "1", headquartersId: "1", role: 'master' },
-    { userId: "1", headquartersId: "2", role: 'master' },
-    { userId: "2", headquartersId: "1", role: 'slave' },
-    { userId: "2", headquartersId: "2", role: 'slave' },
+    { userId: '1', headquartersId: '1', role: 'master' },
+    { userId: '1', headquartersId: '2', role: 'master' },
+    { userId: '2', headquartersId: '1', role: 'slave' },
+    { userId: '2', headquartersId: '2', role: 'slave' },
   ],
   notifications: [],
   procedures: [],
@@ -48,10 +48,13 @@ const INITIAL_DB: DB = {
 };
 
 function reviver(key: string, value: any) {
-    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)) {
-        return new Date(value);
-    }
-    return value;
+  if (
+    typeof value === 'string' &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
+  ) {
+    return new Date(value);
+  }
+  return value;
 }
 
 async function readDB(): Promise<DB> {
@@ -72,9 +75,14 @@ async function writeDB(data: DB): Promise<void> {
 }
 
 export class JsonAdapter implements DatabaseAdapter {
-  async getUserRole(userId: string, headquartersId: string): Promise<UserRole | null> {
+  async getUserRole(
+    userId: string,
+    headquartersId: string
+  ): Promise<UserRole | null> {
     const db = await readDB();
-    const relation = db.userHeadquarters.find((uh) => uh.userId === userId && uh.headquartersId === headquartersId);
+    const relation = db.userHeadquarters.find(
+      (uh) => uh.userId === userId && uh.headquartersId === headquartersId
+    );
     return relation?.role || null;
   }
 
@@ -85,16 +93,23 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async getUserHeadquartersObjects(userId: string): Promise<Headquarters[]> {
     const db = await readDB();
-    const userHeadquartersIds = db.userHeadquarters
-      .filter((uh) => uh.userId === userId)
-      .map((uh) => uh.headquartersId);
-    return db.headquarters.filter((h) => userHeadquartersIds.includes(h.headquartersId));
+    const relations = db.userHeadquarters.filter((uh) => uh.userId === userId);
+    const hqIds = relations.map((uh) => uh.headquartersId);
+    return db.headquarters
+      .filter((h) => hqIds.includes(h.headquartersId))
+      .map((h) => ({
+        ...h,
+        userHeadquarters: relations.filter(
+          (r) => r.headquartersId === h.headquartersId
+        ),
+      }));
   }
 
   async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
     const db = await readDB();
     const exists = db.userHeadquarters.some(
-      (item) => item.userId === uh.userId && item.headquartersId === uh.headquartersId
+      (item) =>
+        item.userId === uh.userId && item.headquartersId === uh.headquartersId
     );
     if (!exists) {
       db.userHeadquarters.push(uh);
@@ -102,33 +117,34 @@ export class JsonAdapter implements DatabaseAdapter {
     }
   }
 
-  async getHeadquarters(): Promise<Headquarters[]> {
-    const db = await readDB();
-    return db.headquarters;
-  }
-
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
     const db = await readDB();
     return db.headquarters.find((hq) => hq.headquartersId === id);
   }
 
-  async createHeadquarters(hq: Headquarters, userId: string): Promise<Headquarters> {
+  async createHeadquarters(
+    hq: Headquarters,
+    userId: string
+  ): Promise<Headquarters> {
     const db = await readDB();
     db.headquarters.push(hq);
-    db.userHeadquarters.push({ 
-        userId, 
-        headquartersId: hq.headquartersId, 
-        role: 'master' 
+    db.userHeadquarters.push({
+      userId,
+      headquartersId: hq.headquartersId,
+      role: 'master',
     });
     await writeDB(db);
     return hq;
   }
 
-  async updateHeadquarters(id: string, updates: Partial<Headquarters>): Promise<Headquarters> {
+  async updateHeadquarters(
+    id: string,
+    updates: Partial<Headquarters>
+  ): Promise<Headquarters> {
     const db = await readDB();
     const index = db.headquarters.findIndex((h) => h.headquartersId === id);
-    if (index === -1) throw new Error("Headquarters not found");
-    
+    if (index === -1) throw new Error('Headquarters not found');
+
     db.headquarters[index] = { ...db.headquarters[index], ...updates };
     await writeDB(db);
     return db.headquarters[index];
@@ -151,9 +167,14 @@ export class JsonAdapter implements DatabaseAdapter {
     return db.requests.filter((r) => r.headquartersId === headquartersId);
   }
 
-  async getUserRequests(headquartersId: string, userId: string): Promise<AppRequest[]> {
+  async getUserRequests(
+    headquartersId: string,
+    userId: string
+  ): Promise<AppRequest[]> {
     const db = await readDB();
-    return db.requests.filter(r => r.applicantId === userId && r.headquartersId === headquartersId);
+    return db.requests.filter(
+      (r) => r.applicantId === userId && r.headquartersId === headquartersId
+    );
   }
 
   async createRequest(request: AppRequest): Promise<AppRequest> {
@@ -163,12 +184,17 @@ export class JsonAdapter implements DatabaseAdapter {
     return request;
   }
 
-  async updateRequestStatus(id: string, status: RequestStatus, headquartersId: string): Promise<AppRequest> {
+  async updateRequestStatus(
+    id: string,
+    status: RequestStatus,
+    headquartersId: string
+  ): Promise<AppRequest> {
     const db = await readDB();
-    const index = db.requests.findIndex(r => r.id === id);
-    if (index === -1) throw new Error("Request not found");
-    if (db.requests[index].headquartersId !== headquartersId) throw new Error("Request mismatch");
-    
+    const index = db.requests.findIndex((r) => r.id === id);
+    if (index === -1) throw new Error('Request not found');
+    if (db.requests[index].headquartersId !== headquartersId)
+      throw new Error('Request mismatch');
+
     db.requests[index].status = status;
     db.requests[index].updatedAt = new Date();
     await writeDB(db);
@@ -180,7 +206,9 @@ export class JsonAdapter implements DatabaseAdapter {
     return db.notifications.filter((n) => n.headquartersId === headquartersId);
   }
 
-  async createNotification(notification: AppNotification): Promise<AppNotification> {
+  async createNotification(
+    notification: AppNotification
+  ): Promise<AppNotification> {
     const db = await readDB();
     db.notifications.push(notification);
     await writeDB(db);
