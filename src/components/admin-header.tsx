@@ -18,7 +18,7 @@ import { AdminNav } from "@/components/admin-nav"
 import { Menu } from "lucide-react"
 
 interface AdminHeaderProps {
-  headquartersId: string
+  headquartersId?: string
 }
 
 export function AdminHeader({ headquartersId }: AdminHeaderProps) {

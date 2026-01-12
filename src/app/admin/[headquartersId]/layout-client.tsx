@@ -56,7 +56,6 @@ export function AdminLayoutClient({
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <AdminHeader headquartersId={headquartersId} />
       <div className="flex">
         <aside className="hidden md:block w-64 border-r bg-card p-6 min-h-[calc(100vh-4rem)]">
           <AdminNav headquartersId={headquartersId} />

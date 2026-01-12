@@ -3,11 +3,14 @@
 import type React from "react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { AdminHeader } from "@/components/admin-header"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
+  const params = useParams()
+  const headquartersId = params?.headquartersId as string | undefined
 
   useEffect(() => {
     if (!isLoading) {
@@ -30,5 +33,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return null
   }
 
-  return <div className="min-h-screen bg-muted/30">{children}</div>
+  return (
+    <div className="min-h-screen bg-muted/30">
+      <AdminHeader headquartersId={headquartersId} />
+      {children}
+    </div>
+  )
 }

@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils"
 import { LayoutDashboard, FileText, FolderOpen, Bell } from "lucide-react"
 
 interface AdminNavProps {
-  headquartersId: string
+  headquartersId?: string
 }
 
 export function AdminNav({ headquartersId }: AdminNavProps) {
   const pathname = usePathname()
+
+  if (!headquartersId) return null
 
   const navItems = [
     {

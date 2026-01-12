@@ -81,7 +81,7 @@ export default function HeadquartersPage() {
   if (!user) return null
 
   return (
-    <div className="container py-10 max-w-5xl">
+    <div className="py-10 mx-auto p-6">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Headquarters</h1>
