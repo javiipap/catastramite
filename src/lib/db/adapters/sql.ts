@@ -9,8 +9,7 @@ import {
   FormField,
   RequestStatus,
 } from '@/lib/types';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
+import { db } from '../drizzle/client';
 import {
   headquarters,
   userHeadquarters,
@@ -19,9 +18,6 @@ import {
   notifications,
 } from '../drizzle/schema';
 import { eq, and } from 'drizzle-orm';
-
-const sqlite = new Database('sqlite.db');
-const db = drizzle(sqlite);
 
 export class SqlAdapter implements DatabaseAdapter {
   // --- Users ---

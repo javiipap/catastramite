@@ -1,103 +1,45 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import Cookies from "js-cookie"
+import { createContext, useContext, type ReactNode } from "react"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 import type { User } from "./types"
 
 interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, name: string) => Promise<User>
-  logout: () => void
+  login: () => Promise<void>
+  logout: () => Promise<void>
   isLoading: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Usuarios de demostración iniciales
-const INITIAL_USERS: User[] = [
-  {
-    id: "1",
-    email: "admin@sede.gov",
-    name: "María García",
-  },
-  {
-    id: "2",
-    email: "usuario@correo.com",
-    name: "Juan Pérez",
-  },
-]
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [allUsers, setAllUsers] = useState<User[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { data: session, isPending: isLoading } = authClient.useSession()
+  const router = useRouter()
 
-  useEffect(() => {
-    // Cargar usuarios registrados
-    const savedUsers = localStorage.getItem("sede_all_users")
-    if (savedUsers) {
-      setAllUsers(JSON.parse(savedUsers))
-    } else {
-      setAllUsers(INITIAL_USERS)
-      localStorage.setItem("sede_all_users", JSON.stringify(INITIAL_USERS))
-    }
-
-    // Verificar si hay una sesión guardada
-    const savedUser = localStorage.getItem("sede_user")
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser)
-      setUser(parsedUser)
-      Cookies.set("sede_user_id", parsedUser.id, { expires: 7 })
-    }
-    setIsLoading(false)
-  }, [])
-
-  /* import Cookies from 'js-cookie' (needs to be at top) */
-
-  // ... inside login
-  const login = async (email: string) => {
-    // Simulación de login
-    const foundUser = allUsers.find((u) => u.email === email)
-    if (foundUser) {
-      setUser(foundUser)
-      localStorage.setItem("sede_user", JSON.stringify(foundUser))
-      Cookies.set("sede_user_id", foundUser.id, { expires: 7 }) // Set cookie
-    } else {
-      throw new Error("Credenciales inválidas")
-    }
+  const login = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard" // or check for onboarding
+    })
   }
 
-  const register = async (email: string, _password: string, name: string): Promise<User> => {
-    const existing = allUsers.find((u) => u.email === email)
-    if (existing) {
-      throw new Error("El usuario ya existe")
-    }
-
-    const newUser: User = {
-      id: Date.now().toString(),
-      email,
-      name,
-    }
-
-    const updatedUsers = [...allUsers, newUser]
-    setAllUsers(updatedUsers)
-    localStorage.setItem("sede_all_users", JSON.stringify(updatedUsers))
-
-    setUser(newUser)
-    localStorage.setItem("sede_user", JSON.stringify(newUser))
-    Cookies.set("sede_user_id", newUser.id, { expires: 7 })
-    return newUser
+  const logout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login")
+        }
+      }
+    })
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem("sede_user")
-    Cookies.remove("sede_user_id") // Remove cookie
-  }
+  // Cast session.user to our User type (which matches mostly)
+  const user = session?.user ? session.user as unknown as User : null
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
