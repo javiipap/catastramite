@@ -4,7 +4,7 @@ import type React from "react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { AdminHeader } from "@/components/admin-header"
+
 import { AdminNav } from "@/components/admin-nav"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { getUserRoleAction } from "@/lib/actions/users"

@@ -3,7 +3,7 @@
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { useNotificationsStore } from "@/lib/queries/notifications"
 import { useAuth } from "@/lib/auth-context"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -19,7 +19,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 import { Bell, Plus, Calendar } from "lucide-react"
-import { useQueryClient } from "@tanstack/react-query"
+
 import { useCreateNotification } from "@/lib/mutations/notifications"
 
 export default function AdminNotificationsPage() {

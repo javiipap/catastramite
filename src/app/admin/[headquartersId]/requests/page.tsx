@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { Request } from "@/lib/types"
-import { useQueryClient } from "@tanstack/react-query"
+
 import { useUpdateRequestStatus } from "@/lib/mutations/requests"
 
 import { useAuth } from "@/lib/auth-context"
@@ -17,7 +17,7 @@ import { useAuth } from "@/lib/auth-context"
 export default function AdminRequestsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: requests } = useRequestsStore()
-  const queryClient = useQueryClient()
+
   const { user } = useAuth()
 
   const [filter, setFilter] = useState<string>("all")

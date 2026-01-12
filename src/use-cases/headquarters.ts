@@ -1,5 +1,5 @@
-import { DatabaseAdapter } from '@/lib/db/types';
-import { Headquarters, UserHeadquarters, UserRole } from '@/lib/types';
+import type { DatabaseAdapter } from '@/lib/db/types';
+import type { Headquarters, UserHeadquarters } from '@/lib/types';
 
 import { getCurrentUserId } from '@/lib/server-auth';
 

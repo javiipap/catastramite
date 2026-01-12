@@ -1,5 +1,5 @@
-import { DatabaseAdapter } from '@/lib/db/types';
-import { UserHeadquarters, Headquarters, UserRole } from '@/lib/types';
+import type { DatabaseAdapter } from '@/lib/db/types';
+import type { UserHeadquarters, UserRole } from '@/lib/types';
 
 export class UsersUseCases {
   constructor(private db: DatabaseAdapter) {}

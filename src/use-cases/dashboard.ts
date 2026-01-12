@@ -1,11 +1,5 @@
-import { DatabaseAdapter } from '@/lib/db/types';
-import {
-  Headquarters,
-  Procedure,
-  Request,
-  DashboardData,
-  UserHeadquarters,
-} from '@/lib/types';
+import type { DatabaseAdapter } from '@/lib/db/types';
+import type { DashboardData, UserHeadquarters } from '@/lib/types';
 
 import { getCurrentUserId } from '@/lib/server-auth';
 

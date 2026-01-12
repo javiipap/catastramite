@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /* import Cookies from 'js-cookie' (needs to be at top) */
 
   // ... inside login
-    const login = async (email: string, _password: string) => {
+  const login = async (email: string) => {
     // Simulación de login
     const foundUser = allUsers.find((u) => u.email === email)
     if (foundUser) {
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     Cookies.set("sede_user_id", newUser.id, { expires: 7 })
     return newUser
   }
-  
+
   const logout = () => {
     setUser(null)
     localStorage.removeItem("sede_user")

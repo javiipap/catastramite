@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 // import { useDataStore } from "@/lib/data-store"
 import { addUserToHeadquarters } from "@/lib/actions/headquarters"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { verifyInviteToken } from "@/lib/tokens"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,7 +26,7 @@ export function LoginForm() {
 
   const { login, register } = useAuth()
   const searchParams = useSearchParams()
-  const router = useRouter()
+
 
   useEffect(() => {
     const token = searchParams.get("token")
@@ -68,7 +68,7 @@ export function LoginForm() {
       }
       // Redirect handled by page effect or just reload to pick up state
       window.location.reload() // Simple way to refresh auth state in app
-    } catch (_err) {
+    } catch {
       setError(isLogin ? "Invalid credentials." : "Error registering user. Email might already exist.")
     } finally {
       setIsLoading(false)

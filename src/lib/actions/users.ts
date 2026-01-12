@@ -1,7 +1,7 @@
 'use server';
 
 import { useCases } from '@/use-cases';
-import { adminAction, slaveAction } from '@/lib/safe-action';
+import { slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 export const getUserRoleAction = slaveAction
