@@ -29,14 +29,22 @@ function getQueryClient() {
 }
 
 import { Toaster } from 'sonner';
+import { ThemeProvider } from "@/components/theme-provider"
 
 export default function Providers({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-        {children}
-        <Toaster />
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            {children}
+            <Toaster />
+        </ThemeProvider>
     </QueryClientProvider>
   );
 }
