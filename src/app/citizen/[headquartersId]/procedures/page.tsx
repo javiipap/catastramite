@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 
-export default function CitizenProceduresPage() {
+export default function SlaveProceduresPage() {
   const { data: procedures } = useProceduresStore()
   const params = useParams()
   const headquartersId = params.headquartersId

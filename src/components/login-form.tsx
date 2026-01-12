@@ -163,7 +163,7 @@ export function LoginForm() {
             <p className="font-medium">Demo Users:</p>
             <div className="space-y-1 text-xs">
               <p>Admin: admin@sede.gov</p>
-              <p>Citizen: usuario@correo.com</p>
+              <p>User: usuario@correo.com</p>
               <p className="italic">Any password works</p>
             </div>
           </div>

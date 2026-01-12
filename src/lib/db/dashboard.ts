@@ -32,7 +32,7 @@ export async function getAdminDashboardData(params: { headquartersId: string }, 
   return { headquarters, procedures, requests };
 }
 
-export async function getCitizenDashboardData(params: { headquartersId: string }, userId: string): Promise<DashboardData> {
+export async function getSlaveDashboardData(params: { headquartersId: string }, userId: string): Promise<DashboardData> {
   const { headquartersId } = params;
 
   // 1. Verify Role (or just association)
@@ -45,7 +45,7 @@ export async function getCitizenDashboardData(params: { headquartersId: string }
   const [headquarters, procedures, requests] = await Promise.all([
     getHeadquartersById(headquartersId),
     getProcedures(headquartersId),
-    getUserRequests(headquartersId, userId), // Citizen sees only own
+    getUserRequests(headquartersId, userId), // Slave sees only own
   ]);
 
   return { headquarters, procedures, requests };

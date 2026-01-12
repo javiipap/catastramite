@@ -38,6 +38,8 @@ export interface FormField {
   options?: string[]
 }
 
+export type RequestStatus = "pending" | "in_review" | "approved" | "rejected";
+
 export interface Request {
   id: string
   headquartersId: string
@@ -45,7 +47,7 @@ export interface Request {
   procedureName: string
   applicantId: string
   applicantName: string
-  status: "pending" | "in_review" | "approved" | "rejected"
+  status: RequestStatus
   data: Record<string, unknown>
   createdAt: Date
   updatedAt: Date

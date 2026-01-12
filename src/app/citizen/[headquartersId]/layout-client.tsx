@@ -6,10 +6,10 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { getUserRole } from "@/lib/db/users"
-import { CitizenHeader } from "@/components/slave-header"
-import { CitizenNav } from "@/components/slave-nav"
+import { SlaveHeader } from "@/components/slave-header"
+import { SlaveNav } from "@/components/slave-nav"
 
-export function CitizenLayoutClient({
+export function SlaveLayoutClient({
   children,
   params,
 }: {
@@ -64,10 +64,10 @@ export function CitizenLayoutClient({
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <CitizenHeader headquartersId={headquartersId} />
+      <SlaveHeader headquartersId={headquartersId} />
       <div className="flex">
         <aside className="hidden md:block w-64 border-r bg-card p-6 min-h-[calc(100vh-4rem)]">
-          <CitizenNav headquartersId={headquartersId} />
+          <SlaveNav headquartersId={headquartersId} />
         </aside>
         <main className="flex-1 p-6">{children}</main>
       </div>

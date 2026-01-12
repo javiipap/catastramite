@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import type { Request } from "@/lib/types"
 import { FileText } from "lucide-react"
 
-export default function CitizenRequestsPage() {
+export default function SlaveRequestsPage() {
   const { data: requests } = useRequestsStore()
   const { user } = useAuth()
   const [filter, setFilter] = useState<string>("all")

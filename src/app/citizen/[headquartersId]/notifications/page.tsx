@@ -4,7 +4,7 @@ import { useNotificationsStore } from "@/lib/queries/notifications"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Bell, Calendar } from "lucide-react"
 
-export default function CitizenNotificationsPage() {
+export default function SlaveNotificationsPage() {
   const { data: notifications } = useNotificationsStore()
 
   return (

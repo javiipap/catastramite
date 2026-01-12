@@ -2,11 +2,11 @@ import { withServerData } from "@/lib/store/with-server-data"
 import { getHeadquartersByParams } from "@/lib/db/headquarters"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
 
-import { CitizenLayoutClient } from "./layout-client"
+import { SlaveLayoutClient } from "./layout-client"
 
 const DataProvider = withServerData(getHeadquartersByParams, HeadquartersProvider);
 
-export default async function CitizenHeadquartersLayout({
+export default async function SlaveHeadquartersLayout({
   children,
   params,
 }: {
@@ -15,9 +15,9 @@ export default async function CitizenHeadquartersLayout({
 }) {
   return (
     <DataProvider params={params}>
-       <CitizenLayoutClient params={params}>
+       <SlaveLayoutClient params={params}>
          {children}
-       </CitizenLayoutClient>
+       </SlaveLayoutClient>
     </DataProvider>
   )
 }

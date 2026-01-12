@@ -1,6 +1,6 @@
 'use server';
 
-import { readDB, writeDB } from '@/lib/db';
+import { db } from '@/lib/db';
 import { Headquarters } from '@/lib/types';
 import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
@@ -14,7 +14,6 @@ const createHeadquartersSchema = v.object({
 export const createHeadquarters = slaveAction
     .inputSchema(createHeadquartersSchema)
     .action(async ({ parsedInput: { name, description, userId } }) => {
-        const db = await readDB();
         const newHeadquarters: Headquarters = {
             id: Date.now().toString(),
             name,
@@ -22,16 +21,8 @@ export const createHeadquarters = slaveAction
             createdAt: new Date(),
         };
         
-        db.headquarters.push(newHeadquarters);
+        await db.createHeadquarters(newHeadquarters, userId);
         
-        // Add creator as admin
-        db.userHeadquarters.push({
-            userId,
-            headquartersId: newHeadquarters.id,
-            role: 'master'
-        });
-        
-        await writeDB(db);
         // Return with relation
         return {
             ...newHeadquarters,
@@ -51,12 +42,10 @@ export const updateHeadquarters = adminAction
     .inputSchema(updateHeadquartersSchema)
     .action(async ({ parsedInput: { id, name, description } }) => {
         // Role check already done by middleware
-        const db = await readDB();
-        const index = db.headquarters.findIndex((h) => h.id === id);
-        if (index !== -1) {
-            db.headquarters[index] = { ...db.headquarters[index], name, description: description || db.headquarters[index].description };
-            await writeDB(db);
-            return db.headquarters[index];
+        const updates: Partial<Headquarters> = { name };
+        if (description !== undefined) {
+            updates.description = description;
         }
-        throw new Error('Headquarters not found');
+
+        return db.updateHeadquarters(id, updates);
     });

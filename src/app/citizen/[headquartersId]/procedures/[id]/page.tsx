@@ -13,7 +13,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useCreateRequest } from "@/lib/mutations/requests"
 
-export default function CitizenProcedurePage() {
+export default function SlaveProcedurePage() {
   const params = useParams()
   const router = useRouter()
   const { data: procedures } = useProceduresStore()

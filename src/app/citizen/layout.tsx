@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
-export default function CitizenLayout({ children }: { children: React.ReactNode }) {
+export default function SlaveLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 

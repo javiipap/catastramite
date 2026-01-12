@@ -1,7 +1,7 @@
 'use server';
 
-import { readDB, writeDB } from '@/lib/db';
-import { Notification } from '@/lib/types';
+import { db } from '@/lib/db';
+import { Notification as AppNotification } from '@/lib/types';
 import { adminAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
@@ -16,8 +16,7 @@ const addNotificationSchema = v.object({
 export const addNotification = adminAction
     .inputSchema(addNotificationSchema)
     .action(async ({ parsedInput: { headquartersId, title, message, priority, userId } }) => {
-        const db = await readDB();
-        const newNotification: Notification = {
+        const newNotification: AppNotification = {
             id: Date.now().toString(),
             headquartersId,
             title,
@@ -27,7 +26,5 @@ export const addNotification = adminAction
             createdBy: userId
         };
         
-        db.notifications.push(newNotification);
-        await writeDB(db);
-        return newNotification;
+        return db.createNotification(newNotification);
     });

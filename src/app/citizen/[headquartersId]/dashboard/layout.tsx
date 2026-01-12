@@ -1,3 +1,3 @@
-export default function CitizenDashboardLayout({ children }: { children: React.ReactNode }) {
+export default function SlaveDashboardLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }

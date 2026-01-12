@@ -14,14 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { CitizenNav } from "@/components/slave-nav"
+import { SlaveNav } from "@/components/slave-nav"
 import { Menu } from "lucide-react"
 
-interface CitizenHeaderProps {
+interface SlaveHeaderProps {
   headquartersId: string
 }
 
-export function CitizenHeader({ headquartersId }: CitizenHeaderProps) {
+export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
   const { user, logout } = useAuth()
 
   return (
@@ -40,7 +40,7 @@ export function CitizenHeader({ headquartersId }: CitizenHeaderProps) {
                   <Building2 className="h-6 w-6 text-primary" />
                   <span className="font-bold text-lg">E-Government Portal</span>
                 </div>
-                <CitizenNav headquartersId={headquartersId} />
+                <SlaveNav headquartersId={headquartersId} />
                 <div className="mt-8 pt-6 border-t">
                   <p className="text-sm text-muted-foreground mb-2 px-2">Current Headquarters</p>
                   <div className="px-2">
@@ -54,7 +54,7 @@ export function CitizenHeader({ headquartersId }: CitizenHeaderProps) {
             <Building2 className="h-8 w-8 text-primary hidden md:block" />
             <div>
               <h1 className="text-xl font-bold text-foreground">E-Government Portal</h1>
-              <p className="text-xs text-muted-foreground">Citizen Portal</p>
+              <p className="text-xs text-muted-foreground">Slave Portal</p>
             </div>
           </div>
           <div className="hidden md:block ml-4 pl-4 border-l">

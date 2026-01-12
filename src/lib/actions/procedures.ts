@@ -1,6 +1,6 @@
 'use server';
 
-import { readDB, writeDB } from '@/lib/db';
+import { db } from '@/lib/db';
 import { Procedure } from '@/lib/types';
 
 import { adminAction } from '@/lib/safe-action';
@@ -27,7 +27,6 @@ export const addProcedure = adminAction
     .inputSchema(addProcedureSchema)
     .action(async ({ parsedInput: { headquartersId, name, description, fields, userId } }) => {
         // Role check already done by middleware via userId/headquartersId
-        const db = await readDB();
         const newProcedure: Procedure = {
             id: Date.now().toString(),
             headquartersId,
@@ -38,8 +37,6 @@ export const addProcedure = adminAction
             createdBy: userId, // Use userId as createdBy
         };
         
-        db.procedures.push(newProcedure);
-        await writeDB(db);
-        return newProcedure;
+        return db.createProcedure(newProcedure);
     });
 

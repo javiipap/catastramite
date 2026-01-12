@@ -1,26 +1,15 @@
 'use server';
 
-import { readDB } from './index';
+import { db } from './index';
 import type { Headquarters } from '@/lib/types';
 
 export async function getHeadquarters(): Promise<Headquarters[]> {
-  const db = await readDB();
-  return db.headquarters.map(hq => ({
-    ...hq,
-    userHeadquarters: db.userHeadquarters.filter(uh => uh.headquartersId === hq.id)
-  }));
+  return db.getHeadquarters();
 }
 
+
 export async function getHeadquartersById(id: string): Promise<Headquarters | undefined> {
-  const db = await readDB();
-  const headquarters = db.headquarters.find((h) => h.id === id);
-  if (headquarters) {
-     return {
-         ...headquarters,
-         userHeadquarters: db.userHeadquarters.filter(uh => uh.headquartersId === headquarters.id)
-     }
-  }
-  return undefined;
+  return db.getHeadquartersById(id);
 }
 
 export async function getHeadquartersByParams(params: { headquartersId: string }): Promise<Headquarters | undefined> {

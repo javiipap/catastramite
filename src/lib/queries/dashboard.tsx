@@ -10,7 +10,7 @@
 // The new Page architecture should probably fetch data on the server or use the new actions directly with useQuery.
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getAdminDashboardData, getCitizenDashboardData, DashboardData } from '@/lib/db/dashboard';
+import { getAdminDashboardData, getSlaveDashboardData, DashboardData } from '@/lib/db/dashboard';
 
 // We need a way to pass userId to these. The current createQueryStore helper
 // takes params object. We can include userId in params.
@@ -21,8 +21,8 @@ export const { Provider: AdminDashboardProvider, useStore: useAdminDashboardStor
     clientFetcher: async ({ headquartersId, userId }) => getAdminDashboardData({ headquartersId }, userId),
   });
 
-export const { Provider: CitizenDashboardProvider, useStore: useCitizenDashboardStore } =
+export const { Provider: SlaveDashboardProvider, useStore: useSlaveDashboardStore } =
   createQueryStore<DashboardData, { headquartersId: string, userId: string }>({
     baseQueryKey: ['slave-dashboard'],
-    clientFetcher: async ({ headquartersId, userId }) => getCitizenDashboardData({ headquartersId }, userId),
+    clientFetcher: async ({ headquartersId, userId }) => getSlaveDashboardData({ headquartersId }, userId),
   });

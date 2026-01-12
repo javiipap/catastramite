@@ -1,19 +1,16 @@
 'use server';
 
-import { readDB } from './index';
-import type { Request } from '@/lib/types';
+import { db } from './index';
+import type { Request as AppRequest } from '@/lib/types';
 
-export async function getRequests(headquartersId: string): Promise<Request[]> {
-  const db = await readDB();
-  return db.requests.filter((r) => r.headquartersId === headquartersId);
+export async function getRequests(headquartersId: string): Promise<AppRequest[]> {
+  return db.getRequests(headquartersId);
 }
 
-export async function getUserRequests(headquartersId: string, userId: string): Promise<Request[]> {
-  const db = await readDB();
-  const userRequests = db.requests.filter(r => r.applicantId === userId && r.headquartersId === headquartersId);
-  return userRequests;
+export async function getUserRequests(headquartersId: string, userId: string): Promise<AppRequest[]> {
+   return db.getUserRequests(headquartersId, userId);
 }
 
-export async function getRequestsByParams(params: { headquartersId: string }): Promise<Request[]> {
+export async function getRequestsByParams(params: { headquartersId: string }): Promise<AppRequest[]> {
   return getRequests(params.headquartersId);
 }

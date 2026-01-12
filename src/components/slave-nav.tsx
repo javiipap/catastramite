@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Home, FileText, FolderOpen, Bell } from "lucide-react"
 
-interface CitizenNavProps {
+interface SlaveNavProps {
   headquartersId: string
 }
 
-export function CitizenNav({ headquartersId }: CitizenNavProps) {
+export function SlaveNav({ headquartersId }: SlaveNavProps) {
   const pathname = usePathname()
 
   const navItems = [

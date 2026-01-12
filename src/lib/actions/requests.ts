@@ -1,7 +1,7 @@
 'use server';
 
-import { readDB, writeDB } from '@/lib/db';
-import { Request } from '@/lib/types';
+import { db } from '@/lib/db';
+import { Request as AppRequest } from '@/lib/types';
 import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 import { getUserRole } from '@/lib/db/users';
@@ -32,8 +32,7 @@ export const addRequest = slaveAction
             throw new Error('Unauthorized: User not associated with headquarters');
         }
 
-        const db = await readDB();
-        const newRequest: Request = {
+        const newRequest: AppRequest = {
             id: Date.now().toString(),
             headquartersId: request.headquartersId,
             procedureId: request.procedureId,
@@ -46,9 +45,7 @@ export const addRequest = slaveAction
             updatedAt: new Date(),
         };
         
-        db.requests.push(newRequest);
-        await writeDB(db);
-        return newRequest;
+        return db.createRequest(newRequest);
     });
 
 const updateRequestStatusSchema = v.object({
@@ -62,22 +59,7 @@ export const updateRequestStatus = adminAction
     .inputSchema(updateRequestStatusSchema)
     .action(async ({ parsedInput: { id, status, headquartersId } }) => {
         // Role checked by middleware using input.headquartersId
-        const db = await readDB();
-        const index = db.requests.findIndex((r) => r.id === id);
-        if (index === -1) {
-            throw new Error('Request not found');
-        }
-        
-        if (db.requests[index].headquartersId !== headquartersId) {
-             throw new Error('Mismatch: Request does not belong to the provided Headquarters');
-        }
 
-        db.requests[index] = { 
-            ...db.requests[index], 
-            status, 
-            updatedAt: new Date() 
-        };
-        await writeDB(db);
-        return db.requests[index];
+        return db.updateRequestStatus(id, status, headquartersId);
     });
 
