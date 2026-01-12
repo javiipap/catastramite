@@ -69,7 +69,7 @@ export default function HeadquartersPage() {
 
   const handleEnterHeadquarters = (headquartersId: string) => {
     // Check role to determine destination
-    const relation = headquarters.find(h => h.id === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
+    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
     if (relation?.role === 'master') {
       router.push(`/admin/${headquartersId}/dashboard`)
     } else {
@@ -152,7 +152,7 @@ export default function HeadquartersPage() {
             const isAdmin = role === 'master'
 
             return (
-              <Card key={h.id} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
+              <Card key={h.headquartersId} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
                 <div className="h-2 w-full bg-primary" />
                 <CardHeader>
                   <div className="flex justify-between items-start">
@@ -169,16 +169,16 @@ export default function HeadquartersPage() {
                   <div className="text-sm text-muted-foreground space-y-2">
                     <p className="flex items-center gap-2">
                       <Building2 className="h-4 w-4" />
-                      ID: <span className="font-mono text-xs">{h.id.substring(0, 8)}...</span>
+                      ID: <span className="font-mono text-xs">{h.headquartersId.substring(0, 8)}...</span>
                     </p>
                   </div>
                 </CardContent>
                 <div className="p-6 pt-0 mt-auto flex gap-2">
-                  <Button className="flex-1" onClick={() => handleEnterHeadquarters(h.id)}>
+                  <Button className="flex-1" onClick={() => handleEnterHeadquarters(h.headquartersId)}>
                     Access <ExternalLink className="ml-2 h-3 w-3" />
                   </Button>
                   {isAdmin && (
-                    <Button variant="outline" size="icon" onClick={() => handleInvite(h.id)} title="Invite users">
+                    <Button variant="outline" size="icon" onClick={() => handleInvite(h.headquartersId)} title="Invite users">
                       <LinkIcon className="h-4 w-4" />
                     </Button>
                   )}

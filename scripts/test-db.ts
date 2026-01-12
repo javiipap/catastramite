@@ -14,13 +14,13 @@ async function test() {
   // 1. Create Headquarters
   console.log("Creating HQ...");
   const hq: Headquarters = {
-    id: hqId,
+    headquartersId: hqId,
     name: `Test HQ ${timestamp}`,
     description: "A test headquarters",
     createdAt: new Date(),
   };
   await db.createHeadquarters(hq, userId);
-  console.log(`HQ created: ${hq.id}`);
+  console.log(`HQ created: ${hq.headquartersId}`);
 
   // 2. Verify HQ Fetch
   const fetchedHq = await db.getHeadquartersById(hqId);

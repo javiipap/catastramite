@@ -5,19 +5,19 @@ import { UserHeadquarters, Headquarters, UserRole } from "@/lib/types";
 export class UsersUseCases {
     constructor(private db: DatabaseAdapter) {}
 
-    async getUserRole(userId: string, hqId: string): Promise<UserRole | null> {
-        return this.db.getUserRole(userId, hqId);
+    async getUserRole(user: Pick<UserHeadquarters, 'userId'>, hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<UserRole | null> {
+        return this.db.getUserRole(user.userId, hq.headquartersId);
     }
 
     async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
         return this.db.addUserToHeadquarters(uh);
     }
     
-    async getUserHeadquarters(userId: string): Promise<UserHeadquarters[]> {
-        return this.db.getUserHeadquarters(userId);
+    async getUserHeadquarters(user: Pick<UserHeadquarters, 'userId'>): Promise<UserHeadquarters[]> {
+        return this.db.getUserHeadquarters(user.userId);
     }
 
-    async getUserHeadquartersObjects(userId: string): Promise<Headquarters[]> {
-        return this.db.getUserHeadquartersObjects(userId);
+    async getUserHeadquartersObjects(user: Pick<UserHeadquarters, 'userId'>): Promise<Headquarters[]> {
+        return this.db.getUserHeadquartersObjects(user.userId);
     }
 }

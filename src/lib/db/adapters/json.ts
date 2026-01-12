@@ -24,13 +24,13 @@ interface DB {
 const INITIAL_DB: DB = {
   headquarters: [
     {
-      id: "1",
+      headquartersId: "1",
       name: "Ayuntamiento de Madrid",
       description: "Sede electrónica del Ayuntamiento de Madrid",
       createdAt: new Date("2025-01-01"),
     },
     {
-      id: "2",
+      headquartersId: "2",
       name: "Comunidad Autónoma de Madrid",
       description: "Sede electrónica de la Comunidad de Madrid",
       createdAt: new Date("2025-01-01"),
@@ -88,7 +88,7 @@ export class JsonAdapter implements DatabaseAdapter {
     const userHeadquartersIds = db.userHeadquarters
       .filter((uh) => uh.userId === userId)
       .map((uh) => uh.headquartersId);
-    return db.headquarters.filter((h) => userHeadquartersIds.includes(h.id));
+    return db.headquarters.filter((h) => userHeadquartersIds.includes(h.headquartersId));
   }
 
   async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
@@ -109,7 +109,7 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
     const db = await readDB();
-    return db.headquarters.find((hq) => hq.id === id);
+    return db.headquarters.find((hq) => hq.headquartersId === id);
   }
 
   async createHeadquarters(hq: Headquarters, userId: string): Promise<Headquarters> {
@@ -117,7 +117,7 @@ export class JsonAdapter implements DatabaseAdapter {
     db.headquarters.push(hq);
     db.userHeadquarters.push({ 
         userId, 
-        headquartersId: hq.id, 
+        headquartersId: hq.headquartersId, 
         role: 'master' 
     });
     await writeDB(db);
@@ -126,7 +126,7 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async updateHeadquarters(id: string, updates: Partial<Headquarters>): Promise<Headquarters> {
     const db = await readDB();
-    const index = db.headquarters.findIndex((h) => h.id === id);
+    const index = db.headquarters.findIndex((h) => h.headquartersId === id);
     if (index === -1) throw new Error("Headquarters not found");
     
     db.headquarters[index] = { ...db.headquarters[index], ...updates };

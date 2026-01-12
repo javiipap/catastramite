@@ -21,7 +21,7 @@ export function HeadquartersSelector() {
   const params = useParams()
   const router = useRouter()
   const pathname = usePathname()
-  
+
   // Get current headquartersId from URL params if available
   const currentHeadquartersId = params?.headquartersId as string | undefined
 
@@ -29,14 +29,14 @@ export function HeadquartersSelector() {
   const { data: userHeadquarters = [] } = useQuery({
     queryKey: ['userHeadquarters', user?.id],
     queryFn: async () => {
-        if (!user) return []
-        return getUserHeadquartersObjects(user.id)
+      if (!user) return []
+      return getUserHeadquartersObjects(user.id)
     },
     enabled: !!user
   })
 
   // Find current headquarters name
-  const currentHeadquarters = userHeadquarters.find((h) => h.id === currentHeadquartersId)
+  const currentHeadquarters = userHeadquarters.find((h) => h.headquartersId === currentHeadquartersId)
 
   if (!user) return null
 
@@ -55,33 +55,33 @@ export function HeadquartersSelector() {
         <DropdownMenuLabel>My Headquarters</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {userHeadquarters.map((headquarters) => (
-          <DropdownMenuItem 
-            key={headquarters.id} 
+          <DropdownMenuItem
+            key={headquarters.headquartersId}
             className="gap-2"
             onSelect={() => {
-                // Determine destination based on current context
-                if (pathname?.startsWith("/admin")) {
-                    router.push(`/admin/${headquarters.id}/dashboard`)
-                } else if (pathname?.startsWith("/ciudadano")) {
-                    router.push(`/ciudadano/${headquarters.id}/dashboard`)
-                } else {
-                    // Default fallback
-                    router.push(`/admin/${headquarters.id}/dashboard`)
-                }
+              // Determine destination based on current context
+              if (pathname?.startsWith("/admin")) {
+                router.push(`/admin/${headquarters.headquartersId}/dashboard`)
+              } else if (pathname?.startsWith("/citizen")) {
+                router.push(`/citizen/${headquarters.headquartersId}/dashboard`)
+              } else {
+                // Default fallback
+                router.push(`/admin/${headquarters.headquartersId}/dashboard`)
+              }
             }}
           >
             <Building2 className="h-4 w-4" />
             <div className="flex-1">
               <div className="font-medium">{headquarters.name}</div>
             </div>
-            {currentHeadquartersId === headquarters.id && <Check className="h-4 w-4 text-primary" />}
+            {currentHeadquartersId === headquarters.headquartersId && <Check className="h-4 w-4 text-primary" />}
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-            <a href="/admin/headquarters" className="w-full cursor-pointer font-medium text-primary">
-                Manage Headquarters
-            </a>
+          <a href="/admin/headquarters" className="w-full cursor-pointer font-medium text-primary">
+            Manage Headquarters
+          </a>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

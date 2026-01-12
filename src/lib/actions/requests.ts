@@ -26,7 +26,7 @@ export const addRequest = slaveAction
             throw new Error('Unauthorized: Cannot create request for another user');
         }
 
-        const role = await useCases.users.getUserRole(userId, request.headquartersId);
+        const role = await useCases.users.getUserRole({ userId }, { headquartersId: request.headquartersId });
         if (!role) {
             throw new Error('Unauthorized: User not associated with headquarters');
         }
@@ -59,6 +59,6 @@ export const updateRequestStatus = adminAction
     .action(async ({ parsedInput: { id, status, headquartersId } }) => {
         // Role checked by middleware using input.headquartersId
 
-        return useCases.requests.updateRequestStatus(id, status, headquartersId);
+        return useCases.requests.updateRequestStatus(id, status, { headquartersId });
     });
 

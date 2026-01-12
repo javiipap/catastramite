@@ -63,10 +63,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
           Put: {
              TableName: TABLE_NAME,
              Item: {
-               PK: this.pk("HQ", hq.id),
+               PK: this.pk("HQ", hq.headquartersId),
                SK: "METADATA",
                GSI1PK: "ALL_HQS",
-               GSI1SK: this.pk("HQ", hq.id),
+               GSI1SK: this.pk("HQ", hq.headquartersId),
                name: hq.name,
                description: hq.description,
                createdAt: hq.createdAt.toISOString(),
@@ -78,8 +78,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
             TableName: TABLE_NAME,
             Item: {
               PK: this.pk("USER", userId),
-              SK: this.pk("HQ", hq.id),
-              GSI1PK: this.pk("HQ", hq.id),
+              SK: this.pk("HQ", hq.headquartersId),
+              GSI1PK: this.pk("HQ", hq.headquartersId),
               GSI1SK: this.pk("USER", userId),
               role: 'master'
             }
@@ -385,7 +385,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   private mapToHeadquarters(item: any): Headquarters {
     return {
-      id: item.PK.split("#")[1],
+      headquartersId: item.PK.split("#")[1],
       name: item.name,
       description: item.description,
       createdAt: new Date(item.createdAt),

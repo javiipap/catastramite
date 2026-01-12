@@ -12,23 +12,29 @@ const createHeadquartersSchema = v.object({
 });
 
 export const createHeadquarters = slaveAction
-    .inputSchema(createHeadquartersSchema)
-    .action(async ({ parsedInput: { name, description, userId } }) => {
-        const newHeadquarters: Headquarters = {
-            id: Date.now().toString(),
-            name,
-            description,
-            createdAt: new Date(),
-        };
-        
-        await useCases.headquarters.createHeadquarters(newHeadquarters, userId);
-        
-        // Return with relation
-        return {
-            ...newHeadquarters,
-            userHeadquarters: [{ userId, headquartersId: newHeadquarters.id, role: 'master' }]
-        };
-    });
+  .inputSchema(createHeadquartersSchema)
+  .action(async ({ parsedInput: { name, description, userId } }) => {
+    const newHeadquarters: Headquarters = {
+      headquartersId: Date.now().toString(),
+      name,
+      description,
+      createdAt: new Date(),
+    };
+
+    await useCases.headquarters.createHeadquarters(newHeadquarters, { userId });
+
+    // Return with relation
+    return {
+      ...newHeadquarters,
+      userHeadquarters: [
+        {
+          userId,
+          headquartersId: newHeadquarters.headquartersId,
+          role: 'master',
+        },
+      ],
+    };
+  });
 
 const updateHeadquartersSchema = v.object({
   id: v.string(),
@@ -39,13 +45,13 @@ const updateHeadquartersSchema = v.object({
 });
 
 export const updateHeadquarters = adminAction
-    .inputSchema(updateHeadquartersSchema)
-    .action(async ({ parsedInput: { id, name, description } }) => {
-        // Role check already done by middleware
-        const updates: Partial<Headquarters> = { name };
-        if (description !== undefined) {
-            updates.description = description;
-        }
+  .inputSchema(updateHeadquartersSchema)
+  .action(async ({ parsedInput: { id, name, description } }) => {
+    // Role check already done by middleware
+    const updates: Partial<Headquarters> = { name };
+    if (description !== undefined) {
+      updates.description = description;
+    }
 
-        return useCases.headquarters.updateHeadquarters(id, updates);
-    });
+    return useCases.headquarters.updateHeadquarters(id, updates);
+  });

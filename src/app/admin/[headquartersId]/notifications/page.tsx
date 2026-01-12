@@ -38,7 +38,7 @@ export default function AdminNotificationsPage() {
     e.preventDefault()
     if (headquarters && user) {
       addMutation.mutate({
-        headquartersId: headquarters.id,
+        headquartersId: headquarters.headquartersId,
         title,
         message,
         priority,

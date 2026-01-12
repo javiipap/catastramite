@@ -22,7 +22,7 @@ export default function SlaveDashboardPage() {
       description: "Active services",
       icon: FileText,
       color: "text-blue-600",
-      href: `/slave/${currentHeadquarters?.id}/procedures`,
+      href: `/slave/${currentHeadquarters?.headquartersId}/procedures`,
     },
     {
       title: "My Requests",
@@ -30,7 +30,7 @@ export default function SlaveDashboardPage() {
       description: "Management history",
       icon: FolderOpen,
       color: "text-green-600",
-      href: `/slave/${currentHeadquarters?.id}/requests`,
+      href: `/slave/${currentHeadquarters?.headquartersId}/requests`,
     },
     {
       title: "Notice Board",
@@ -38,7 +38,7 @@ export default function SlaveDashboardPage() {
       description: "Important notices",
       icon: Bell,
       color: "text-yellow-600",
-      href: `/slave/${currentHeadquarters?.id}/notifications`,
+      href: `/slave/${currentHeadquarters?.headquartersId}/notifications`,
     },
   ]
 
@@ -76,7 +76,7 @@ export default function SlaveDashboardPage() {
               <CardTitle>My Recent Requests</CardTitle>
               <CardDescription>Status of your latest procedures</CardDescription>
             </div>
-            <Link href={`/slave/${currentHeadquarters?.id}/requests`}>
+            <Link href={`/slave/${currentHeadquarters?.headquartersId}/requests`}>
               <Button variant="ghost" size="sm">
                 View all <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -86,7 +86,7 @@ export default function SlaveDashboardPage() {
             {myRequests.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
                 <p>You have no active requests</p>
-                <Link href={`/slave/${currentHeadquarters?.id}/procedures`}>
+                <Link href={`/slave/${currentHeadquarters?.headquartersId}/procedures`}>
                   <Button variant="link" className="mt-2 text-primary">
                     Start a procedure
                   </Button>
@@ -130,7 +130,7 @@ export default function SlaveDashboardPage() {
               <CardTitle>Available Procedures</CardTitle>
               <CardDescription>Featured services</CardDescription>
             </div>
-            <Link href={`/slave/${currentHeadquarters?.id}/procedures`}>
+            <Link href={`/slave/${currentHeadquarters?.headquartersId}/procedures`}>
               <Button variant="ghost" size="sm">
                 View all <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -150,7 +150,7 @@ export default function SlaveDashboardPage() {
                       <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
                     </div>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/slave/${currentHeadquarters?.id}/procedures/${procedure.id}`}>Start</Link>
+                      <Link href={`/slave/${currentHeadquarters?.headquartersId}/procedures/${procedure.id}`}>Start</Link>
                     </Button>
                   </div>
                 ))}

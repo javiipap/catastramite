@@ -102,11 +102,11 @@ export default function AdminRequestsPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                       onClick={() => {
-                            if (user) {
-                                updateMutation.mutate({ id: request.id, status: "in_review", headquartersId: headquarters.id, userId: user.id })
-                            }
-                        }}
+                      onClick={() => {
+                        if (user) {
+                          updateMutation.mutate({ id: request.id, status: "in_review", headquartersId: headquarters.headquartersId, userId: user.id })
+                        }
+                      }}
                     >
                       Mark as In Review
                     </Button>
@@ -117,9 +117,9 @@ export default function AdminRequestsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                            if (user) {
-                                updateMutation.mutate({ id: request.id, status: "approved", headquartersId: headquarters.id, userId: user.id })
-                            }
+                          if (user) {
+                            updateMutation.mutate({ id: request.id, status: "approved", headquartersId: headquarters.headquartersId, userId: user.id })
+                          }
                         }}
                         className="text-green-700 hover:text-green-800"
                       >
@@ -128,10 +128,10 @@ export default function AdminRequestsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                         onClick={() => {
-                            if (user) {
-                                updateMutation.mutate({ id: request.id, status: "rejected", headquartersId: headquarters.id, userId: user.id })
-                            }
+                        onClick={() => {
+                          if (user) {
+                            updateMutation.mutate({ id: request.id, status: "rejected", headquartersId: headquarters.headquartersId, userId: user.id })
+                          }
                         }}
                         className="text-red-700 hover:text-red-800"
                       >
@@ -209,9 +209,9 @@ export default function AdminRequestsPage() {
                 <div className="flex gap-2 pt-4 border-t">
                   <Button
                     onClick={() => {
-                        if (headquarters && user) {
-                            updateMutation.mutate({ id: selectedRequest.id, status: "approved", headquartersId: headquarters.id, userId: user.id })
-                        }
+                      if (headquarters && user) {
+                        updateMutation.mutate({ id: selectedRequest.id, status: "approved", headquartersId: headquarters.headquartersId, userId: user.id })
+                      }
                     }}
                     className="flex-1"
                   >
@@ -220,9 +220,9 @@ export default function AdminRequestsPage() {
                   <Button
                     variant="destructive"
                     onClick={() => {
-                        if (headquarters && user) {
-                            updateMutation.mutate({ id: selectedRequest.id, status: "rejected", headquartersId: headquarters.id, userId: user.id })
-                        }
+                      if (headquarters && user) {
+                        updateMutation.mutate({ id: selectedRequest.id, status: "rejected", headquartersId: headquarters.headquartersId, userId: user.id })
+                      }
                     }}
                     className="flex-1"
                   >

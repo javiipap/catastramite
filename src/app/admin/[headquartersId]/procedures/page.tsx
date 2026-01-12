@@ -56,7 +56,7 @@ export default function AdminProceduresPage() {
   const handleSubmit = () => {
     if (name && description && fields.length > 0 && user && headquarters) {
       addMutation.mutate({
-        headquartersId: headquarters.id,
+        headquartersId: headquarters.headquartersId,
         name,
         description,
         fields: fields.map((c, i) => ({ ...c, id: `${i + 1}` })),

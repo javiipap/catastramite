@@ -1,7 +1,7 @@
 export type UserRole = 'master' | 'slave'
 
 export interface Headquarters {
-  id: string
+  headquartersId: string
   name: string
   description?: string
   createdAt: Date
