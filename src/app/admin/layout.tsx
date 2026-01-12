@@ -34,9 +34,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <AdminHeader headquartersId={headquartersId} />
-      {children}
+    <div className="h-screen flex flex-col bg-muted/30">
+      <div className="flex-none">
+        <AdminHeader headquartersId={headquartersId} />
+      </div>
+      <div className="flex-1 overflow-hidden">
+        {children}
+      </div>
     </div>
   )
 }

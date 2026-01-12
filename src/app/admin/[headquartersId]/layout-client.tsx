@@ -55,13 +55,13 @@ export function AdminLayoutClient({
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <div className="flex">
-        <aside className="hidden md:block w-64 border-r bg-card p-6 min-h-[calc(100vh-4rem)]">
-          <AdminNav headquartersId={headquartersId} />
-        </aside>
-        <main className="flex-1 p-6">{children}</main>
-      </div>
+    <div className="h-full flex">
+      <aside className="hidden md:block w-64 border-r bg-card h-full overflow-y-auto p-6">
+        <AdminNav headquartersId={headquartersId ?? undefined} />
+      </aside>
+      <main className="flex-1 h-full overflow-y-auto p-6">
+        {children}
+      </main>
     </div>
   )
 }
