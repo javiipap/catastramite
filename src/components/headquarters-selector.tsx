@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
-import { getUserHeadquartersObjects } from "@/lib/db/users"
+import { getUserHeadquartersObjectsAction } from "@/lib/actions/users"
 import { useParams, useRouter, usePathname } from "next/navigation"
 
 export function HeadquartersSelector() {
@@ -30,7 +30,8 @@ export function HeadquartersSelector() {
     queryKey: ['userHeadquarters', user?.id],
     queryFn: async () => {
       if (!user) return []
-      return getUserHeadquartersObjects(user.id)
+      const result = await getUserHeadquartersObjectsAction({ userId: user.id })
+      return result?.data || []
     },
     enabled: !!user
   })

@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context"
 import { LoginForm } from "@/components/login-form"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { getUserHeadquarters } from "@/lib/db/users"
+import { getUserHeadquartersAction } from "@/lib/actions/users"
 
 export default function HomePage() {
   const { user, isLoading } = useAuth()
@@ -12,28 +12,28 @@ export default function HomePage() {
 
   useEffect(() => {
     const checkRedirect = async () => {
-        if (!isLoading && user) {
-            try {
-                // Fetch user headquarters using the server action
-                const userHeadquarters = await getUserHeadquarters(user.id)
+      if (!isLoading && user) {
+        try {
+          // Fetch user headquarters using the server action
+          const result = await getUserHeadquartersAction({ userId: user.id })
 
-                if (userHeadquarters.length > 0) {
-                    const firstHeadquarters = userHeadquarters[0]
-                    if (firstHeadquarters.role === 'master') {
-                        router.push(`/admin/${firstHeadquarters.headquartersId}/dashboard`)
-                    } else {
-                        router.push(`/slave/${firstHeadquarters.headquartersId}/dashboard`)
-                    }
-                } else {
-                    // No headquarters, redirect to headquarters management
-                    router.push("/admin/headquarters")
-                }
-            } catch (error) {
-                console.error("Failed to fetch headquarters", error)
+          if (result?.data && result.data.length > 0) {
+            const firstHeadquarters = result.data[0]
+            if (firstHeadquarters.role === 'master') {
+              router.push(`/admin/${firstHeadquarters.headquartersId}/dashboard`)
+            } else {
+              router.push(`/slave/${firstHeadquarters.headquartersId}/dashboard`)
             }
+          } else {
+            // No headquarters, redirect to headquarters management
+            router.push("/admin/headquarters")
+          }
+        } catch (error) {
+          console.error("Failed to fetch headquarters", error)
         }
+      }
     }
-    
+
     checkRedirect()
   }, [user, isLoading, router])
 

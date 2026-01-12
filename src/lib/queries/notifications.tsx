@@ -1,13 +1,14 @@
 'use client';
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getNotifications } from '@/lib/db/notifications';
 import { Notification } from '@/lib/types';
+import { getNotificationsAction } from "@/lib/actions/notifications"
 
 export const { Provider: NotificationsProvider, useStore: useNotificationsStore } =
   createQueryStore<Notification[], { headquartersId: string }>({
     baseQueryKey: ['notifications'],
     clientFetcher: async ({ headquartersId }) => {
-      return getNotifications(headquartersId);
+      const result = await getNotificationsAction({ headquartersId });
+      return result?.data || [];
     },
   });

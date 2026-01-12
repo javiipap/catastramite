@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { AdminHeader } from "@/components/admin-header"
 import { AdminNav } from "@/components/admin-nav"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
-import { getUserRole } from "@/lib/db/users" 
+import { getUserRoleAction } from "@/lib/actions/users"
 
 export function AdminLayoutClient({
   children,
@@ -23,21 +23,21 @@ export function AdminLayoutClient({
 
   useEffect(() => {
     Promise.resolve(params).then((resolvedParams) => {
-        setHeadquartersId(resolvedParams.headquartersId)
+      setHeadquartersId(resolvedParams.headquartersId)
     })
   }, [params])
 
   useEffect(() => {
     // Perform async check for role
     const checkAccess = async () => {
-        if (!isLoading && headquartersId && user) {
-             const role = await getUserRole(user.id, headquartersId)
-             if (role !== 'master') {
-                router.push("/")
-             }
-        } else if (!isLoading && !user) {
-             router.push("/")
+      if (!isLoading && headquartersId && user) {
+        const result = await getUserRoleAction({ userId: user.id, headquartersId })
+        if (result?.data !== 'master') {
+          router.push("/")
         }
+      } else if (!isLoading && !user) {
+        router.push("/")
+      }
     }
     checkAccess()
   }, [user, isLoading, headquartersId, router])

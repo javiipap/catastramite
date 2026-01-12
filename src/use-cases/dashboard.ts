@@ -1,56 +1,59 @@
-import { DatabaseAdapter } from "@/lib/db/types";
-import { Headquarters, Procedure, Request, DashboardData, UserHeadquarters } from "@/lib/types";
+import { DatabaseAdapter } from '@/lib/db/types';
+import {
+  Headquarters,
+  Procedure,
+  Request,
+  DashboardData,
+  UserHeadquarters,
+} from '@/lib/types';
 
-import { getCurrentUserId } from "@/lib/server-auth";
+import { getCurrentUserId } from '@/lib/server-auth';
 
 export class DashboardUseCases {
-    constructor(private db: DatabaseAdapter) {}
+  constructor(private db: DatabaseAdapter) {}
 
-    async getAdminDashboardData(hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<DashboardData> {
-        const userId = await getCurrentUserId();
-        if (!userId) throw new Error("Unauthorized");
+  async getAdminDashboardData(
+    hq: Pick<UserHeadquarters, 'headquartersId'>
+  ): Promise<DashboardData> {
+    const userId = await getCurrentUserId();
+    if (!userId) throw new Error('Unauthorized');
 
-        const role = await this.db.getUserRole(userId, hq.headquartersId);
-        if (role !== 'master') throw new Error("Unauthorized: Admin access required");
-        
-        const [headquarters, procedures, requests] = await Promise.all([
-             this.db.getHeadquartersById(hq.headquartersId),
-             this.db.getProcedures(hq.headquartersId),
-             this.db.getRequests(hq.headquartersId)
-        ]);
+    const role = await this.db.getUserRole(userId, hq.headquartersId);
+    if (role !== 'master')
+      throw new Error('Unauthorized: Admin access required');
 
-        return {
-            headquarters,
-            procedures,
-            requests
-        };
-    }
+    const [headquarters, procedures, requests] = await Promise.all([
+      this.db.getHeadquartersById(hq.headquartersId),
+      this.db.getProcedures(hq.headquartersId),
+      this.db.getRequests(hq.headquartersId),
+    ]);
 
-    async getAdminStats(hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<DashboardData> {
-        return this.getAdminDashboardData(hq)
-    }
+    return {
+      headquarters,
+      procedures,
+      requests,
+    };
+  }
 
-    async getDashboardDataServer(hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<DashboardData> {
-        return this.getAdminDashboardData(hq)
-    }
+  async getSlaveDashboardData(
+    hq: Pick<UserHeadquarters, 'headquartersId'>
+  ): Promise<DashboardData> {
+    const userId = await getCurrentUserId();
+    if (!userId) throw new Error('Unauthorized');
 
-    async getSlaveDashboardData(hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<DashboardData> {
-        const userId = await getCurrentUserId();
-        if (!userId) throw new Error("Unauthorized");
+    const role = await this.db.getUserRole(userId, hq.headquartersId);
+    if (!role) throw new Error('Unauthorized: Access denied');
 
-        const role = await this.db.getUserRole(userId, hq.headquartersId);
-        if (!role) throw new Error("Unauthorized: Access denied");
-       
-        const [headquarters, procedures, requests] = await Promise.all([
-             this.db.getHeadquartersById(hq.headquartersId),
-             this.db.getProcedures(hq.headquartersId),
-             this.db.getUserRequests(hq.headquartersId, userId)
-        ]);
-        
-        return {
-             headquarters,
-             procedures,
-             requests
-        };
-    }
+    const [headquarters, procedures, requests] = await Promise.all([
+      this.db.getHeadquartersById(hq.headquartersId),
+      this.db.getProcedures(hq.headquartersId),
+      this.db.getUserRequests(hq.headquartersId, userId),
+    ]);
+
+    return {
+      headquarters,
+      procedures,
+      requests,
+    };
+  }
 }

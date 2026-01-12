@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
-import { getUserRole } from "@/lib/db/users"
+import { getUserRoleAction } from "@/lib/actions/users"
 import { SlaveHeader } from "@/components/slave-header"
 import { SlaveNav } from "@/components/slave-nav"
 
@@ -23,29 +23,30 @@ export function SlaveLayoutClient({
 
   useEffect(() => {
     Promise.resolve(params).then((resolvedParams) => {
-        setHeadquartersId(resolvedParams.headquartersId)
+      setHeadquartersId(resolvedParams.headquartersId)
     })
   }, [params])
 
   useEffect(() => {
     // Perform async check for role/access if needed
     const checkAccess = async () => {
-        if (!isLoading && headquartersId && user) {
-             const role = await getUserRole(user.id, headquartersId)
-             // Allow everyone or specific logic? 
-             // Initially we allow 'slave' or 'master'.
-             // If not member, maybe should auto-join or error?
-             // Since we use getUserRole, it returns null if not associated.
-             
-             if (!role) {
-                // If user is not associated, what do we do?
-                // Probably redirect to home or some invite error.
-                // Assuming currently they should be associated.
-                router.push("/")
-             }
-        } else if (!isLoading && !user) {
-             router.push("/")
+      if (!isLoading && headquartersId && user) {
+        const result = await getUserRoleAction({ userId: user.id, headquartersId })
+        const role = result?.data
+        // Allow everyone or specific logic? 
+        // Initially we allow 'slave' or 'master'.
+        // If not member, maybe should auto-join or error?
+        // Since we use getUserRole, it returns null if not associated.
+
+        if (!role) {
+          // If user is not associated, what do we do?
+          // Probably redirect to home or some invite error.
+          // Assuming currently they should be associated.
+          router.push("/")
         }
+      } else if (!isLoading && !user) {
+        router.push("/")
+      }
     }
     checkAccess()
   }, [user, isLoading, headquartersId, router])

@@ -1,5 +1,9 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { useCases } from "@/use-cases"
+import { getUserRequestsAction } from "@/lib/actions/requests"
 import { RequestsProvider } from "@/lib/queries/requests"
 
-export default withServerData(useCases.requests.getUserRequests, RequestsProvider);
+const fetcher = async ({ headquartersId }: { headquartersId: string }) => {
+  return (await getUserRequestsAction({ headquartersId }))?.data || [];
+}
+
+export default withServerData(fetcher, RequestsProvider);

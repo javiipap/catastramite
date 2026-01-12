@@ -2,14 +2,14 @@
 
 import { useCases } from '@/use-cases';
 import { Procedure } from '@/lib/types';
-import { adminAction } from '@/lib/safe-action';
+import { adminAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 // Definition for FormField schema
 const FormFieldSchema = v.object({
   id: v.string(),
   name: v.string(),
-  type: v.picklist(["text", "number", "date", "email", "textarea", "select"]),
+  type: v.picklist(['text', 'number', 'date', 'email', 'textarea', 'select']),
   required: v.boolean(),
   options: v.optional(v.array(v.string())),
 });
@@ -19,23 +19,32 @@ const addProcedureSchema = v.object({
   name: v.string(),
   description: v.string(),
   fields: v.array(FormFieldSchema),
-  userId: v.string() // Explicit userId for admin check and creation
+  userId: v.string(), // Explicit userId for admin check and creation
 });
 
 export const addProcedure = adminAction
-    .inputSchema(addProcedureSchema)
-    .action(async ({ parsedInput: { headquartersId, name, description, fields, userId } }) => {
-        // Role check already done by middleware via userId/headquartersId
-        const newProcedure: Procedure = {
-            id: Date.now().toString(),
-            headquartersId,
-            name,
-            description,
-            fields,
-            createdAt: new Date(),
-            createdBy: userId, // Use userId as createdBy
-        };
-        
-        return useCases.procedures.createProcedure(newProcedure);
-    });
+  .inputSchema(addProcedureSchema)
+  .action(
+    async ({
+      parsedInput: { headquartersId, name, description, fields, userId },
+    }) => {
+      // Role check already done by middleware via userId/headquartersId
+      const newProcedure: Procedure = {
+        id: Date.now().toString(),
+        headquartersId,
+        name,
+        description,
+        fields,
+        createdAt: new Date(),
+        createdBy: userId, // Use userId as createdBy
+      };
 
+      return useCases.procedures.createProcedure(newProcedure);
+    }
+  );
+
+export const getProceduresAction = slaveAction
+  .inputSchema(v.object({ headquartersId: v.string() }))
+  .action(async ({ parsedInput: { headquartersId } }) => {
+    return useCases.procedures.getProcedures({ headquartersId });
+  });

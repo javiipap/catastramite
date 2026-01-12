@@ -55,3 +55,13 @@ export const updateHeadquarters = adminAction
 
     return useCases.headquarters.updateHeadquarters(id, updates);
   });
+
+export const getAllHeadquartersAction = slaveAction.action(async () => {
+  return useCases.headquarters.getAllHeadquarters();
+});
+
+export const getHeadquartersAction = slaveAction
+  .inputSchema(v.object({ headquartersId: v.string() }))
+  .action(async ({ parsedInput: { headquartersId } }) => {
+    return useCases.headquarters.getHeadquarters({ headquartersId });
+  });
