@@ -39,13 +39,10 @@ export const slaveAction = actionClient.use(async ({ next }) => {
   return next({ ctx: { user: session.user } });
 });
 
-export const masterAction2 =
-  <TSchema extends z.ZodType>(
+export const mutateMasterAction =
+  <TSchema extends z.ZodType, TData>(
     schema: TSchema,
-    handler: (
-      data: z.infer<TSchema>,
-      ctx: { user: User }
-    ) => Promise<z.infer<TSchema>>
+    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
@@ -59,6 +56,25 @@ export const masterAction2 =
     }
 
     if (session.user.role !== "master") {
+      throw new Error();
+    }
+
+    return handler(parsedInput, { user: session.user });
+  };
+
+export const mutateSlaveAction =
+  <TSchema extends z.ZodType, TData>(
+    schema: TSchema,
+    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>
+  ) =>
+  async (rawData: z.infer<TSchema>) => {
+    const parsedInput = schema.parse(rawData);
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
       throw new Error();
     }
 

@@ -65,6 +65,36 @@
       "name": "Primera de prueba",
       "description": "",
       "createdAt": "2026-01-13T19:18:45.666Z"
+    },
+    {
+      "headquartersId": "1768332706637",
+      "name": "prueba2",
+      "description": "",
+      "createdAt": "2026-01-13T19:31:46.637Z"
+    },
+    {
+      "headquartersId": "1768332852918",
+      "name": "otra más",
+      "description": "",
+      "createdAt": "2026-01-13T19:34:12.918Z"
+    },
+    {
+      "headquartersId": "1768332857749",
+      "name": "adsfasdf",
+      "description": "",
+      "createdAt": "2026-01-13T19:34:17.749Z"
+    },
+    {
+      "headquartersId": "1768332877206",
+      "name": "af",
+      "description": "",
+      "createdAt": "2026-01-13T19:34:37.206Z"
+    },
+    {
+      "headquartersId": "1768332944146",
+      "name": "kjkj",
+      "description": "",
+      "createdAt": "2026-01-13T19:35:44.146Z"
     }
   ],
   "userHeadquarters": [
@@ -131,6 +161,31 @@
     {
       "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
       "headquartersId": "1768331925666",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768332706637",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768332852918",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768332857749",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768332877206",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768332944146",
       "role": "master"
     }
   ],

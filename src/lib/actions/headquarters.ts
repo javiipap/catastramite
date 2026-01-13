@@ -2,7 +2,7 @@
 
 import { useCases } from "@/use-cases";
 import { Headquarters } from "@/lib/schemas/headquarters";
-import { masterAction, masterAction2, slaveAction } from "@/lib/safe-action";
+import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
 import {
   createHeadquartersSchema,
   updateHeadquartersSchema,
@@ -10,7 +10,7 @@ import {
   getUserHeadquartersRelationsSchema,
 } from "@/lib/schemas/headquarters";
 
-export const createHeadquarters = masterAction2(
+export const createHeadquarters = mutateMasterAction(
   createHeadquartersSchema,
   // @ts-ignore
   async ({ name, description }, { user }) => {
@@ -34,29 +34,25 @@ export const createHeadquarters = masterAction2(
           role: "master",
         },
       ],
-    };
+    } as Headquarters;
   }
 );
 
-export const updateHeadquarters = masterAction
-  .inputSchema(updateHeadquartersSchema)
-  .action(
-    async ({
-      parsedInput: { headquartersId, name, description },
-      ctx: { user },
-    }) => {
-      const updates: Partial<Headquarters> = { name };
-      if (description !== undefined) {
-        updates.description = description;
-      }
-
-      return useCases.headquarters.updateHeadquarters(
-        headquartersId,
-        updates,
-        user
-      );
+export const updateHeadquarters = mutateMasterAction(
+  updateHeadquartersSchema,
+  async ({ headquartersId, name, description }, { user }) => {
+    const updates: Partial<Headquarters> = { name };
+    if (description !== undefined) {
+      updates.description = description;
     }
-  );
+
+    return useCases.headquarters.updateHeadquarters(
+      headquartersId,
+      updates,
+      user
+    );
+  }
+);
 
 export const getHeadquartersAction = slaveAction
   .inputSchema(getHeadquartersSchema)

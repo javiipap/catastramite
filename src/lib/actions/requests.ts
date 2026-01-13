@@ -1,20 +1,19 @@
-'use server';
+"use server";
 
-import { useCases } from '@/use-cases';
-import { Request as AppRequest } from '@/lib/schemas/requests';
-import { masterAction, slaveAction } from '@/lib/safe-action';
+import { useCases } from "@/use-cases";
+import { Request as AppRequest } from "@/lib/schemas/requests";
+import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
 import {
   createRequestSchema,
   updateRequestStatusSchema,
   getRequestsSchema,
-} from '@/lib/schemas/requests';
+} from "@/lib/schemas/requests";
 
-export const addRequest = slaveAction
-  .inputSchema(createRequestSchema)
-  .action(async ({ parsedInput: request, ctx: { user } }) => {
-    // Additional check: Ensure user creating is the applicant (implicit in safeAction context?)
+export const addRequestAction = mutateMasterAction(
+  createRequestSchema,
+  async (request, { user }) => {
     if (request.applicantId !== user.id) {
-      throw new Error('Unauthorized: Cannot create request for another user');
+      throw new Error("Unauthorized: Cannot create request for another user");
     }
 
     const newRequest: AppRequest = {
@@ -31,23 +30,20 @@ export const addRequest = slaveAction
     };
 
     return useCases.requests.createRequest(newRequest, user);
-  });
+  }
+);
 
-export const updateRequestStatus = masterAction
-  .inputSchema(updateRequestStatusSchema)
-  .action(
-    async ({
-      parsedInput: { requestId, status, headquartersId },
-      ctx: { user },
-    }) => {
-      return useCases.requests.updateRequestStatus(
-        requestId,
-        status,
-        { headquartersId },
-        user
-      );
-    }
-  );
+export const updateRequestStatusAction = mutateMasterAction(
+  updateRequestStatusSchema,
+  async ({ requestId, status, headquartersId }, { user }) => {
+    return useCases.requests.updateRequestStatus(
+      requestId,
+      status,
+      { headquartersId },
+      user
+    );
+  }
+);
 
 export const getRequestsAction = slaveAction
   .inputSchema(getRequestsSchema)

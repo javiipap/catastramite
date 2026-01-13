@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { addNotification } from "@/lib/actions/notifications";
+import { addNotificationAction } from "@/lib/actions/notifications";
 import { Notification } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 
@@ -9,7 +9,7 @@ export function useCreateNotification() {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: addNotification,
+    mutationFn: addNotificationAction,
     onMutate: async (newItem) => {
       await queryClient.cancelQueries({ queryKey: ["notifications"] });
       const previousNotifications = queryClient.getQueryData<Notification[]>([
@@ -35,21 +35,19 @@ export function useCreateNotification() {
       return { previousNotifications };
     },
     onSuccess: (result, vars, context) => {
-      if (result?.serverError || result?.validationErrors) {
-        toast.error("Error creating notification");
-        if (context?.previousNotifications) {
-          queryClient.setQueryData(
-            ["notifications"],
-            context.previousNotifications
-          );
-        }
-        return;
-      }
       toast.success("Notification created successfully");
+
+      queryClient.setQueryData(
+        ["notifications"],
+        [...(context.previousNotifications ?? []), result]
+      );
+
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to create notification");
+      console.error(err);
+
       if (context?.previousNotifications) {
         queryClient.setQueryData(
           ["notifications"],

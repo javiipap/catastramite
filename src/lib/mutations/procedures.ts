@@ -12,43 +12,44 @@ export function useCreateProcedure() {
     mutationFn: addProcedure,
     onMutate: async (newItem) => {
       await queryClient.cancelQueries({ queryKey: ["procedures"] });
-      const previousProcedures = queryClient.getQueryData<Procedure[]>([
-        "procedures",
-      ]);
+      const previousProcedures =
+        queryClient.getQueryData<Procedure[]>(["procedures"]) ?? [];
 
-      if (previousProcedures) {
-        // Optimistic add
-        const optProcedure: any = {
-          id: "temp-" + Date.now(),
-          headquartersId: newItem.headquartersId,
-          name: newItem.name,
-          description: newItem.description,
-          fields: newItem.fields,
-          createdAt: new Date(),
-          createdBy: user?.userId || "",
-        };
-        queryClient.setQueryData(
-          ["procedures"],
-          [...previousProcedures, optProcedure]
-        );
-      }
+      const optProcedure: any = {
+        id: "temp-" + Date.now(),
+        headquartersId: newItem.headquartersId,
+        name: newItem.name,
+        description: newItem.description,
+        fields: newItem.fields,
+        createdAt: new Date(),
+        createdBy: user?.userId || "",
+      };
+      queryClient.setQueryData(
+        ["procedures"],
+        [...previousProcedures, optProcedure]
+      );
+
       return { previousProcedures };
     },
     onSuccess: (result, vars, context) => {
-      if (result?.serverError || result?.validationErrors) {
-        toast.error("Error creating procedure");
-        if (context?.previousProcedures) {
-          queryClient.setQueryData(["procedures"], context.previousProcedures);
-        }
-        return;
-      }
       toast.success("Procedure created successfully");
+
+      queryClient.setQueryData<Procedure[]>(
+        ["procedures"],
+        [...(context?.previousProcedures || []), result]
+      );
+
       queryClient.invalidateQueries({ queryKey: ["procedures"] });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to create procedure");
+      console.error(err);
+
       if (context?.previousProcedures) {
-        queryClient.setQueryData(["procedures"], context.previousProcedures);
+        queryClient.setQueryData<Procedure[]>(
+          ["procedures"],
+          context.previousProcedures
+        );
       }
     },
   });
