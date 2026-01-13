@@ -82,7 +82,7 @@ export default function OnboardingPage() {
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Administrator</SelectItem>
+                  <SelectItem value="master">Master</SelectItem>
                   <SelectItem value="slave">Slave</SelectItem>
                 </SelectContent>
               </Select>

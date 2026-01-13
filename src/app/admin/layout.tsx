@@ -4,9 +4,9 @@ import type React from "react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { AdminHeader } from "@/components/admin-header"
+import { MasterHeader } from "@/components/master-header"
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function MasterLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const params = useParams()
@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="h-screen flex flex-col bg-muted/30">
       <div className="flex-none">
-        <AdminHeader headquartersId={headquartersId} />
+        <MasterHeader headquartersId={headquartersId} />
       </div>
       <div className="flex-1 overflow-hidden">
         {children}

@@ -11,7 +11,7 @@ export class ProceduresUseCases {
   ): Promise<Procedure> {
     const role = await this.db.getUserRole(user.id, procedure.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.createProcedure(procedure);
   }

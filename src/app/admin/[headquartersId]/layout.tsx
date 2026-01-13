@@ -1,19 +1,14 @@
 import { withServerData } from "@/lib/store/with-server-data"
 import { useCases } from "@/use-cases"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
-import { AdminLayoutClient } from "./layout-client"
+import { MasterLayoutClient } from "./layout-client"
 
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
-import { AdminGuard } from "@/components/admin-guard"
 
-const DataProvider = withServerData(async (params: { headquartersId: string }) => {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) throw new Error("Unauthorized");
-  return useCases.headquarters.getHeadquarters(params, session.user);
-}, HeadquartersProvider);
+import { MasterGuard } from "@/components/master-guard"
 
-export default async function AdminLayout({
+const DataProvider = withServerData(useCases.headquarters.getHeadquarters, HeadquartersProvider);
+
+export default async function MasterLayout({
   children,
   params,
 }: {
@@ -22,12 +17,12 @@ export default async function AdminLayout({
 }) {
   const { headquartersId } = await params;
   return (
-    <AdminGuard headquartersId={headquartersId}>
+    <MasterGuard headquartersId={headquartersId}>
       <DataProvider params={params}>
-        <AdminLayoutClient params={params}>
+        <MasterLayoutClient params={params}>
           {children}
-        </AdminLayoutClient>
+        </MasterLayoutClient>
       </DataProvider>
-    </AdminGuard>
+    </MasterGuard>
   )
 }

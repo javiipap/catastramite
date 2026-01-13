@@ -11,9 +11,8 @@ const _geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'E-Government Portal | Digital Administration',
-  description: 'Administrative procedure management platform',
-  generator: 'v0.app',
+  title: 'Catastramite',
+  description: 'La solución a todos tus problemas',
   icons: {
     icon: [
       {
@@ -47,7 +46,7 @@ export default function RootLayout({
       )}>
         <Providers>
           <AuthProvider>
-              {children}
+            {children}
           </AuthProvider>
         </Providers>
         {/* <Analytics /> */}

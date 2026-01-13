@@ -1,13 +1,13 @@
 'use client';
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { getAdminDashboardDataAction, getSlaveDashboardDataAction } from '@/lib/actions/dashboard';
+import { getMasterDashboardDataAction, getSlaveDashboardDataAction } from '@/lib/actions/dashboard';
 import { DashboardData } from '@/lib/types';
 
-export const { Provider: AdminDashboardProvider, useStore: useAdminDashboardStore } =
+export const { Provider: MasterDashboardProvider, useStore: useMasterDashboardStore } =
   createQueryStore<DashboardData, { headquartersId: string }>({
-    baseQueryKey: ['admin-dashboard'],
-    clientFetcher: async ({ headquartersId }) => getAdminDashboardDataAction({ headquartersId }),
+    baseQueryKey: ['master-dashboard'],
+    clientFetcher: async ({ headquartersId }) => getMasterDashboardDataAction({ headquartersId }),
   });
 
 export const { Provider: SlaveDashboardProvider, useStore: useSlaveDashboardStore } =

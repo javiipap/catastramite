@@ -14,7 +14,7 @@ import { useUpdateRequestStatus } from "@/lib/mutations/requests"
 
 import { useAuth } from "@/lib/auth-context"
 
-export default function AdminRequestsPage() {
+export default function MasterRequestsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: requests } = useRequestsStore()
 

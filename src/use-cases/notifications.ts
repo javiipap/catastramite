@@ -14,7 +14,7 @@ export class NotificationsUseCases {
       notification.headquartersId
     );
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.createNotification(notification);
   }

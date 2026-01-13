@@ -23,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { FormField } from "@/lib/types"
 import { useCreateProcedure } from "@/lib/mutations/procedures"
 
-export default function AdminProceduresPage() {
+export default function MasterProceduresPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: procedures } = useProceduresStore()
   const { user } = useAuth()

@@ -30,7 +30,7 @@ export class HeadquartersUseCases {
   ): Promise<Headquarters> {
     const role = await this.db.getUserRole(user.id, id);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.updateHeadquarters(id, updates);
   }
@@ -41,7 +41,7 @@ export class HeadquartersUseCases {
   ): Promise<void> {
     const role = await this.db.getUserRole(actor.id, uh.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.addUserToHeadquarters(uh);
   }
@@ -58,7 +58,7 @@ export class HeadquartersUseCases {
     return this.db.getUserHeadquartersObjects(user.userId);
   }
 
-  async getAdminHeadquarters(
+  async getMasterHeadquarters(
     user: Pick<UserHeadquarters, 'userId'>
   ): Promise<Headquarters[]> {
     const allHqs = await this.db.getUserHeadquartersObjects(user.userId);
@@ -75,7 +75,7 @@ export class HeadquartersUseCases {
   ) {
     const role = await this.db.getUserRole(user.id, params.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.getUsersByHeadquarters(params.headquartersId);
   }
@@ -87,7 +87,7 @@ export class HeadquartersUseCases {
   ): Promise<void> {
     const role = await this.db.getUserRole(actor.id, headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.removeUserFromHeadquarters(userId, headquartersId);
   }

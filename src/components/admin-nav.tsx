@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, FileText, FolderOpen, Bell, Users } from "lucide-react"
 
-interface AdminNavProps {
+interface MasterNavProps {
   headquartersId?: string
 }
 
-export function AdminNav({ headquartersId }: AdminNavProps) {
+export function MasterNav({ headquartersId }: MasterNavProps) {
   const pathname = usePathname()
 
   if (!headquartersId) return null
@@ -17,27 +17,27 @@ export function AdminNav({ headquartersId }: AdminNavProps) {
   const navItems = [
     {
       title: "Dashboard",
-      href: `/admin/${headquartersId}/dashboard`,
+      href: `/master/${headquartersId}/dashboard`,
       icon: LayoutDashboard,
     },
     {
       title: "Notifications",
-      href: `/admin/${headquartersId}/notifications`,
+      href: `/master/${headquartersId}/notifications`,
       icon: Bell,
     },
     {
       title: "Procedures",
-      href: `/admin/${headquartersId}/procedures`,
+      href: `/master/${headquartersId}/procedures`,
       icon: FileText,
     },
     {
       title: "Requests",
-      href: `/admin/${headquartersId}/requests`,
+      href: `/master/${headquartersId}/requests`,
       icon: FolderOpen,
     },
     {
       title: "Users",
-      href: `/admin/${headquartersId}/users`,
+      href: `/master/${headquartersId}/users`,
       icon: Users,
     },
   ]

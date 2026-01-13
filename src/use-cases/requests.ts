@@ -29,7 +29,7 @@ export class RequestsUseCases {
   ): Promise<AppRequest[]> {
     const role = await this.db.getUserRole(user.id, hq.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.getRequests(hq.headquartersId);
   }
@@ -53,7 +53,7 @@ export class RequestsUseCases {
   ): Promise<AppRequest> {
     const role = await this.db.getUserRole(user.id, hq.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
     return this.db.updateRequestStatus(id, status, hq.headquartersId);
   }

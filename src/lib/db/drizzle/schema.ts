@@ -13,7 +13,7 @@ export const user = sqliteTable('user', {
   image: text('image'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
-  role: text('role'), // 'admin' | 'slave'
+  role: text('role'), // 'master' | 'slave'
   age: integer('age'),
 });
 

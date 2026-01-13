@@ -4,13 +4,13 @@ import type { DashboardData, User, UserHeadquarters } from '@/lib/types';
 export class DashboardUseCases {
   constructor(private db: DatabaseAdapter) {}
 
-  async getAdminDashboardData(
+  async getMasterDashboardData(
     hq: Pick<UserHeadquarters, 'headquartersId'>,
     user: Pick<User, 'id'>
   ): Promise<DashboardData> {
     const role = await this.db.getUserRole(user.id, hq.headquartersId);
     if (role !== 'master') {
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error('Unauthorized: Master access required');
     }
 
     const [headquarters, procedures, requests] = await Promise.all([

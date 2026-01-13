@@ -4,12 +4,12 @@ import { useCases } from '@/use-cases';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
-interface AdminGuardProps {
+interface MasterGuardProps {
   headquartersId: string;
   children: ReactNode;
 }
 
-export async function AdminGuard({ headquartersId, children }: AdminGuardProps) {
+export async function MasterGuard({ headquartersId, children }: MasterGuardProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

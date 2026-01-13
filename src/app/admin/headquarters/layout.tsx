@@ -1,7 +1,7 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { getAdminHeadquartersAction } from "@/lib/actions/headquarters"
-import { AdminHeadquartersListProvider } from "@/lib/queries/headquarters"
+import { getMasterHeadquartersAction } from "@/lib/actions/headquarters"
+import { MasterHeadquartersListProvider } from "@/lib/queries/headquarters"
 
-const fetcher = async () => (await getAdminHeadquartersAction())?.data || [];
+const fetcher = async () => (await getMasterHeadquartersAction())?.data || [];
 
-export default withServerData(fetcher, AdminHeadquartersListProvider);
+export default withServerData(fetcher, MasterHeadquartersListProvider);

@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
   // Define protected routes
   const isProtectedRoute =
     request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/master') ||
     request.nextUrl.pathname.startsWith('/onboarding');
 
   if (isProtectedRoute && !sessionCookie) {
@@ -18,5 +18,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/onboarding'],
+  matcher: ['/dashboard/:path*', '/master/:path*', '/onboarding'],
 };

@@ -26,7 +26,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import type { User, UserRole } from "@/lib/types"
 
-export default function AdminUsersPage() {
+export default function MasterUsersPage() {
   const { data: headquarters } = useHeadquartersStore()
   const queryClient = useQueryClient()
 
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="master">Admin (Master)</SelectItem>
+                    <SelectItem value="master">Master (Master)</SelectItem>
                     <SelectItem value="slave">Employee (Slave)</SelectItem>
                   </SelectContent>
                 </Select>

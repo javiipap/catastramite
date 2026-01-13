@@ -22,7 +22,7 @@ import { Bell, Plus, Calendar } from "lucide-react"
 
 import { useCreateNotification } from "@/lib/mutations/notifications"
 
-export default function AdminNotificationsPage() {
+export default function MasterNotificationsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: notifications } = useNotificationsStore()
   const { user } = useAuth()

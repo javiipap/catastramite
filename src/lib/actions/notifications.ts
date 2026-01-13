@@ -2,7 +2,7 @@
 
 import { useCases } from '@/use-cases';
 import { Notification as AppNotification } from '@/lib/types';
-import { adminAction, slaveAction } from '@/lib/safe-action';
+import { masterAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 const addNotificationSchema = v.object({
@@ -12,7 +12,7 @@ const addNotificationSchema = v.object({
   priority: v.picklist(['low', 'medium', 'high']),
 });
 
-export const addNotification = adminAction
+export const addNotification = masterAction
   .inputSchema(addNotificationSchema)
   .action(
     async ({

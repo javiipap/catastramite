@@ -5,11 +5,11 @@ import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { AdminNav } from "@/components/admin-nav"
+import { MasterNav } from "@/components/master-nav"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { getUserRoleAction } from "@/lib/actions/users"
 
-export function AdminLayoutClient({
+export function MasterLayoutClient({
   children,
   params,
 }: {
@@ -57,7 +57,7 @@ export function AdminLayoutClient({
   return (
     <div className="h-full flex">
       <aside className="hidden md:block w-64 border-r bg-card h-full overflow-y-auto p-6">
-        <AdminNav headquartersId={headquartersId ?? undefined} />
+        <MasterNav headquartersId={headquartersId ?? undefined} />
       </aside>
       <main className="flex-1 h-full overflow-y-auto p-6">
         {children}

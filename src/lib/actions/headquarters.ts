@@ -2,7 +2,7 @@
 
 import { useCases } from '@/use-cases';
 import { Headquarters } from '@/lib/types';
-import { adminAction, slaveAction } from '@/lib/safe-action';
+import { masterAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 const createHeadquartersSchema = v.object({
@@ -11,7 +11,7 @@ const createHeadquartersSchema = v.object({
   userId: v.string(),
 });
 
-export const createHeadquarters = slaveAction
+export const createHeadquarters = masterAction
   .inputSchema(createHeadquartersSchema)
   .action(async ({ parsedInput: { name, description }, ctx: { user } }) => {
     const newHeadquarters: Headquarters = {
@@ -45,7 +45,7 @@ const updateHeadquartersSchema = v.object({
   headquartersId: v.string(), // We will pass headquartersId explicitly for the check
 });
 
-export const updateHeadquarters = adminAction
+export const updateHeadquarters = masterAction
   .inputSchema(updateHeadquartersSchema)
   .action(async ({ parsedInput: { id, name, description }, ctx: { user } }) => {
     // Role check already done by middleware
@@ -64,7 +64,7 @@ export const getHeadquartersAction = slaveAction
   });
 
 export const getUserHeadquartersRelationsAction = slaveAction
-  .inputSchema(v.object({ userId: v.string() })) // userId param might be redundant if we only fetch for self? But maybe admins fetch for others? UseCase `getUserHeadquarters` just returns for the User ID passed. Admin shouldn't fetch for others via this? Let's assume passed userId but we should control it. But wait, `getUserHeadquarters` use case just takes `userId`. Authorization? Not checked in use case for *which* user we are querying, only that caller is logged in (implied). But `getUserHeadquartersObjects` was updated. `getUserHeadquarters` wasn't updated to check if `actor` allows it.
+  .inputSchema(v.object({ userId: v.string() })) // userId param might be redundant if we only fetch for self? But maybe admins fetch for others? UseCase `getUserHeadquarters` just returns for the User ID passed. Master shouldn't fetch for others via this? Let's assume passed userId but we should control it. But wait, `getUserHeadquarters` use case just takes `userId`. Authorization? Not checked in use case for *which* user we are querying, only that caller is logged in (implied). But `getUserHeadquartersObjects` was updated. `getUserHeadquarters` wasn't updated to check if `actor` allows it.
   // Actually I updated `getUserHeadquarters` in `headquarters.ts` use case:
   // async getUserHeadquarters(user: Pick<UserHeadquarters, 'userId'>): Promise<UserHeadquarters[]> { return this.db.getUserHeadquarters(user.userId); }
   // No auth check there! It just returns for the ID.
@@ -88,8 +88,8 @@ export const getUserHeadquartersAction = slaveAction.action(
   }
 );
 
-export const getAdminHeadquartersAction = slaveAction.action(
+export const getMasterHeadquartersAction = slaveAction.action(
   async ({ ctx: { user } }) => {
-    return useCases.headquarters.getAdminHeadquarters({ userId: user.id });
+    return useCases.headquarters.getMasterHeadquarters({ userId: user.id });
   }
 );

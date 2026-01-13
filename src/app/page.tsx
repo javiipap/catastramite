@@ -20,13 +20,13 @@ export default function HomePage() {
           if (result?.data && result.data.length > 0) {
             const firstHeadquarters = result.data[0]
             if (firstHeadquarters.role === 'master') {
-              router.push(`/admin/${firstHeadquarters.headquartersId}/dashboard`)
+              router.push(`/master/${firstHeadquarters.headquartersId}/dashboard`)
             } else {
               router.push(`/slave/${firstHeadquarters.headquartersId}/dashboard`)
             }
           } else {
             // No headquarters, redirect to headquarters management
-            router.push("/admin/headquarters")
+            router.push("/master/headquarters")
           }
         } catch (error) {
           console.error("Failed to fetch headquarters", error)

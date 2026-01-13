@@ -2,7 +2,7 @@
 
 import { createQueryStore } from '@/lib/store/create-query';
 import { getHeadquartersAction } from '@/lib/actions/headquarters';
-import { getUserHeadquartersAction, getAdminHeadquartersAction } from '@/lib/actions/headquarters';
+import { getUserHeadquartersAction, getMasterHeadquartersAction } from '@/lib/actions/headquarters';
 import { Headquarters } from '@/lib/types';
 
 export const { Provider: HeadquartersListProvider, useStore: useHeadquartersListStore } =
@@ -14,11 +14,11 @@ export const { Provider: HeadquartersListProvider, useStore: useHeadquartersList
     },
   });
 
-export const { Provider: AdminHeadquartersListProvider, useStore: useAdminHeadquartersListStore } =
+export const { Provider: MasterHeadquartersListProvider, useStore: useMasterHeadquartersListStore } =
   createQueryStore<Headquarters[]>({
-    baseQueryKey: ['admin-headquarters-list'],
+    baseQueryKey: ['master-headquarters-list'],
     clientFetcher: async () => {
-      const result = await getAdminHeadquartersAction();
+      const result = await getMasterHeadquartersAction();
       return result?.data || [];
     },
   });

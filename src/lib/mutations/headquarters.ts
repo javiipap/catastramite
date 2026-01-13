@@ -29,7 +29,7 @@ export function useCreateHeadquarters() {
               name: newItem.name,
               description: newItem.description,
               createdAt: new Date(),
-              userHeadquarters: [], // Optimistically this user is admin
+              userHeadquarters: [], // Optimistically this user is master
             } as Headquarters,
           ]
         );

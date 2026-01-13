@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, FolderOpen, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
-import { useAdminDashboardStore } from '@/lib/queries/dashboard'
+import { useMasterDashboardStore } from '@/lib/queries/dashboard'
 
-export default function AdminDashboardPage() {
-  const store = useAdminDashboardStore();
+export default function MasterDashboardPage() {
+  const store = useMasterDashboardStore();
   const { headquarters: currentHeadquarters, procedures: headquartersProcedures, requests: headquartersRequests } = store.data;
 
   const pending = headquartersRequests.filter((s) => s.status === "pending").length

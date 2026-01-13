@@ -2,7 +2,7 @@
 
 import { useCases } from '@/use-cases';
 import { Procedure } from '@/lib/types';
-import { adminAction, slaveAction } from '@/lib/safe-action';
+import { masterAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 // Definition for FormField schema
@@ -21,7 +21,7 @@ const addProcedureSchema = v.object({
   fields: v.array(FormFieldSchema),
 });
 
-export const addProcedure = adminAction
+export const addProcedure = masterAction
   .inputSchema(addProcedureSchema)
   .action(
     async ({

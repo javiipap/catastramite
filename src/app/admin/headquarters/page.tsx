@@ -3,7 +3,7 @@
 import { useState } from "react"
 import type React from "react"
 
-import { useAdminHeadquartersListStore } from "@/lib/queries/headquarters"
+import { useMasterHeadquartersListStore } from "@/lib/queries/headquarters"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
 
 export default function HeadquartersPage() {
-  const { data: headquarters } = useAdminHeadquartersListStore()
+  const { data: headquarters } = useMasterHeadquartersListStore()
   const { user } = useAuth()
   const router = useRouter()
 
@@ -33,11 +33,6 @@ export default function HeadquartersPage() {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [newHeadquartersName, setNewHeadquartersName] = useState("")
   const [inviteLink, setInviteLink] = useState<string | null>(null)
-
-  // const userHeadquarters = headquarters
-  // We trust the query returns only ours, but we keep the variable assignment for compatibility
-  // Also we need to ensure the `userHeadquarters` array is populated (we just fixed that in adapters)
-  const userHeadquarters = headquarters;
 
   const createMutation = useCreateHeadquarters()
 
@@ -72,7 +67,7 @@ export default function HeadquartersPage() {
     // Check role to determine destination
     const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
     if (relation?.role === 'master') {
-      router.push(`/admin/${headquartersId}/dashboard`)
+      router.push(`/master/${headquartersId}/dashboard`)
     } else {
       router.push(`/slave/${headquartersId}/dashboard`)
     }
@@ -129,7 +124,7 @@ export default function HeadquartersPage() {
         </Dialog>
       </div>
 
-      {userHeadquarters.length === 0 ? (
+      {headquarters.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <div className="bg-muted p-4 rounded-full mb-4">
@@ -147,10 +142,10 @@ export default function HeadquartersPage() {
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {userHeadquarters.map((h) => {
+          {headquarters.map((h) => {
             const relation = h.userHeadquarters?.find(uh => uh.userId === user.id)
             const role = relation?.role || 'slave'
-            const isAdmin = role === 'master'
+            const isMaster = role === 'master'
 
             return (
               <Card key={h.headquartersId} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
@@ -158,8 +153,8 @@ export default function HeadquartersPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="line-clamp-1 text-xl">{h.name}</CardTitle>
-                    {isAdmin ? (
-                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">Admin</span>
+                    {isMaster ? (
+                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">Master</span>
                     ) : (
                       <span className="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium">User</span>
                     )}
@@ -178,7 +173,7 @@ export default function HeadquartersPage() {
                   <Button className="flex-1" onClick={() => handleEnterHeadquarters(h.headquartersId)}>
                     Access <ExternalLink className="ml-2 h-3 w-3" />
                   </Button>
-                  {isAdmin && (
+                  {isMaster && (
                     <Button variant="outline" size="icon" onClick={() => handleInvite(h.headquartersId)} title="Invite users">
                       <LinkIcon className="h-4 w-4" />
                     </Button>

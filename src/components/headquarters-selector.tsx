@@ -61,13 +61,13 @@ export function HeadquartersSelector() {
             className="gap-2"
             onSelect={() => {
               // Determine destination based on current context
-              if (pathname?.startsWith("/admin")) {
-                router.push(`/admin/${headquarters.headquartersId}/dashboard`)
+              if (pathname?.startsWith("/master")) {
+                router.push(`/master/${headquarters.headquartersId}/dashboard`)
               } else if (pathname?.startsWith("/slave")) {
                 router.push(`/slave/${headquarters.headquartersId}/dashboard`)
               } else {
                 // Default fallback
-                router.push(`/admin/${headquarters.headquartersId}/dashboard`)
+                router.push(`/master/${headquarters.headquartersId}/dashboard`)
               }
             }}
           >
@@ -80,7 +80,7 @@ export function HeadquartersSelector() {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <a href="/admin/headquarters" className="w-full cursor-pointer font-medium text-primary">
+          <a href="/master/headquarters" className="w-full cursor-pointer font-medium text-primary">
             Manage Headquarters
           </a>
         </DropdownMenuItem>

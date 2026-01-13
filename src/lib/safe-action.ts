@@ -2,9 +2,14 @@ import { createSafeActionClient } from 'next-safe-action';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 
-export const actionClient = createSafeActionClient();
+export const actionClient = createSafeActionClient({
+  handleServerError: (error) => {
+    console.error(error);
+    return error;
+  },
+});
 
-export const adminAction = actionClient.use(async ({ next, clientInput }) => {
+export const masterAction = actionClient.use(async ({ next, clientInput }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

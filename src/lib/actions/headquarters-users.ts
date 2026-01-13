@@ -1,17 +1,17 @@
 'use server';
 
 import { useCases } from '@/use-cases';
-import { adminAction } from '@/lib/safe-action';
+import { masterAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 import { revalidatePath } from 'next/cache';
 
-export const getHeadquartersUsersAction = adminAction
+export const getHeadquartersUsersAction = masterAction
   .inputSchema(v.object({ headquartersId: v.string() }))
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.headquarters.getHeadquartersUsers({ headquartersId }, user);
   });
 
-export const addUserToHeadquartersAction = adminAction
+export const addUserToHeadquartersAction = masterAction
   .inputSchema(
     v.object({
       headquartersId: v.string(),
@@ -38,11 +38,11 @@ export const addUserToHeadquartersAction = adminAction
         actor
       );
 
-      revalidatePath(`/admin/${headquartersId}/users`);
+      revalidatePath(`/master/${headquartersId}/users`);
     }
   );
 
-export const removeUserFromHeadquartersAction = adminAction
+export const removeUserFromHeadquartersAction = masterAction
   .inputSchema(
     v.object({
       headquartersId: v.string(),
@@ -59,6 +59,6 @@ export const removeUserFromHeadquartersAction = adminAction
         headquartersId,
         actor
       );
-      revalidatePath(`/admin/${headquartersId}/users`);
+      revalidatePath(`/master/${headquartersId}/users`);
     }
   );

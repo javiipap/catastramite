@@ -2,7 +2,7 @@
 
 import { useCases } from '@/use-cases';
 import { Request as AppRequest } from '@/lib/types';
-import { adminAction, slaveAction } from '@/lib/safe-action';
+import { masterAction, slaveAction } from '@/lib/safe-action';
 import * as v from 'valibot';
 
 const addRequestSchema = v.object({
@@ -46,7 +46,7 @@ const updateRequestStatusSchema = v.object({
   headquartersId: v.string(),
 });
 
-export const updateRequestStatus = adminAction
+export const updateRequestStatus = masterAction
   .inputSchema(updateRequestStatusSchema)
   .action(
     async ({ parsedInput: { id, status, headquartersId }, ctx: { user } }) => {

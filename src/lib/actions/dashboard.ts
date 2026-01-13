@@ -5,7 +5,7 @@ import { DashboardData } from '@/lib/types';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 
-export async function getAdminDashboardDataAction(params: {
+export async function getMasterDashboardDataAction(params: {
   headquartersId: string;
 }): Promise<DashboardData> {
   const session = await auth.api.getSession({
@@ -13,7 +13,7 @@ export async function getAdminDashboardDataAction(params: {
   });
   if (!session?.user) throw new Error('Unauthorized');
 
-  return useCases.dashboard.getAdminDashboardData(params, session.user);
+  return useCases.dashboard.getMasterDashboardData(params, session.user);
 }
 
 export async function getSlaveDashboardDataAction(params: {
