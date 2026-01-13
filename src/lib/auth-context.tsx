@@ -36,6 +36,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   // Map session.user to our User type
+  if (session?.user) {
+    console.log("AuthProvider - raw session.user:", session.user);
+    // @ts-ignore
+    console.log("AuthProvider - session.user.role:", session.user.role);
+  }
+
   const user: User | null = session?.user
     ? {
       ...session.user,
@@ -43,6 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role: (session.user as any).role, // Ensure role is passed if present
     } as unknown as User
     : null
+
+  if (user) {
+    console.log("AuthProvider - mapped user:", user);
+  }
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isLoading }}>

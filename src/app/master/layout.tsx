@@ -1,36 +1,24 @@
-"use client"
-
 import type React from "react"
-import { useAuth } from "@/lib/auth-context"
-import { useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { redirect } from "next/navigation"
 import { MasterHeader } from "@/components/master-header"
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
-export default function MasterLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth()
-  const router = useRouter()
-  const params = useParams()
-  const headquartersId = params?.headquartersId as string | undefined
+interface Props {
+  children: React.ReactNode,
+  params: Promise<{ headquartersId: string }>
+}
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        router.push("/")
-        return
-      }
-    }
-  }, [user, isLoading, router])
+export default async function MasterLayout({ children, params }: Props) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
+  const headquartersId = (await params).headquartersId
 
-  if (!user) {
-    return null
+  if (!session?.user.role) {
+    console.log('Master layout' + session?.user)
+    redirect('/login');
   }
 
   return (

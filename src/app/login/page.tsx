@@ -1,61 +1,22 @@
-"use client"
-
-import { useAuth } from "@/lib/auth-context"
 import { LoginForm } from "@/components/login-form"
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { getUserHeadquartersRelationsAction } from "@/lib/actions/headquarters"
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export default function LoginPage() {
-  const { user, isLoading } = useAuth()
-  const router = useRouter()
+export default async function LoginPage() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  useEffect(() => {
-    const checkRedirect = async () => {
-      if (!isLoading && user) {
-        try {
-          // Fetch user headquarters using the server action
-          const result = await getUserHeadquartersRelationsAction({ userId: user.userId })
-
-          if (result?.data && result.data.length > 0) {
-            const firstHeadquarters = result.data[0]
-            if (firstHeadquarters.role === 'master') {
-              router.push(`/master/${firstHeadquarters.headquartersId}/dashboard`)
-            } else {
-              router.push(`/slave/${firstHeadquarters.headquartersId}/dashboard`)
-            }
-          } else {
-            // No headquarters, redirect to headquarters management
-            router.push("/master/headquarters")
-          }
-        } catch (error) {
-          console.error("Failed to fetch headquarters", error)
-          router.push("/master/headquarters")
-        }
-      }
-    }
-
-    checkRedirect()
-  }, [user, isLoading, router])
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-muted">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // If user is authenticated, we return null while redirecting
-  if (user) {
-    return null
+  if (session?.user.role) {
+    redirect(`/${session.user.role}/headquarters`);
+  } else if (!session?.user.role) {
+    console.log('LOGIN', session?.user)
+    redirect('/onboarding');
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted/10 to-muted/60 p-4">
       <LoginForm />
     </main>
   )

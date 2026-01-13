@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const userRoleSchema = z.enum(['master', 'slave']);
+export const userRoleSchema = z.enum(["master", "slave"]);
 
 export const userSchema = z.object({
   userId: z.string(),
@@ -10,7 +10,7 @@ export const userSchema = z.object({
   image: z.string().optional().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  role: z.string().optional().nullable(),
+  role: userRoleSchema.optional().nullable(),
   age: z.number().optional().nullable(),
 });
 

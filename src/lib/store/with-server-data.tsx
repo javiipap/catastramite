@@ -36,6 +36,7 @@ export function withServerData<TData, TArgs>(
     });
 
     if (!session?.user) {
+      console.log('NO USER')
       redirect('/login');
     }
 

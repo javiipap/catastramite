@@ -59,6 +59,12 @@
       "name": "prueba",
       "description": "",
       "createdAt": "2026-01-13T16:12:16.282Z"
+    },
+    {
+      "headquartersId": "1768331925666",
+      "name": "Primera de prueba",
+      "description": "",
+      "createdAt": "2026-01-13T19:18:45.666Z"
     }
   ],
   "userHeadquarters": [
@@ -120,6 +126,11 @@
     {
       "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
       "headquartersId": "1768320736282",
+      "role": "master"
+    },
+    {
+      "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
+      "headquartersId": "1768331925666",
       "role": "master"
     }
   ],

@@ -15,6 +15,7 @@ export async function MasterGuard({ headquartersId, children }: MasterGuardProps
   });
 
   if (!session?.user) {
+    console.log('MASTER-GUARD: NO USER')
     redirect('/login');
   }
 
