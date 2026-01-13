@@ -12,12 +12,17 @@ export function useCreateRequest() {
   return useMutation({
     mutationFn: addRequestAction,
     onMutate: async (vars) => {
-      await queryClient.cancelQueries({ queryKey: ["requests"] });
+      await queryClient.cancelQueries({
+        queryKey: ["requests", vars.headquartersId],
+      });
       const previousRequests =
-        queryClient.getQueryData<Request[]>(["requests"]) ?? [];
+        queryClient.getQueryData<Request[]>([
+          "requests",
+          vars.headquartersId,
+        ]) ?? [];
 
       queryClient.setQueryData<Request[]>(
-        ["requests"],
+        ["requests", vars.headquartersId],
         [
           ...previousRequests,
           {
@@ -42,19 +47,26 @@ export function useCreateRequest() {
       // Invalidate both slave and master lists
 
       queryClient.setQueryData<Request[]>(
-        ["requests"],
+        ["requests", vars.headquartersId],
         [...context.previousRequests, result]
       );
 
-      queryClient.invalidateQueries({ queryKey: ["requests"] });
-      queryClient.invalidateQueries({ queryKey: ["slave-dashboard"] });
+      queryClient.invalidateQueries({
+        queryKey: ["requests", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["slave-dashboard", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["master-dashboard", vars.headquartersId],
+      });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to submit request");
       console.error(err);
 
       queryClient.setQueryData<Request[]>(
-        ["requests"],
+        ["requests", vars.headquartersId],
         context?.previousRequests ?? []
       );
     },
@@ -67,12 +79,17 @@ export function useUpdateRequestStatus() {
   return useMutation({
     mutationFn: updateRequestStatusAction,
     onMutate: async (vars) => {
-      await queryClient.cancelQueries({ queryKey: ["requests"] });
+      await queryClient.cancelQueries({
+        queryKey: ["requests", vars.headquartersId],
+      });
       const previousRequests =
-        queryClient.getQueryData<Request[]>(["requests"]) ?? [];
+        queryClient.getQueryData<Request[]>([
+          "requests",
+          vars.headquartersId,
+        ]) ?? [];
 
       queryClient.setQueryData<Request[]>(
-        ["requests"],
+        ["requests", vars.headquartersId],
         previousRequests.map((r) =>
           r.requestId === vars.requestId ? { ...r, status: vars.status } : r
         )
@@ -83,19 +100,25 @@ export function useUpdateRequestStatus() {
     onSuccess: (result, vars, context) => {
       toast.success("Status updated successfully");
 
-      queryClient.setQueryData<Request[]>(
-        ["requests"],
-        context.previousRequests
-      );
-
-      queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({
+        queryKey: ["requests", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["slave-dashboard", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["master-dashboard", vars.headquartersId],
+      });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to update status");
       console.error(err);
 
       if (context?.previousRequests) {
-        queryClient.setQueryData(["requests"], context.previousRequests);
+        queryClient.setQueryData(
+          ["requests", vars.headquartersId],
+          context.previousRequests
+        );
       }
     },
   });

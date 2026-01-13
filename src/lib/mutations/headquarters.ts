@@ -46,6 +46,7 @@ export function useCreateHeadquarters() {
       );
 
       queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
+      queryClient.invalidateQueries({ queryKey: ["user-headquarters-list"] });
     },
     onError: (err, newItem, context) => {
       toast.error("Failed to create headquarters");
@@ -99,7 +100,14 @@ export function useUpdateHeadquarters() {
 
       queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
       queryClient.invalidateQueries({
-        queryKey: ["master-headquarters-list", result.headquartersId],
+        queryKey: ["headquarters-detail", result.headquartersId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["user-headquarters-list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["master-dashboard", result.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["slave-dashboard", result.headquartersId],
       });
     },
     onError: (err, newItem, context) => {

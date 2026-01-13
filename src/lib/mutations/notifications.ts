@@ -11,9 +11,12 @@ export function useCreateNotification() {
   return useMutation({
     mutationFn: addNotificationAction,
     onMutate: async (newItem) => {
-      await queryClient.cancelQueries({ queryKey: ["notifications"] });
+      await queryClient.cancelQueries({
+        queryKey: ["notifications", newItem.headquartersId],
+      });
       const previousNotifications = queryClient.getQueryData<Notification[]>([
         "notifications",
+        newItem.headquartersId,
       ]);
 
       if (previousNotifications) {
@@ -27,7 +30,7 @@ export function useCreateNotification() {
           createdBy: user?.userId || "",
         };
         queryClient.setQueryData(
-          ["notifications"],
+          ["notifications", newItem.headquartersId],
           [...previousNotifications, optNotif]
         );
       }
@@ -38,11 +41,13 @@ export function useCreateNotification() {
       toast.success("Notification created successfully");
 
       queryClient.setQueryData(
-        ["notifications"],
+        ["notifications", vars.headquartersId],
         [...(context.previousNotifications ?? []), result]
       );
 
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({
+        queryKey: ["notifications", vars.headquartersId],
+      });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to create notification");
@@ -50,7 +55,7 @@ export function useCreateNotification() {
 
       if (context?.previousNotifications) {
         queryClient.setQueryData(
-          ["notifications"],
+          ["notifications", vars.headquartersId],
           context.previousNotifications
         );
       }

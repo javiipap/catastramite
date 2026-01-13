@@ -11,9 +11,14 @@ export function useCreateProcedure() {
   return useMutation({
     mutationFn: addProcedure,
     onMutate: async (newItem) => {
-      await queryClient.cancelQueries({ queryKey: ["procedures"] });
+      await queryClient.cancelQueries({
+        queryKey: ["procedures", newItem.headquartersId],
+      });
       const previousProcedures =
-        queryClient.getQueryData<Procedure[]>(["procedures"]) ?? [];
+        queryClient.getQueryData<Procedure[]>([
+          "procedures",
+          newItem.headquartersId,
+        ]) ?? [];
 
       const optProcedure: any = {
         id: "temp-" + Date.now(),
@@ -25,7 +30,7 @@ export function useCreateProcedure() {
         createdBy: user?.userId || "",
       };
       queryClient.setQueryData(
-        ["procedures"],
+        ["procedures", newItem.headquartersId],
         [...previousProcedures, optProcedure]
       );
 
@@ -35,11 +40,19 @@ export function useCreateProcedure() {
       toast.success("Procedure created successfully");
 
       queryClient.setQueryData<Procedure[]>(
-        ["procedures"],
+        ["procedures", vars.headquartersId],
         [...(context?.previousProcedures || []), result]
       );
 
-      queryClient.invalidateQueries({ queryKey: ["procedures"] });
+      queryClient.invalidateQueries({
+        queryKey: ["procedures", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["master-dashboard", vars.headquartersId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["slave-dashboard", vars.headquartersId],
+      });
     },
     onError: (err, vars, context) => {
       toast.error("Failed to create procedure");
@@ -47,7 +60,7 @@ export function useCreateProcedure() {
 
       if (context?.previousProcedures) {
         queryClient.setQueryData<Procedure[]>(
-          ["procedures"],
+          ["procedures", vars.headquartersId],
           context.previousProcedures
         );
       }
