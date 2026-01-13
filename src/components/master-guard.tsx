@@ -15,7 +15,7 @@ export async function MasterGuard({ headquartersId, children }: MasterGuardProps
   });
 
   if (!session?.user) {
-    redirect('/onboarding');
+    redirect('/login');
   }
 
   const role = await useCases.users.getUserRole(

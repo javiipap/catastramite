@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { DatabaseAdapter } from '../types';
+import fs from "fs/promises";
+import path from "path";
+import { DatabaseAdapter } from "../types";
 import {
   Headquarters,
   UserHeadquarters,
@@ -10,9 +10,9 @@ import {
   UserRole,
   RequestStatus,
   User,
-} from '@/lib/types';
+} from "@/lib/types";
 
-const DB_PATH = path.join(process.cwd(), 'data.json');
+const DB_PATH = path.join(process.cwd(), "data.json");
 
 interface DB {
   headquarters: Headquarters[];
@@ -25,23 +25,23 @@ interface DB {
 const INITIAL_DB: DB = {
   headquarters: [
     {
-      headquartersId: '1',
-      name: 'Ayuntamiento de Madrid',
-      description: 'Sede electrónica del Ayuntamiento de Madrid',
-      createdAt: new Date('2025-01-01'),
+      headquartersId: "1",
+      name: "Ayuntamiento de Madrid",
+      description: "Sede electrónica del Ayuntamiento de Madrid",
+      createdAt: new Date("2025-01-01"),
     },
     {
-      headquartersId: '2',
-      name: 'Comunidad Autónoma de Madrid',
-      description: 'Sede electrónica de la Comunidad de Madrid',
-      createdAt: new Date('2025-01-01'),
+      headquartersId: "2",
+      name: "Comunidad Autónoma de Madrid",
+      description: "Sede electrónica de la Comunidad de Madrid",
+      createdAt: new Date("2025-01-01"),
     },
   ],
   userHeadquarters: [
-    { userId: '1', headquartersId: '1', role: 'master' },
-    { userId: '1', headquartersId: '2', role: 'master' },
-    { userId: '2', headquartersId: '1', role: 'slave' },
-    { userId: '2', headquartersId: '2', role: 'slave' },
+    { userId: "1", headquartersId: "1", role: "master" },
+    { userId: "1", headquartersId: "2", role: "master" },
+    { userId: "2", headquartersId: "1", role: "slave" },
+    { userId: "2", headquartersId: "2", role: "slave" },
   ],
   notifications: [],
   procedures: [],
@@ -50,7 +50,7 @@ const INITIAL_DB: DB = {
 
 function reviver(key: string, value: any) {
   if (
-    typeof value === 'string' &&
+    typeof value === "string" &&
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
   ) {
     return new Date(value);
@@ -60,10 +60,10 @@ function reviver(key: string, value: any) {
 
 async function readDB(): Promise<DB> {
   try {
-    const data = await fs.readFile(DB_PATH, 'utf-8');
+    const data = await fs.readFile(DB_PATH, "utf-8");
     return JSON.parse(data, reviver);
   } catch (error: any) {
-    if (error.code === 'ENOENT') {
+    if (error.code === "ENOENT") {
       await writeDB(INITIAL_DB);
       return INITIAL_DB;
     }
@@ -122,18 +122,18 @@ export class JsonAdapter implements DatabaseAdapter {
   async getUsersByHeadquarters(
     hqId: string
   ): Promise<(User & { role: UserRole })[]> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   async removeUserFromHeadquarters(
     userId: string,
     hqId: string
   ): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
@@ -150,7 +150,7 @@ export class JsonAdapter implements DatabaseAdapter {
     db.userHeadquarters.push({
       userId,
       headquartersId: hq.headquartersId,
-      role: 'master',
+      role: "master",
     });
     await writeDB(db);
     return hq;
@@ -162,7 +162,7 @@ export class JsonAdapter implements DatabaseAdapter {
   ): Promise<Headquarters> {
     const db = await readDB();
     const index = db.headquarters.findIndex((h) => h.headquartersId === id);
-    if (index === -1) throw new Error('Headquarters not found');
+    if (index === -1) throw new Error("Headquarters not found");
 
     db.headquarters[index] = { ...db.headquarters[index], ...updates };
     await writeDB(db);
@@ -209,10 +209,10 @@ export class JsonAdapter implements DatabaseAdapter {
     headquartersId: string
   ): Promise<AppRequest> {
     const db = await readDB();
-    const index = db.requests.findIndex((r) => r.id === id);
-    if (index === -1) throw new Error('Request not found');
+    const index = db.requests.findIndex((r) => r.requestId === id);
+    if (index === -1) throw new Error("Request not found");
     if (db.requests[index].headquartersId !== headquartersId)
-      throw new Error('Request mismatch');
+      throw new Error("Request mismatch");
 
     db.requests[index].status = status;
     db.requests[index].updatedAt = new Date();

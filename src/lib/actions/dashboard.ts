@@ -1,32 +1,25 @@
-'use server';
+"use server";
 
-import { useCases } from '@/use-cases';
-import { DashboardData } from '@/lib/types';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
+import { useCases } from "@/use-cases";
+import { masterAction, slaveAction } from "@/lib/safe-action";
+import { z } from "zod";
 
-export async function getMasterDashboardDataAction(params: {
-  headquartersId: string;
-}): Promise<DashboardData> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
+const dashboardSchema = z.object({
+  headquartersId: z.string(),
+});
+
+export const getMasterDashboardDataAction = masterAction
+  .inputSchema(dashboardSchema)
+  .action(async ({ parsedInput: params, ctx: { user } }) => {
+    return useCases.dashboard.getMasterDashboardData(params, {
+      userId: user.id,
+    });
   });
-  if (!session?.user) throw new Error('Unauthorized');
 
-  return useCases.dashboard.getMasterDashboardData(params, {
-    userId: session.user.id,
+export const getSlaveDashboardDataAction = slaveAction
+  .inputSchema(dashboardSchema)
+  .action(async ({ parsedInput: params, ctx: { user } }) => {
+    return useCases.dashboard.getSlaveDashboardData(params, {
+      userId: user.id,
+    });
   });
-}
-
-export async function getSlaveDashboardDataAction(params: {
-  headquartersId: string;
-}): Promise<DashboardData> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session?.user) throw new Error('Unauthorized');
-
-  return useCases.dashboard.getSlaveDashboardData(params, {
-    userId: session.user.id,
-  });
-}

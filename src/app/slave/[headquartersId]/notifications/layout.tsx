@@ -1,5 +1,5 @@
 import { withServerData } from "@/lib/store/with-server-data"
-import { useCases } from "@/use-cases"
+import { getNotificationsAction } from "@/lib/actions/notifications"
 import { NotificationsProvider } from "@/lib/queries/notifications"
 
-export default withServerData(useCases.notifications.getNotifications, NotificationsProvider);
+export default withServerData(getNotificationsAction, NotificationsProvider);

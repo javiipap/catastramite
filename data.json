@@ -11,6 +11,54 @@
       "name": "Comunidad Autónoma de Madrid",
       "description": "Sede electrónica de la Comunidad de Madrid",
       "createdAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "headquartersId": "1768310399716",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:19:59.716Z"
+    },
+    {
+      "headquartersId": "1768310401488",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:01.488Z"
+    },
+    {
+      "headquartersId": "1768310404007",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:04.007Z"
+    },
+    {
+      "headquartersId": "1768310404773",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:04.773Z"
+    },
+    {
+      "headquartersId": "1768310410249",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:10.249Z"
+    },
+    {
+      "headquartersId": "1768310411970",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:11.970Z"
+    },
+    {
+      "headquartersId": "1768310427522",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T13:20:27.522Z"
+    },
+    {
+      "headquartersId": "1768320736282",
+      "name": "prueba",
+      "description": "",
+      "createdAt": "2026-01-13T16:12:16.282Z"
     }
   ],
   "userHeadquarters": [
@@ -33,6 +81,46 @@
       "userId": "2",
       "headquartersId": "2",
       "role": "slave"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310399716",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310401488",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310404007",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310404773",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310410249",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310411970",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768310427522",
+      "role": "master"
+    },
+    {
+      "userId": "TzJPOktOkWVDQi2aHiX0eNXMa7lsFDAd",
+      "headquartersId": "1768320736282",
+      "role": "master"
     }
   ],
   "notifications": [],

@@ -1,5 +1,5 @@
 import { MasterDashboardProvider } from '@/lib/queries/dashboard';
 import { withServerData } from '@/lib/store/with-server-data';
-import { useCases } from '@/use-cases';
+import { getMasterDashboardDataAction } from '@/lib/actions/dashboard';
 
-export default withServerData(useCases.dashboard.getMasterDashboardData, MasterDashboardProvider)
+export default withServerData(getMasterDashboardDataAction, MasterDashboardProvider)

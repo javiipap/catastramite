@@ -1,5 +1,5 @@
 import { SlaveDashboardProvider } from '@/lib/queries/dashboard';
 import { withServerData } from '@/lib/store/with-server-data';
-import { useCases } from '@/use-cases';
+import { getSlaveDashboardDataAction } from '@/lib/actions/dashboard';
 
-export default withServerData(useCases.dashboard.getSlaveDashboardData, SlaveDashboardProvider);
+export default withServerData(getSlaveDashboardDataAction, SlaveDashboardProvider);

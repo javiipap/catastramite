@@ -1,11 +1,11 @@
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from './db/drizzle/client';
-import { user, session, account, verification } from './db/drizzle/schema';
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "./db/drizzle/client";
+import { user, session, account, verification } from "./db/drizzle/schema";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: 'sqlite',
+    provider: "sqlite",
     schema: {
       user,
       session,
@@ -22,13 +22,18 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: 'string',
+        type: "string",
         required: false,
       },
       age: {
-        type: 'number',
+        type: "number",
         required: false,
       },
     },
   },
+  advanced: {
+    cookiePrefix: "catastramite",
+  },
 });
+
+export type Session = typeof auth.$Infer.Session;

@@ -1,4 +1,4 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   QueryCommand,
@@ -7,8 +7,8 @@ import {
   UpdateCommand,
   TransactWriteCommand,
   BatchGetCommand,
-} from '@aws-sdk/lib-dynamodb';
-import { DatabaseAdapter } from '../types';
+} from "@aws-sdk/lib-dynamodb";
+import { DatabaseAdapter } from "../types";
 import {
   Headquarters,
   UserHeadquarters,
@@ -19,11 +19,11 @@ import {
   FormField,
   RequestStatus,
   User,
-} from '@/lib/types';
+} from "@/lib/types";
 
 // Configuration from env or defaults
-const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || 'Catastramite';
-const REGION = process.env.AWS_REGION || 'us-east-1';
+const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "Catastramite";
+const REGION = process.env.AWS_REGION || "us-east-1";
 
 // Client initialization
 const client = new DynamoDBClient({ region: REGION });
@@ -42,10 +42,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new PutCommand({
       TableName: TABLE_NAME,
       Item: {
-        PK: this.pk('USER', uh.userId),
-        SK: this.pk('HQ', uh.headquartersId),
-        GSI1PK: this.pk('HQ', uh.headquartersId), // For "Get HQ's Users" access pattern if needed
-        GSI1SK: this.pk('USER', uh.userId),
+        PK: this.pk("USER", uh.userId),
+        SK: this.pk("HQ", uh.headquartersId),
+        GSI1PK: this.pk("HQ", uh.headquartersId), // For "Get HQ's Users" access pattern if needed
+        GSI1SK: this.pk("USER", uh.userId),
         role: uh.role,
       },
       // Ensure idempotency / check existence if strict, but Put is fine here
@@ -57,18 +57,18 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async getUsersByHeadquarters(
     hqId: string
   ): Promise<(User & { role: UserRole })[]> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   async removeUserFromHeadquarters(
     userId: string,
     hqId: string
   ): Promise<void> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 
   // ... (Reads omitted/unchanged) ...
@@ -83,10 +83,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
           Put: {
             TableName: TABLE_NAME,
             Item: {
-              PK: this.pk('HQ', hq.headquartersId),
-              SK: 'METADATA',
-              GSI1PK: 'ALL_HQS',
-              GSI1SK: this.pk('HQ', hq.headquartersId),
+              PK: this.pk("HQ", hq.headquartersId),
+              SK: "METADATA",
+              GSI1PK: "ALL_HQS",
+              GSI1SK: this.pk("HQ", hq.headquartersId),
               name: hq.name,
               description: hq.description,
               createdAt: hq.createdAt.toISOString(),
@@ -97,11 +97,11 @@ export class DynamoDBAdapter implements DatabaseAdapter {
           Put: {
             TableName: TABLE_NAME,
             Item: {
-              PK: this.pk('USER', userId),
-              SK: this.pk('HQ', hq.headquartersId),
-              GSI1PK: this.pk('HQ', hq.headquartersId),
-              GSI1SK: this.pk('USER', userId),
-              role: 'master',
+              PK: this.pk("USER", userId),
+              SK: this.pk("HQ", hq.headquartersId),
+              GSI1PK: this.pk("HQ", hq.headquartersId),
+              GSI1SK: this.pk("USER", userId),
+              role: "master",
             },
           },
         },
@@ -119,16 +119,16 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     // Build Update Expression
     const expAttrValues: Record<string, any> = {};
     const expAttrNames: Record<string, string> = {};
-    let updateExp = 'SET';
+    let updateExp = "SET";
 
     if (updates.name) {
-      updateExp += ' #n = :n,';
-      expAttrValues[':n'] = updates.name;
-      expAttrNames['#n'] = 'name';
+      updateExp += " #n = :n,";
+      expAttrValues[":n"] = updates.name;
+      expAttrNames["#n"] = "name";
     }
     if (updates.description) {
-      updateExp += ' description = :d,';
-      expAttrValues[':d'] = updates.description;
+      updateExp += " description = :d,";
+      expAttrValues[":d"] = updates.description;
     }
 
     // Remove trailing comma
@@ -137,21 +137,21 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     // If no updates in relevant fields, fetch and return
     if (Object.keys(expAttrValues).length === 0) {
       const existing = await this.getHeadquartersById(id);
-      if (!existing) throw new Error('Headquarters not found');
+      if (!existing) throw new Error("Headquarters not found");
       return existing;
     }
 
     const command = new UpdateCommand({
       TableName: TABLE_NAME,
       Key: {
-        PK: this.pk('HQ', id),
-        SK: 'METADATA',
+        PK: this.pk("HQ", id),
+        SK: "METADATA",
       },
       UpdateExpression: updateExp,
       ExpressionAttributeNames:
         Object.keys(expAttrNames).length > 0 ? expAttrNames : undefined,
       ExpressionAttributeValues: expAttrValues,
-      ReturnValues: 'ALL_NEW',
+      ReturnValues: "ALL_NEW",
     });
 
     const result = await docClient.send(command);
@@ -162,8 +162,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new PutCommand({
       TableName: TABLE_NAME,
       Item: {
-        PK: this.pk('HQ', procedure.headquartersId),
-        SK: this.pk('PROC', procedure.id),
+        PK: this.pk("HQ", procedure.headquartersId),
+        SK: this.pk("PROC", procedure.procedureId),
         name: procedure.name,
         description: procedure.description,
         fields: procedure.fields,
@@ -180,12 +180,13 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new PutCommand({
       TableName: TABLE_NAME,
       Item: {
-        PK: this.pk('HQ', request.headquartersId),
-        SK: this.pk('REQ', request.id),
+        PK: this.pk("HQ", request.headquartersId),
+        SK: this.pk("REQ", request.requestId),
 
         // GSI for User's Requests
-        GSI1PK: this.pk('USER', request.applicantId),
-        GSI1SK: this.pk('HQ', request.headquartersId) + '#REQ#' + request.id,
+        GSI1PK: this.pk("USER", request.applicantId),
+        GSI1SK:
+          this.pk("HQ", request.headquartersId) + "#REQ#" + request.requestId,
 
         procedureId: request.procedureId,
         procedureName: request.procedureName,
@@ -214,16 +215,16 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new UpdateCommand({
       TableName: TABLE_NAME,
       Key: {
-        PK: this.pk('HQ', headquartersId),
-        SK: this.pk('REQ', id),
+        PK: this.pk("HQ", headquartersId),
+        SK: this.pk("REQ", id),
       },
-      UpdateExpression: 'SET #s = :s, updatedAt = :u',
-      ExpressionAttributeNames: { '#s': 'status' },
+      UpdateExpression: "SET #s = :s, updatedAt = :u",
+      ExpressionAttributeNames: { "#s": "status" },
       ExpressionAttributeValues: {
-        ':s': status,
-        ':u': new Date().toISOString(),
+        ":s": status,
+        ":u": new Date().toISOString(),
       },
-      ReturnValues: 'ALL_NEW',
+      ReturnValues: "ALL_NEW",
     });
 
     const result = await docClient.send(command);
@@ -236,8 +237,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new PutCommand({
       TableName: TABLE_NAME,
       Item: {
-        PK: this.pk('HQ', notification.headquartersId),
-        SK: this.pk('NOTIF', notification.id),
+        PK: this.pk("HQ", notification.headquartersId),
+        SK: this.pk("NOTIF", notification.notificationId),
         title: notification.title,
         message: notification.message,
         priority: notification.priority,
@@ -254,8 +255,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new GetCommand({
       TableName: TABLE_NAME,
       Key: {
-        PK: this.pk('USER', userId),
-        SK: this.pk('HQ', hqId),
+        PK: this.pk("USER", userId),
+        SK: this.pk("HQ", hqId),
       },
     });
 
@@ -268,10 +269,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async getUserHeadquarters(userId: string): Promise<UserHeadquarters[]> {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
       ExpressionAttributeValues: {
-        ':pk': this.pk('USER', userId),
-        ':skPrefix': 'HQ#',
+        ":pk": this.pk("USER", userId),
+        ":skPrefix": "HQ#",
       },
     });
 
@@ -280,7 +281,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
     return result.Items.map((item) => ({
       userId,
-      headquartersId: item.SK.split('#')[1],
+      headquartersId: item.SK.split("#")[1],
       role: item.role as UserRole,
     }));
   }
@@ -292,8 +293,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     // Batch Get HQs
     const distinctHqIds = [...new Set(userHqs.map((uh) => uh.headquartersId))];
     const keys = distinctHqIds.map((id) => ({
-      PK: this.pk('HQ', id),
-      SK: 'METADATA',
+      PK: this.pk("HQ", id),
+      SK: "METADATA",
     }));
 
     // Handle batch constraints (25 items max) in a real app, keeping simple here
@@ -320,8 +321,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     const command = new GetCommand({
       TableName: TABLE_NAME,
       Key: {
-        PK: this.pk('HQ', id),
-        SK: 'METADATA',
+        PK: this.pk("HQ", id),
+        SK: "METADATA",
       },
     });
 
@@ -334,10 +335,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async getProcedures(hqId: string): Promise<Procedure[]> {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
       ExpressionAttributeValues: {
-        ':pk': this.pk('HQ', hqId),
-        ':skPrefix': 'PROC#',
+        ":pk": this.pk("HQ", hqId),
+        ":skPrefix": "PROC#",
       },
     });
 
@@ -350,10 +351,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async getRequests(hqId: string): Promise<AppRequest[]> {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
       ExpressionAttributeValues: {
-        ':pk': this.pk('HQ', hqId),
-        ':skPrefix': 'REQ#',
+        ":pk": this.pk("HQ", hqId),
+        ":skPrefix": "REQ#",
       },
     });
 
@@ -369,12 +370,12 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      IndexName: 'GSI1',
+      IndexName: "GSI1",
       KeyConditionExpression:
-        'GSI1PK = :userPk AND begins_with(GSI1SK, :gsiSkPrefix)',
+        "GSI1PK = :userPk AND begins_with(GSI1SK, :gsiSkPrefix)",
       ExpressionAttributeValues: {
-        ':userPk': this.pk('USER', userId),
-        ':gsiSkPrefix': this.pk('HQ', hqId) + '#REQ#',
+        ":userPk": this.pk("USER", userId),
+        ":gsiSkPrefix": this.pk("HQ", hqId) + "#REQ#",
       },
     });
 
@@ -387,10 +388,10 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async getNotifications(hqId: string): Promise<AppNotification[]> {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :skPrefix)',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
       ExpressionAttributeValues: {
-        ':pk': this.pk('HQ', hqId),
-        ':skPrefix': 'NOTIF#',
+        ":pk": this.pk("HQ", hqId),
+        ":skPrefix": "NOTIF#",
       },
     });
 
@@ -404,7 +405,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   private mapToHeadquarters(item: any): Headquarters {
     return {
-      headquartersId: item.PK.split('#')[1],
+      headquartersId: item.PK.split("#")[1],
       name: item.name,
       description: item.description,
       createdAt: new Date(item.createdAt),
@@ -414,7 +415,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   private mapToProcedure(item: any, hqId: string): Procedure {
     return {
-      id: item.SK.split('#')[1],
+      procedureId: item.SK.split("#")[1],
       headquartersId: hqId,
       name: item.name,
       description: item.description,
@@ -426,7 +427,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   private mapToRequest(item: any, hqId: string): AppRequest {
     return {
-      id: item.SK.split('#')[1],
+      requestId: item.SK.split("#")[1],
       headquartersId: hqId,
       procedureId: item.procedureId,
       procedureName: item.procedureName,
@@ -441,7 +442,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   private mapToNotification(item: any, hqId: string): AppNotification {
     return {
-      id: item.SK.split('#')[1],
+      notificationId: item.SK.split("#")[1],
       headquartersId: hqId,
       title: item.title,
       message: item.message,

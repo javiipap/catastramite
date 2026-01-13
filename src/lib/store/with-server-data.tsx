@@ -17,8 +17,15 @@ type WrapperProps = {
   searchParams?: Promise<any> | any;
 }
 
-export function withServerData<TData, TArgs = undefined>(
-  fetcher: (args: TArgs, user: User) => Promise<TData>,
+// Define compatible SafeAction type
+type SafeAction<TInput, TOutput> = (input: TInput) => Promise<{
+  data?: TOutput;
+  serverError?: any;
+  validationErrors?: unknown;
+}>;
+
+export function withServerData<TData, TArgs>(
+  action: SafeAction<TArgs, TData>,
   Provider: React.ComponentType<ProviderProps<TData, TArgs>>
 ) {
   return async (props: WrapperProps) => {
@@ -29,13 +36,23 @@ export function withServerData<TData, TArgs = undefined>(
     });
 
     if (!session?.user) {
-      redirect('/onboarding');
+      redirect('/login');
     }
 
-    const data = await fetcher(params as TArgs, session.user);
+    const hasParams = params && Object.keys(params).length > 0;
+    const input = hasParams ? params : undefined;
+    const result = await action(input as TArgs);
+
+    if (result?.serverError) {
+      throw new Error(result.serverError);
+    }
+
+    if (result?.validationErrors) {
+      throw new Error("Validation Error: " + JSON.stringify(result.validationErrors));
+    }
 
     return (
-      <Provider initialData={data} args={params as TArgs} user={session.user}>
+      <Provider initialData={result.data as TData} args={params as TArgs} user={session.user}>
         {props.children}
       </Provider>
     );

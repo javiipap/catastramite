@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: user?.role ? `/${user.role}/headquarters` : "/onboarding",
+      callbackURL: "/onboarding",
     })
   }
 

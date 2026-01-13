@@ -1,4 +1,4 @@
-import { DatabaseAdapter } from '../types';
+import { DatabaseAdapter } from "../types";
 import {
   Headquarters,
   UserHeadquarters,
@@ -9,8 +9,8 @@ import {
   FormField,
   RequestStatus,
   User,
-} from '@/lib/types';
-import { db } from '../drizzle/client';
+} from "@/lib/types";
+import { db } from "../drizzle/client";
 import {
   headquarters,
   userHeadquarters,
@@ -18,8 +18,8 @@ import {
   procedures,
   requests,
   notifications,
-} from '../drizzle/schema';
-import { eq, and, inArray } from 'drizzle-orm';
+} from "../drizzle/schema";
+import { eq, and, inArray } from "drizzle-orm";
 
 export class SqlAdapter implements DatabaseAdapter {
   // --- Users ---
@@ -121,6 +121,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
     return results.map(({ user, role }) => ({
       ...user,
+      userId: user.id,
       role: role as UserRole,
     }));
   }
@@ -132,7 +133,11 @@ export class SqlAdapter implements DatabaseAdapter {
       .where(eq(user.email, email))
       .get();
 
-    return result;
+    if (!result) return undefined;
+    return {
+      ...result,
+      userId: result.id,
+    };
   }
 
   // --- Headquarters ---
@@ -166,7 +171,7 @@ export class SqlAdapter implements DatabaseAdapter {
         .values({
           userId: userId,
           headquartersId: hq.headquartersId,
-          role: 'master',
+          role: "master",
         })
         .run();
     });
@@ -180,7 +185,7 @@ export class SqlAdapter implements DatabaseAdapter {
   ): Promise<Headquarters> {
     if (Object.keys(updates).length === 0) {
       const hq = await this.getHeadquartersById(id);
-      if (!hq) throw new Error('Headquarters not found');
+      if (!hq) throw new Error("Headquarters not found");
       return hq;
     }
 
@@ -194,7 +199,7 @@ export class SqlAdapter implements DatabaseAdapter {
       .run();
 
     const updated = await this.getHeadquartersById(id);
-    if (!updated) throw new Error('Headquarters not found after update');
+    if (!updated) throw new Error("Headquarters not found after update");
     return updated;
   }
 
@@ -214,7 +219,7 @@ export class SqlAdapter implements DatabaseAdapter {
     await db
       .insert(procedures)
       .values({
-        id: procedure.id,
+        id: procedure.procedureId,
         headquartersId: procedure.headquartersId,
         name: procedure.name,
         description: procedure.description,
@@ -257,7 +262,7 @@ export class SqlAdapter implements DatabaseAdapter {
     await db
       .insert(requests)
       .values({
-        id: request.id,
+        id: request.requestId,
         headquartersId: request.headquartersId,
         procedureId: request.procedureId,
         procedureName: request.procedureName,
@@ -293,7 +298,7 @@ export class SqlAdapter implements DatabaseAdapter {
       .from(requests)
       .where(eq(requests.id, id))
       .get();
-    if (!updated) throw new Error('Request not found');
+    if (!updated) throw new Error("Request not found");
 
     return this.mapToRequest(updated);
   }
@@ -316,7 +321,7 @@ export class SqlAdapter implements DatabaseAdapter {
     await db
       .insert(notifications)
       .values({
-        id: notification.id,
+        id: notification.notificationId,
         headquartersId: notification.headquartersId,
         title: notification.title,
         message: notification.message,
@@ -344,7 +349,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
   private mapToProcedure(row: typeof procedures.$inferSelect): Procedure {
     return {
-      id: row.id,
+      procedureId: row.id,
       headquartersId: row.headquartersId,
       name: row.name,
       description: row.description,
@@ -356,7 +361,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
   private mapToRequest(row: typeof requests.$inferSelect): AppRequest {
     return {
-      id: row.id,
+      requestId: row.id,
       headquartersId: row.headquartersId,
       procedureId: row.procedureId,
       procedureName: row.procedureName,
@@ -373,11 +378,11 @@ export class SqlAdapter implements DatabaseAdapter {
     row: typeof notifications.$inferSelect
   ): AppNotification {
     return {
-      id: row.id,
+      notificationId: row.id,
       headquartersId: row.headquartersId,
       title: row.title,
       message: row.message,
-      priority: row.priority as 'low' | 'medium' | 'high',
+      priority: row.priority as "low" | "medium" | "high",
       createdAt: row.createdAt,
       createdBy: row.createdBy,
     };

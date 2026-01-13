@@ -1,23 +1,29 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { authClient } from "@/lib/auth-client"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
+import { UserRole } from '@/lib/types'
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
 
+  if (session?.user.role) {
+    router.push(`/${session.user.role}/headquarters`);
+    return null;
+  }
+
   // Prefill name if available
-  const [name, setName] = useState(session?.user?.name || "");
-  const [age, setAge] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [name, setName] = useState(session?.user?.name || '');
+  const [age, setAge] = useState<string>('');
+  const [role, setRole] = useState<UserRole>('slave');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,18 +31,11 @@ export default function OnboardingPage() {
     setIsLoading(true);
 
     try {
-      await authClient.updateUser({
-        name,
-        // @ts-expect-error - custom fields
-        age: parseInt(age),
-        role
-      });
+      await authClient.updateUser({ name, age: parseInt(age), role });
 
-      // Refresh session to get updated user data
-      await authClient.getSession();
+      const { data: session } = await authClient.getSession();
 
-      router.push("/login");
-      router.refresh();
+      router.push(`/${session?.user.role ?? 'slave'}/headquarters`);
     } catch (err) {
       console.error(err);
     } finally {
@@ -45,29 +44,29 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Card className="w-full max-w-md">
+    <div className='min-h-screen flex items-center justify-center'>
+      <Card className='w-full max-w-md'>
         <CardHeader>
           <CardTitle>Welcome to Catastramite</CardTitle>
           <CardDescription>Please complete your profile to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+          <form onSubmit={handleSubmit} className='space-y-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='name'>Full Name</Label>
               <Input
-                id="name"
+                id='name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='age'>Age</Label>
               <Input
-                id="age"
-                type="number"
+                id='age'
+                type='number'
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 required
@@ -75,27 +74,27 @@ export default function OnboardingPage() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={setRole} required>
+            <div className='space-y-2'>
+              <Label htmlFor='role'>Role</Label>
+              <Select value={role} onValueChange={(value) => setRole(value as UserRole)} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder='Select a role' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="master">Master</SelectItem>
-                  <SelectItem value="slave">Slave</SelectItem>
+                  <SelectItem value='master'>Master</SelectItem>
+                  <SelectItem value='slave'>Slave</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type='submit' className='w-full' disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Saving...
                 </>
               ) : (
-                "Complete Profile"
+                'Complete Profile'
               )}
             </Button>
           </form>

@@ -1,18 +1,19 @@
-'use server';
+"use server";
 
-import { useCases } from '@/use-cases';
-import { Headquarters } from '@/lib/schemas/headquarters';
-import { masterAction, slaveAction } from '@/lib/safe-action';
+import { useCases } from "@/use-cases";
+import { Headquarters } from "@/lib/schemas/headquarters";
+import { masterAction, masterAction2, slaveAction } from "@/lib/safe-action";
 import {
   createHeadquartersSchema,
   updateHeadquartersSchema,
   getHeadquartersSchema,
   getUserHeadquartersRelationsSchema,
-} from '@/lib/schemas/headquarters';
+} from "@/lib/schemas/headquarters";
 
-export const createHeadquarters = masterAction
-  .inputSchema(createHeadquartersSchema)
-  .action(async ({ parsedInput: { name, description }, ctx: { user } }) => {
+export const createHeadquarters = masterAction2(
+  createHeadquartersSchema,
+  // @ts-ignore
+  async ({ name, description }, { user }) => {
     const newHeadquarters: Headquarters = {
       headquartersId: Date.now().toString(),
       name,
@@ -30,11 +31,12 @@ export const createHeadquarters = masterAction
         {
           userId: user.id,
           headquartersId: newHeadquarters.headquartersId,
-          role: 'master',
+          role: "master",
         },
       ],
     };
-  });
+  }
+);
 
 export const updateHeadquarters = masterAction
   .inputSchema(updateHeadquartersSchema)
@@ -43,7 +45,6 @@ export const updateHeadquarters = masterAction
       parsedInput: { headquartersId, name, description },
       ctx: { user },
     }) => {
-      // Role check already done by middleware
       const updates: Partial<Headquarters> = { name };
       if (description !== undefined) {
         updates.description = description;
