@@ -18,6 +18,7 @@ import {
   Notification as AppNotification,
   FormField,
   RequestStatus,
+  User,
 } from '@/lib/types';
 
 // Configuration from env or defaults
@@ -51,6 +52,23 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     });
 
     await docClient.send(command);
+  }
+
+  async getUsersByHeadquarters(
+    hqId: string
+  ): Promise<(User & { role: UserRole })[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    throw new Error('Method not implemented.');
+  }
+
+  async removeUserFromHeadquarters(
+    userId: string,
+    hqId: string
+  ): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 
   // ... (Reads omitted/unchanged) ...

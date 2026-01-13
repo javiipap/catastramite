@@ -6,6 +6,7 @@ import {
   Request as AppRequest,
   Notification as AppNotification,
   RequestStatus,
+  User,
 } from '@/lib/types';
 
 export interface DatabaseAdapter {
@@ -13,7 +14,11 @@ export interface DatabaseAdapter {
   getUserRole(userId: string, hqId: string): Promise<UserRole | null>;
   getUserHeadquarters(userId: string): Promise<UserHeadquarters[]>;
   getUserHeadquartersObjects(userId: string): Promise<Headquarters[]>;
+  getUserHeadquartersObjects(userId: string): Promise<Headquarters[]>;
   addUserToHeadquarters(uh: UserHeadquarters): Promise<void>;
+  getUsersByHeadquarters(hqId: string): Promise<(User & { role: UserRole })[]>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  removeUserFromHeadquarters(userId: string, hqId: string): Promise<void>;
 
   // Headquarters
 

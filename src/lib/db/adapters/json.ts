@@ -9,6 +9,7 @@ import {
   Notification as AppNotification,
   UserRole,
   RequestStatus,
+  User,
 } from '@/lib/types';
 
 const DB_PATH = path.join(process.cwd(), 'data.json');
@@ -111,10 +112,28 @@ export class JsonAdapter implements DatabaseAdapter {
       (item) =>
         item.userId === uh.userId && item.headquartersId === uh.headquartersId
     );
+
     if (!exists) {
       db.userHeadquarters.push(uh);
       await writeDB(db);
     }
+  }
+
+  async getUsersByHeadquarters(
+    hqId: string
+  ): Promise<(User & { role: UserRole })[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    throw new Error('Method not implemented.');
+  }
+
+  async removeUserFromHeadquarters(
+    userId: string,
+    hqId: string
+  ): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {

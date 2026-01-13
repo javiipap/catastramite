@@ -8,16 +8,18 @@ import {
   Notification as AppNotification,
   FormField,
   RequestStatus,
+  User,
 } from '@/lib/types';
 import { db } from '../drizzle/client';
 import {
   headquarters,
   userHeadquarters,
+  user,
   procedures,
   requests,
   notifications,
 } from '../drizzle/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, inArray } from 'drizzle-orm';
 
 export class SqlAdapter implements DatabaseAdapter {
   // --- Users ---
@@ -57,25 +59,21 @@ export class SqlAdapter implements DatabaseAdapter {
 
     const hqIds = userHqs.map((h) => h.headquartersId);
 
-    // In Drizzle we can use 'inArray', but let's loop for simplicity if needed,
-    // or properly use inArray from drizzle-orm
-    // Importing inArray first... actually simpler to just map async if list is small,
-    // but correct way is `inArray`. Let's assume standard methods unless we need complex query.
-    // For better perf, we should use `inArray`. I will iterate for now to avoid importing another operator unless strictly necessary,
-    // but `inArray` is standard. Let's do a loop or Promise.all for now to be safe on imports without checking docs for specific path.
-    // Actually, I'll use Promise.all which is robust.
+    const hqsResult = await db
+      .select()
+      .from(headquarters)
+      .where(inArray(headquarters.id, hqIds))
+      .all();
 
-    const hqs = await Promise.all(
-      hqIds.map((id) => this.getHeadquartersById(id))
-    );
-    return hqs
-      .filter((h): h is Headquarters => !!h)
-      .map((h) => ({
-        ...h,
+    return hqsResult.map((row) => {
+      const hq = this.mapToHeadquarters(row);
+      return {
+        ...hq,
         userHeadquarters: userHqs.filter(
-          (uh) => uh.headquartersId === h.headquartersId
+          (uh) => uh.headquartersId === hq.headquartersId
         ),
-      }));
+      };
+    });
   }
 
   async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
@@ -91,6 +89,50 @@ export class SqlAdapter implements DatabaseAdapter {
         })
         .run();
     }
+  }
+
+  async removeUserFromHeadquarters(
+    userId: string,
+    hqId: string
+  ): Promise<void> {
+    await db
+      .delete(userHeadquarters)
+      .where(
+        and(
+          eq(userHeadquarters.userId, userId),
+          eq(userHeadquarters.headquartersId, hqId)
+        )
+      )
+      .run();
+  }
+
+  async getUsersByHeadquarters(
+    hqId: string
+  ): Promise<(User & { role: UserRole })[]> {
+    const results = await db
+      .select({
+        user: user,
+        role: userHeadquarters.role,
+      })
+      .from(userHeadquarters)
+      .innerJoin(user, eq(userHeadquarters.userId, user.id))
+      .where(eq(userHeadquarters.headquartersId, hqId))
+      .all();
+
+    return results.map(({ user, role }) => ({
+      ...user,
+      role: role as UserRole,
+    }));
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const result = await db
+      .select()
+      .from(user)
+      .where(eq(user.email, email))
+      .get();
+
+    return result;
   }
 
   // --- Headquarters ---
@@ -235,10 +277,6 @@ export class SqlAdapter implements DatabaseAdapter {
     status: RequestStatus,
     headquartersId: string
   ): Promise<AppRequest> {
-    // Verify ownership/HQ match implicitly by where clause or separate check?
-    // Adapter interface implies we trust caller or we check.
-    // For safety let's check or scope update.
-
     await db
       .update(requests)
       .set({
