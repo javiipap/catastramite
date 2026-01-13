@@ -10,14 +10,14 @@ const addNotificationSchema = v.object({
   title: v.string(),
   message: v.string(),
   priority: v.picklist(['low', 'medium', 'high']),
-  userId: v.string(), // For admin check and creation
 });
 
 export const addNotification = adminAction
   .inputSchema(addNotificationSchema)
   .action(
     async ({
-      parsedInput: { headquartersId, title, message, priority, userId },
+      parsedInput: { headquartersId, title, message, priority },
+      ctx: { user },
     }) => {
       const newNotification: AppNotification = {
         id: Date.now().toString(),
@@ -26,15 +26,15 @@ export const addNotification = adminAction
         message,
         priority,
         createdAt: new Date(),
-        createdBy: userId,
+        createdBy: user.id,
       };
 
-      return useCases.notifications.createNotification(newNotification);
+      return useCases.notifications.createNotification(newNotification, user);
     }
   );
 
 export const getNotificationsAction = slaveAction
   .inputSchema(v.object({ headquartersId: v.string() }))
-  .action(async ({ parsedInput: { headquartersId } }) => {
-    return useCases.notifications.getNotifications({ headquartersId });
+  .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
+    return useCases.notifications.getNotifications({ headquartersId }, user);
   });

@@ -19,14 +19,14 @@ const addProcedureSchema = v.object({
   name: v.string(),
   description: v.string(),
   fields: v.array(FormFieldSchema),
-  userId: v.string(), // Explicit userId for admin check and creation
 });
 
 export const addProcedure = adminAction
   .inputSchema(addProcedureSchema)
   .action(
     async ({
-      parsedInput: { headquartersId, name, description, fields, userId },
+      parsedInput: { headquartersId, name, description, fields },
+      ctx: { user },
     }) => {
       // Role check already done by middleware via userId/headquartersId
       const newProcedure: Procedure = {
@@ -36,15 +36,15 @@ export const addProcedure = adminAction
         description,
         fields,
         createdAt: new Date(),
-        createdBy: userId, // Use userId as createdBy
+        createdBy: user.id, // Use userId as createdBy
       };
 
-      return useCases.procedures.createProcedure(newProcedure);
+      return useCases.procedures.createProcedure(newProcedure, user);
     }
   );
 
 export const getProceduresAction = slaveAction
   .inputSchema(v.object({ headquartersId: v.string() }))
-  .action(async ({ parsedInput: { headquartersId } }) => {
-    return useCases.procedures.getProcedures({ headquartersId });
+  .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
+    return useCases.procedures.getProcedures({ headquartersId }, user);
   });

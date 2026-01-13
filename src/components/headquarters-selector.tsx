@@ -63,8 +63,8 @@ export function HeadquartersSelector() {
               // Determine destination based on current context
               if (pathname?.startsWith("/admin")) {
                 router.push(`/admin/${headquarters.headquartersId}/dashboard`)
-              } else if (pathname?.startsWith("/citizen")) {
-                router.push(`/citizen/${headquarters.headquartersId}/dashboard`)
+              } else if (pathname?.startsWith("/slave")) {
+                router.push(`/slave/${headquarters.headquartersId}/dashboard`)
               } else {
                 // Default fallback
                 router.push(`/admin/${headquarters.headquartersId}/dashboard`)

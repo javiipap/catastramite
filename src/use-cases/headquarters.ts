@@ -1,7 +1,6 @@
 import type { DatabaseAdapter } from '@/lib/db/types';
 import type { Headquarters, UserHeadquarters } from '@/lib/types';
-
-import { getCurrentUserId } from '@/lib/server-auth';
+import type { User } from 'better-auth';
 
 export class HeadquartersUseCases {
   constructor(private db: DatabaseAdapter) {}
@@ -14,25 +13,36 @@ export class HeadquartersUseCases {
   }
 
   async getHeadquarters(
-    params: Pick<Headquarters, 'headquartersId'>
+    params: Pick<Headquarters, 'headquartersId'>,
+    user: Pick<User, 'id'>
   ): Promise<Headquarters | undefined> {
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error('Unauthorized');
-
-    const role = await this.db.getUserRole(userId, params.headquartersId);
-    if (!role) throw new Error('Unauthorized: Access denied');
-
+    const role = await this.db.getUserRole(user.id, params.headquartersId);
+    if (!role) {
+      throw new Error('Unauthorized: Access denied');
+    }
     return this.db.getHeadquartersById(params.headquartersId);
   }
 
   async updateHeadquarters(
     id: string,
-    updates: Partial<Headquarters>
+    updates: Partial<Headquarters>,
+    user: Pick<User, 'id'>
   ): Promise<Headquarters> {
+    const role = await this.db.getUserRole(user.id, id);
+    if (role !== 'master') {
+      throw new Error('Unauthorized: Admin access required');
+    }
     return this.db.updateHeadquarters(id, updates);
   }
 
-  async addUserToHeadquarters(uh: UserHeadquarters): Promise<void> {
+  async addUserToHeadquarters(
+    uh: UserHeadquarters,
+    actor: Pick<User, 'id'>
+  ): Promise<void> {
+    const role = await this.db.getUserRole(actor.id, uh.headquartersId);
+    if (role !== 'master') {
+      throw new Error('Unauthorized: Admin access required');
+    }
     return this.db.addUserToHeadquarters(uh);
   }
 
@@ -57,5 +67,32 @@ export class HeadquartersUseCases {
         (uh) => uh.userId === user.userId && uh.role === 'master'
       )
     );
+  }
+
+  async getHeadquartersUsers(
+    params: Pick<UserHeadquarters, 'headquartersId'>,
+    user: Pick<User, 'id'>
+  ) {
+    const role = await this.db.getUserRole(user.id, params.headquartersId);
+    if (role !== 'master') {
+      throw new Error('Unauthorized: Admin access required');
+    }
+    return this.db.getUsersByHeadquarters(params.headquartersId);
+  }
+
+  async removeUserFromHeadquarters(
+    userId: string,
+    headquartersId: string,
+    actor: Pick<User, 'id'>
+  ): Promise<void> {
+    const role = await this.db.getUserRole(actor.id, headquartersId);
+    if (role !== 'master') {
+      throw new Error('Unauthorized: Admin access required');
+    }
+    return this.db.removeUserFromHeadquarters(userId, headquartersId);
+  }
+
+  async getUserByEmail(email: string) {
+    return this.db.getUserByEmail(email);
   }
 }

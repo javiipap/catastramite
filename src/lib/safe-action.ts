@@ -1,37 +1,33 @@
 import { createSafeActionClient } from 'next-safe-action';
-import { useCases } from '@/use-cases';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export const actionClient = createSafeActionClient();
 
 export const adminAction = actionClient.use(async ({ next, clientInput }) => {
-  const input = clientInput as
-    | { userId?: string; headquartersId?: string }
-    | undefined;
-  const uid = input?.userId;
-  const hqid = input?.headquartersId;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!uid || !hqid) {
-    throw new Error('Missing credentials for admin action');
+  if (!session?.user) {
+    throw new Error();
   }
 
-  const role = await useCases.users.getUserRole(
-    { userId: uid },
-    { headquartersId: hqid }
-  );
-  if (role !== 'master') {
-    throw new Error('Unauthorized: Admin access required');
+  if (session.user.role !== 'master') {
+    throw new Error();
   }
 
-  return next({ ctx: { userId: uid, headquartersId: hqid } });
+  return next({ ctx: { user: session.user } });
 });
 
 export const slaveAction = actionClient.use(async ({ next, clientInput }) => {
-  const input = clientInput as { userId?: string } | undefined;
-  const uid = input?.userId;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!uid) {
-    throw new Error('Missing user credentials');
+  if (!session?.user) {
+    throw new Error();
   }
 
-  return next({ ctx: { userId: uid } });
+  return next({ ctx: { user: session.user } });
 });

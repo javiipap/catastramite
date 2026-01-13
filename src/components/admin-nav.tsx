@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, FolderOpen, Bell } from "lucide-react"
+import { LayoutDashboard, FileText, FolderOpen, Bell, Users } from "lucide-react"
 
 interface AdminNavProps {
   headquartersId?: string
@@ -34,6 +34,11 @@ export function AdminNav({ headquartersId }: AdminNavProps) {
       title: "Requests",
       href: `/admin/${headquartersId}/requests`,
       icon: FolderOpen,
+    },
+    {
+      title: "Users",
+      href: `/admin/${headquartersId}/users`,
+      icon: Users,
     },
   ]
 

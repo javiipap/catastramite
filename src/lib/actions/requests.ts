@@ -18,20 +18,10 @@ const addRequestSchema = v.object({
 
 export const addRequest = slaveAction
   .inputSchema(addRequestSchema)
-  .action(async ({ parsedInput: request }) => {
-    const { userId } = request;
-
+  .action(async ({ parsedInput: request, ctx: { user } }) => {
     // Additional check: Ensure user creating is the applicant (implicit in safeAction context?)
-    if (request.applicantId !== userId) {
+    if (request.applicantId !== user.id) {
       throw new Error('Unauthorized: Cannot create request for another user');
-    }
-
-    const role = await useCases.users.getUserRole(
-      { userId },
-      { headquartersId: request.headquartersId }
-    );
-    if (!role) {
-      throw new Error('Unauthorized: User not associated with headquarters');
     }
 
     const newRequest: AppRequest = {
@@ -47,34 +37,36 @@ export const addRequest = slaveAction
       updatedAt: new Date(),
     };
 
-    return useCases.requests.createRequest(newRequest);
+    return useCases.requests.createRequest(newRequest, user);
   });
 
 const updateRequestStatusSchema = v.object({
   id: v.string(),
   status: v.picklist(['pending', 'in_review', 'approved', 'rejected'] as const),
   headquartersId: v.string(),
-  userId: v.string(),
 });
 
 export const updateRequestStatus = adminAction
   .inputSchema(updateRequestStatusSchema)
-  .action(async ({ parsedInput: { id, status, headquartersId } }) => {
-    // Role checked by middleware using input.headquartersId
-
-    return useCases.requests.updateRequestStatus(id, status, {
-      headquartersId,
-    });
-  });
+  .action(
+    async ({ parsedInput: { id, status, headquartersId }, ctx: { user } }) => {
+      return useCases.requests.updateRequestStatus(
+        id,
+        status,
+        { headquartersId },
+        user
+      );
+    }
+  );
 
 export const getRequestsAction = slaveAction
   .inputSchema(v.object({ headquartersId: v.string() }))
-  .action(async ({ parsedInput: { headquartersId } }) => {
-    return useCases.requests.getRequests({ headquartersId });
+  .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
+    return useCases.requests.getRequests({ headquartersId }, user);
   });
 
 export const getUserRequestsAction = slaveAction
   .inputSchema(v.object({ headquartersId: v.string() }))
-  .action(async ({ parsedInput: { headquartersId } }) => {
-    return useCases.requests.getUserRequests({ headquartersId });
+  .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
+    return useCases.requests.getUserRequests({ headquartersId }, user);
   });

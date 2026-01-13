@@ -1,23 +1,33 @@
-
-import { DatabaseAdapter } from "@/lib/db/types";
-import { Notification as AppNotification, UserHeadquarters } from "@/lib/types";
-
-import { getCurrentUserId } from "@/lib/server-auth";
+import { DatabaseAdapter } from '@/lib/db/types';
+import { Notification as AppNotification, UserHeadquarters } from '@/lib/types';
+import { User } from 'better-auth';
 
 export class NotificationsUseCases {
-    constructor(private db: DatabaseAdapter) {}
+  constructor(private db: DatabaseAdapter) {}
 
-    async createNotification(notification: AppNotification): Promise<AppNotification> {
-        return this.db.createNotification(notification);
+  async createNotification(
+    notification: AppNotification,
+    user: Pick<User, 'id'>
+  ): Promise<AppNotification> {
+    const role = await this.db.getUserRole(
+      user.id,
+      notification.headquartersId
+    );
+    if (role !== 'master') {
+      throw new Error('Unauthorized: Admin access required');
+    }
+    return this.db.createNotification(notification);
+  }
+
+  async getNotifications(
+    hq: Pick<UserHeadquarters, 'headquartersId'>,
+    user: Pick<User, 'id'>
+  ): Promise<AppNotification[]> {
+    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    if (!role) {
+      throw new Error('Unauthorized: Access denied');
     }
 
-    async getNotifications(hq: Pick<UserHeadquarters, 'headquartersId'>): Promise<AppNotification[]> {
-        const userId = await getCurrentUserId();
-        if (!userId) throw new Error("Unauthorized");
-    
-        const role = await this.db.getUserRole(userId, hq.headquartersId);
-        if (!role) throw new Error("Unauthorized: Access denied");
-        
-        return this.db.getNotifications(hq.headquartersId);
-    }
+    return this.db.getNotifications(hq.headquartersId);
+  }
 }
