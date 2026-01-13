@@ -98,7 +98,7 @@ export default function MasterDashboardPage() {
                   .slice(0, 5)
                   .reverse()
                   .map((request) => (
-                    <div key={request.id} className="flex items-center justify-between border-b pb-2">
+                    <div key={request.requestId} className="flex items-center justify-between border-b pb-2">
                       <div>
                         <p className="text-sm font-medium">{request.procedureName}</p>
                         <p className="text-xs text-muted-foreground">{request.applicantName}</p>
@@ -132,7 +132,7 @@ export default function MasterDashboardPage() {
             ) : (
               <div className="space-y-3">
                 {headquartersProcedures.map((procedure) => (
-                  <div key={procedure.id} className="flex items-start justify-between border-b pb-2">
+                  <div key={procedure.procedureId} className="flex items-start justify-between border-b pb-2">
                     <div className="flex-1">
                       <p className="text-sm font-medium">{procedure.name}</p>
                       <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>

@@ -73,7 +73,7 @@ export default function MasterRequestsPage() {
       ) : (
         <div className="space-y-4">
           {filteredRequests.map((request) => (
-            <Card key={request.id} className="hover:shadow-md transition-shadow">
+            <Card key={request.requestId} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -104,7 +104,7 @@ export default function MasterRequestsPage() {
                       size="sm"
                       onClick={() => {
                         if (user) {
-                          updateMutation.mutate({ id: request.id, status: "in_review", headquartersId: headquarters.headquartersId, userId: user.id })
+                          updateMutation.mutate({ requestId: request.requestId, status: "in_review", headquartersId: headquarters.headquartersId })
                         }
                       }}
                     >
@@ -118,7 +118,7 @@ export default function MasterRequestsPage() {
                         size="sm"
                         onClick={() => {
                           if (user) {
-                            updateMutation.mutate({ id: request.id, status: "approved", headquartersId: headquarters.headquartersId, userId: user.id })
+                            updateMutation.mutate({ requestId: request.requestId, status: "approved", headquartersId: headquarters.headquartersId })
                           }
                         }}
                         className="text-green-700 hover:text-green-800"
@@ -130,7 +130,7 @@ export default function MasterRequestsPage() {
                         size="sm"
                         onClick={() => {
                           if (user) {
-                            updateMutation.mutate({ id: request.id, status: "rejected", headquartersId: headquarters.headquartersId, userId: user.id })
+                            updateMutation.mutate({ requestId: request.requestId, status: "rejected", headquartersId: headquarters.headquartersId })
                           }
                         }}
                         className="text-red-700 hover:text-red-800"
@@ -150,7 +150,7 @@ export default function MasterRequestsPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedRequest?.procedureName}</DialogTitle>
-            <DialogDescription>Request #{selectedRequest?.id} Details</DialogDescription>
+            <DialogDescription>Request #{selectedRequest?.requestId} Details</DialogDescription>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 py-4">
@@ -210,7 +210,7 @@ export default function MasterRequestsPage() {
                   <Button
                     onClick={() => {
                       if (headquarters && user) {
-                        updateMutation.mutate({ id: selectedRequest.id, status: "approved", headquartersId: headquarters.headquartersId, userId: user.id })
+                        updateMutation.mutate({ requestId: selectedRequest.requestId, status: "approved", headquartersId: headquarters.headquartersId })
                       }
                     }}
                     className="flex-1"
@@ -221,7 +221,7 @@ export default function MasterRequestsPage() {
                     variant="destructive"
                     onClick={() => {
                       if (headquarters && user) {
-                        updateMutation.mutate({ id: selectedRequest.id, status: "rejected", headquartersId: headquarters.headquartersId, userId: user.id })
+                        updateMutation.mutate({ requestId: selectedRequest.requestId, status: "rejected", headquartersId: headquarters.headquartersId })
                       }
                     }}
                     className="flex-1"

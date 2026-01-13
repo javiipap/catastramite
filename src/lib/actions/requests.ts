@@ -1,23 +1,16 @@
 'use server';
 
 import { useCases } from '@/use-cases';
-import { Request as AppRequest } from '@/lib/types';
+import { Request as AppRequest } from '@/lib/schemas/requests';
 import { masterAction, slaveAction } from '@/lib/safe-action';
-import * as v from 'valibot';
-
-const addRequestSchema = v.object({
-  headquartersId: v.string(),
-  procedureId: v.string(),
-  procedureName: v.string(),
-  applicantId: v.string(),
-  applicantName: v.string(),
-  status: v.picklist(['pending', 'in_review', 'approved', 'rejected']),
-  data: v.record(v.string(), v.unknown()),
-  userId: v.string(),
-});
+import {
+  createRequestSchema,
+  updateRequestStatusSchema,
+  getRequestsSchema,
+} from '@/lib/schemas/requests';
 
 export const addRequest = slaveAction
-  .inputSchema(addRequestSchema)
+  .inputSchema(createRequestSchema)
   .action(async ({ parsedInput: request, ctx: { user } }) => {
     // Additional check: Ensure user creating is the applicant (implicit in safeAction context?)
     if (request.applicantId !== user.id) {
@@ -25,7 +18,7 @@ export const addRequest = slaveAction
     }
 
     const newRequest: AppRequest = {
-      id: Date.now().toString(),
+      requestId: Date.now().toString(),
       headquartersId: request.headquartersId,
       procedureId: request.procedureId,
       procedureName: request.procedureName,
@@ -40,18 +33,15 @@ export const addRequest = slaveAction
     return useCases.requests.createRequest(newRequest, user);
   });
 
-const updateRequestStatusSchema = v.object({
-  id: v.string(),
-  status: v.picklist(['pending', 'in_review', 'approved', 'rejected'] as const),
-  headquartersId: v.string(),
-});
-
 export const updateRequestStatus = masterAction
   .inputSchema(updateRequestStatusSchema)
   .action(
-    async ({ parsedInput: { id, status, headquartersId }, ctx: { user } }) => {
+    async ({
+      parsedInput: { requestId, status, headquartersId },
+      ctx: { user },
+    }) => {
       return useCases.requests.updateRequestStatus(
-        id,
+        requestId,
         status,
         { headquartersId },
         user
@@ -60,13 +50,13 @@ export const updateRequestStatus = masterAction
   );
 
 export const getRequestsAction = slaveAction
-  .inputSchema(v.object({ headquartersId: v.string() }))
+  .inputSchema(getRequestsSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.requests.getRequests({ headquartersId }, user);
   });
 
 export const getUserRequestsAction = slaveAction
-  .inputSchema(v.object({ headquartersId: v.string() }))
+  .inputSchema(getRequestsSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.requests.getUserRequests({ headquartersId }, user);
   });

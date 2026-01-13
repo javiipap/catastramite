@@ -11,39 +11,49 @@ import {
 
 export interface DatabaseAdapter {
   // Users
-  getUserRole(userId: string, hqId: string): Promise<UserRole | null>;
+  getUserRole(userId: string, headquartersId: string): Promise<UserRole | null>;
   getUserHeadquarters(userId: string): Promise<UserHeadquarters[]>;
   getUserHeadquartersObjects(userId: string): Promise<Headquarters[]>;
   getUserHeadquartersObjects(userId: string): Promise<Headquarters[]>;
   addUserToHeadquarters(uh: UserHeadquarters): Promise<void>;
-  getUsersByHeadquarters(hqId: string): Promise<(User & { role: UserRole })[]>;
+  getUsersByHeadquarters(
+    headquartersId: string
+  ): Promise<(User & { role: UserRole })[]>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  removeUserFromHeadquarters(userId: string, hqId: string): Promise<void>;
+  removeUserFromHeadquarters(
+    userId: string,
+    headquartersId: string
+  ): Promise<void>;
 
   // Headquarters
 
-  getHeadquartersById(id: string): Promise<Headquarters | undefined>;
+  getHeadquartersById(
+    headquartersId: string
+  ): Promise<Headquarters | undefined>;
   createHeadquarters(hq: Headquarters, userId: string): Promise<Headquarters>;
   updateHeadquarters(
-    id: string,
+    headquartersId: string,
     updates: Partial<Headquarters>
   ): Promise<Headquarters>;
 
   // Procedures
-  getProcedures(hqId: string): Promise<Procedure[]>;
+  getProcedures(headquartersId: string): Promise<Procedure[]>;
   createProcedure(procedure: Procedure): Promise<Procedure>;
 
   // Requests
-  getRequests(hqId: string): Promise<AppRequest[]>;
-  getUserRequests(hqId: string, userId: string): Promise<AppRequest[]>;
+  getRequests(headquartersId: string): Promise<AppRequest[]>;
+  getUserRequests(
+    headquartersId: string,
+    userId: string
+  ): Promise<AppRequest[]>;
   createRequest(request: AppRequest): Promise<AppRequest>;
   updateRequestStatus(
-    id: string,
+    requestId: string,
     status: RequestStatus,
     headquartersId: string
   ): Promise<AppRequest>;
 
   // Notifications
-  getNotifications(hqId: string): Promise<AppNotification[]>;
+  getNotifications(headquartersId: string): Promise<AppNotification[]>;
   createNotification(notification: AppNotification): Promise<AppNotification>;
 }

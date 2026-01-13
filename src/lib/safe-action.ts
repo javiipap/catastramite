@@ -9,7 +9,7 @@ export const actionClient = createSafeActionClient({
   },
 });
 
-export const masterAction = actionClient.use(async ({ next, clientInput }) => {
+export const masterAction = actionClient.use(async ({ next }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -25,7 +25,7 @@ export const masterAction = actionClient.use(async ({ next, clientInput }) => {
   return next({ ctx: { user: session.user } });
 });
 
-export const slaveAction = actionClient.use(async ({ next, clientInput }) => {
+export const slaveAction = actionClient.use(async ({ next }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

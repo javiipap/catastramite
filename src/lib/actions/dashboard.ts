@@ -13,7 +13,9 @@ export async function getMasterDashboardDataAction(params: {
   });
   if (!session?.user) throw new Error('Unauthorized');
 
-  return useCases.dashboard.getMasterDashboardData(params, session.user);
+  return useCases.dashboard.getMasterDashboardData(params, {
+    userId: session.user.id,
+  });
 }
 
 export async function getSlaveDashboardDataAction(params: {
@@ -24,5 +26,7 @@ export async function getSlaveDashboardDataAction(params: {
   });
   if (!session?.user) throw new Error('Unauthorized');
 
-  return useCases.dashboard.getSlaveDashboardData(params, session.user);
+  return useCases.dashboard.getSlaveDashboardData(params, {
+    userId: session.user.id,
+  });
 }

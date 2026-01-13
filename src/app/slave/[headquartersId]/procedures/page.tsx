@@ -27,7 +27,7 @@ export default function SlaveProceduresPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {procedures.map((procedure) => (
-            <Card key={procedure.id} className="hover:shadow-lg transition-shadow">
+            <Card key={procedure.procedureId} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle>{procedure.name}</CardTitle>
                 <CardDescription className="line-clamp-2">{procedure.description}</CardDescription>
@@ -37,7 +37,7 @@ export default function SlaveProceduresPage() {
                   <p>Requirements: {procedure.fields.length} fields to complete</p>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link href={`/slave/${headquartersId}/procedures/${procedure.id}`}>Start Procedure</Link>
+                  <Link href={`/slave/${headquartersId}/procedures/${procedure.procedureId}`}>Start Procedure</Link>
                 </Button>
               </CardContent>
             </Card>

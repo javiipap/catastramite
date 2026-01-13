@@ -1,28 +1,16 @@
 'use server';
 
 import { useCases } from '@/use-cases';
-import { Procedure } from '@/lib/types';
+import { useCases } from '@/use-cases';
+import { Procedure, FormField } from '@/lib/schemas/procedures';
 import { masterAction, slaveAction } from '@/lib/safe-action';
-import * as v from 'valibot';
-
-// Definition for FormField schema
-const FormFieldSchema = v.object({
-  id: v.string(),
-  name: v.string(),
-  type: v.picklist(['text', 'number', 'date', 'email', 'textarea', 'select']),
-  required: v.boolean(),
-  options: v.optional(v.array(v.string())),
-});
-
-const addProcedureSchema = v.object({
-  headquartersId: v.string(),
-  name: v.string(),
-  description: v.string(),
-  fields: v.array(FormFieldSchema),
-});
+import {
+  createProcedureSchema,
+  getProceduresSchema,
+} from '@/lib/schemas/procedures';
 
 export const addProcedure = masterAction
-  .inputSchema(addProcedureSchema)
+  .inputSchema(createProcedureSchema)
   .action(
     async ({
       parsedInput: { headquartersId, name, description, fields },
@@ -30,11 +18,11 @@ export const addProcedure = masterAction
     }) => {
       // Role check already done by middleware via userId/headquartersId
       const newProcedure: Procedure = {
-        id: Date.now().toString(),
+        procedureId: Date.now().toString(),
         headquartersId,
         name,
         description,
-        fields,
+        fields: fields as FormField[], // Cast to verify structure matches core types
         createdAt: new Date(),
         createdBy: user.id, // Use userId as createdBy
       };
@@ -44,7 +32,7 @@ export const addProcedure = masterAction
   );
 
 export const getProceduresAction = slaveAction
-  .inputSchema(v.object({ headquartersId: v.string() }))
+  .inputSchema(getProceduresSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.procedures.getProcedures({ headquartersId }, user);
   });

@@ -2,23 +2,21 @@
 
 import { useCases } from '@/use-cases';
 import { masterAction } from '@/lib/safe-action';
-import * as v from 'valibot';
 import { revalidatePath } from 'next/cache';
+import {
+  getHeadquartersUsersSchema,
+  addUserToHeadquartersSchema,
+  removeUserFromHeadquartersSchema,
+} from '@/lib/schemas/users';
 
 export const getHeadquartersUsersAction = masterAction
-  .inputSchema(v.object({ headquartersId: v.string() }))
+  .inputSchema(getHeadquartersUsersSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.headquarters.getHeadquartersUsers({ headquartersId }, user);
   });
 
 export const addUserToHeadquartersAction = masterAction
-  .inputSchema(
-    v.object({
-      headquartersId: v.string(),
-      email: v.string(),
-      role: v.picklist(['master', 'slave']),
-    })
-  )
+  .inputSchema(addUserToHeadquartersSchema)
   .action(
     async ({
       parsedInput: { headquartersId, email, role },
@@ -31,7 +29,7 @@ export const addUserToHeadquartersAction = masterAction
 
       await useCases.headquarters.addUserToHeadquarters(
         {
-          userId: user.id,
+          userId: user.userId,
           headquartersId: headquartersId,
           role: role,
         },
@@ -43,12 +41,7 @@ export const addUserToHeadquartersAction = masterAction
   );
 
 export const removeUserFromHeadquartersAction = masterAction
-  .inputSchema(
-    v.object({
-      headquartersId: v.string(),
-      userId: v.string(),
-    })
-  )
+  .inputSchema(removeUserFromHeadquartersSchema)
   .action(
     async ({
       parsedInput: { headquartersId, userId },

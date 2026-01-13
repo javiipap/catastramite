@@ -13,7 +13,7 @@ export class HeadquartersUseCases {
   }
 
   async getHeadquarters(
-    params: Pick<Headquarters, 'headquartersId'>,
+    params: { headquartersId: string },
     user: Pick<User, 'id'>
   ): Promise<Headquarters | undefined> {
     const role = await this.db.getUserRole(user.id, params.headquartersId);
@@ -24,15 +24,15 @@ export class HeadquartersUseCases {
   }
 
   async updateHeadquarters(
-    id: string,
+    headquartersId: string,
     updates: Partial<Headquarters>,
     user: Pick<User, 'id'>
   ): Promise<Headquarters> {
-    const role = await this.db.getUserRole(user.id, id);
+    const role = await this.db.getUserRole(user.id, headquartersId);
     if (role !== 'master') {
       throw new Error('Unauthorized: Master access required');
     }
-    return this.db.updateHeadquarters(id, updates);
+    return this.db.updateHeadquarters(headquartersId, updates);
   }
 
   async addUserToHeadquarters(

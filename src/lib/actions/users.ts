@@ -2,10 +2,10 @@
 
 import { useCases } from '@/use-cases';
 import { slaveAction } from '@/lib/safe-action';
-import * as v from 'valibot';
+import { getUserRoleSchema } from '@/lib/schemas/users';
 
 export const getUserRoleAction = slaveAction
-  .inputSchema(v.object({ userId: v.string(), headquartersId: v.string() }))
+  .inputSchema(getUserRoleSchema)
   .action(async ({ parsedInput: { userId, headquartersId } }) => {
     return useCases.users.getUserRole({ userId }, { headquartersId });
   });

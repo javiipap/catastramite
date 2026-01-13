@@ -1,26 +1,22 @@
 'use server';
 
 import { useCases } from '@/use-cases';
-import { Notification as AppNotification } from '@/lib/types';
+import { Notification as AppNotification } from '@/lib/schemas/notifications';
 import { masterAction, slaveAction } from '@/lib/safe-action';
-import * as v from 'valibot';
-
-const addNotificationSchema = v.object({
-  headquartersId: v.string(),
-  title: v.string(),
-  message: v.string(),
-  priority: v.picklist(['low', 'medium', 'high']),
-});
+import {
+  createNotificationSchema,
+  getNotificationsSchema,
+} from '@/lib/schemas/notifications';
 
 export const addNotification = masterAction
-  .inputSchema(addNotificationSchema)
+  .inputSchema(createNotificationSchema)
   .action(
     async ({
       parsedInput: { headquartersId, title, message, priority },
       ctx: { user },
     }) => {
       const newNotification: AppNotification = {
-        id: Date.now().toString(),
+        notificationId: Date.now().toString(),
         headquartersId,
         title,
         message,
@@ -34,7 +30,7 @@ export const addNotification = masterAction
   );
 
 export const getNotificationsAction = slaveAction
-  .inputSchema(v.object({ headquartersId: v.string() }))
+  .inputSchema(getNotificationsSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.notifications.getNotifications({ headquartersId }, user);
   });

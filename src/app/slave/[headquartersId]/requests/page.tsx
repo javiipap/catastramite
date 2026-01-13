@@ -18,7 +18,7 @@ export default function SlaveRequestsPage() {
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
 
   // Filter client side for current user
-  const myRequests = requests.filter((r) => r.applicantId === user?.id)
+  const myRequests = requests.filter((r) => r.applicantId === user?.userId)
   const filteredRequests = filter === "all" ? myRequests : myRequests.filter((r) => r.status === filter)
 
   const getStatusBadge = (status: Request["status"]) => {
@@ -67,13 +67,13 @@ export default function SlaveRequestsPage() {
             .slice()
             .reverse()
             .map((request) => (
-              <Card key={request.id} className="hover:shadow-md transition-shadow">
+              <Card key={request.requestId} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-lg">{request.procedureName}</CardTitle>
                       <CardDescription>
-                        Request #{request.id}
+                        Request #{request.requestId}
                         <span className="mx-2">•</span>
                         {new Date(request.createdAt).toLocaleDateString("en-US", {
                           year: "numeric",
@@ -101,7 +101,7 @@ export default function SlaveRequestsPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedRequest?.procedureName}</DialogTitle>
-            <DialogDescription>Details of your request #{selectedRequest?.id}</DialogDescription>
+            <DialogDescription>Details of your request #{selectedRequest?.requestId}</DialogDescription>
           </DialogHeader>
           {selectedRequest && (
             <div className="space-y-4 py-4">

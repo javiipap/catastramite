@@ -35,8 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  // Cast session.user to our User type (which matches mostly)
-  const user = session?.user ? session.user as unknown as User : null
+  // Map session.user to our User type
+  const user: User | null = session?.user
+    ? {
+      ...session.user,
+      userId: session.user.id,
+      role: (session.user as any).role, // Ensure role is passed if present
+    } as unknown as User
+    : null
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isLoading }}>

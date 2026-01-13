@@ -18,11 +18,11 @@ export default function SlaveProcedurePage() {
   const router = useRouter()
   const { data: procedures } = useProceduresStore()
   const { user } = useAuth()
-  
+
   const [formData, setFormData] = useState<Record<string, string>>({})
 
   // Find Procedure from store
-  const procedure = procedures.find((p) => p.id === params.id)
+  const procedure = procedures.find((p) => p.procedureId === params.id)
 
   const addMutation = useCreateRequest()
 
@@ -47,19 +47,19 @@ export default function SlaveProcedurePage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (user && procedure) {
-        addMutation.mutate({
-        procedureId: procedure.id,
+      addMutation.mutate({
+        procedureId: procedure.procedureId,
         procedureName: procedure.name,
         headquartersId: procedure.headquartersId,
-        applicantId: user.id,
+        applicantId: user.userId,
         applicantName: user.name,
         status: "pending",
         data: formData,
-        userId: user.id
+
       }, {
-          onSuccess: () => {
-              router.push(`/slave/${params.headquartersId}/requests`)
-          }
+        onSuccess: () => {
+          router.push(`/slave/${params.headquartersId}/requests`)
+        }
       })
     }
   }

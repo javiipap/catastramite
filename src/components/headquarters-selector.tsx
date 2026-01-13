@@ -27,10 +27,10 @@ export function HeadquartersSelector() {
 
   // Fetch user headquarters on client side
   const { data: userHeadquarters = [] } = useQuery({
-    queryKey: ['userHeadquarters', user?.id],
+    queryKey: ['userHeadquarters', user?.userId],
     queryFn: async () => {
       if (!user) return []
-      const result = await getUserHeadquartersObjectsAction({ userId: user.id })
+      const result = await getUserHeadquartersObjectsAction({ userId: user.userId })
       return result?.data || []
     },
     enabled: !!user

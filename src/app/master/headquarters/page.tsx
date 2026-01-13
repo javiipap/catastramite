@@ -39,7 +39,7 @@ export default function HeadquartersPage() {
   const handleCreateHeadquarters = (e: React.FormEvent) => {
     e.preventDefault()
     if (newHeadquartersName.trim() && user) {
-      createMutation.mutate({ name: newHeadquartersName, description: "", userId: user.id }, {
+      createMutation.mutate({ name: newHeadquartersName, description: "" }, {
         onSuccess: () => {
           setIsOpen(false)
           setNewHeadquartersName("")
@@ -65,7 +65,7 @@ export default function HeadquartersPage() {
 
   const handleEnterHeadquarters = (headquartersId: string) => {
     // Check role to determine destination
-    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
+    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.userId)
     if (relation?.role === 'master') {
       router.push(`/master/${headquartersId}/dashboard`)
     } else {
@@ -143,7 +143,7 @@ export default function HeadquartersPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {headquarters.map((h) => {
-            const relation = h.userHeadquarters?.find(uh => uh.userId === user.id)
+            const relation = h.userHeadquarters?.find(uh => uh.userId === user.userId)
             const role = relation?.role || 'slave'
             const isMaster = role === 'master'
 

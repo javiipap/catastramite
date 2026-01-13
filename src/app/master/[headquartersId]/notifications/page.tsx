@@ -42,7 +42,7 @@ export default function MasterNotificationsPage() {
         title,
         message,
         priority,
-        userId: user.id,
+
       }, {
         onSuccess: () => {
           setIsOpen(false)
@@ -144,7 +144,7 @@ export default function MasterNotificationsPage() {
             .slice()
             .reverse()
             .map((notification) => (
-              <Card key={notification.id}>
+              <Card key={notification.notificationId}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">

@@ -6,9 +6,9 @@ export class DashboardUseCases {
 
   async getMasterDashboardData(
     hq: Pick<UserHeadquarters, 'headquartersId'>,
-    user: Pick<User, 'id'>
+    user: Pick<User, 'userId'>
   ): Promise<DashboardData> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (role !== 'master') {
       throw new Error('Unauthorized: Master access required');
     }
@@ -28,9 +28,9 @@ export class DashboardUseCases {
 
   async getSlaveDashboardData(
     hq: Pick<UserHeadquarters, 'headquartersId'>,
-    user: Pick<User, 'id'>
+    user: Pick<User, 'userId'>
   ): Promise<DashboardData> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (!role) {
       throw new Error('Unauthorized: Access denied');
     }
@@ -38,7 +38,7 @@ export class DashboardUseCases {
     const [headquarters, procedures, requests] = await Promise.all([
       this.db.getHeadquartersById(hq.headquartersId),
       this.db.getProcedures(hq.headquartersId),
-      this.db.getUserRequests(hq.headquartersId, user.id),
+      this.db.getUserRequests(hq.headquartersId, user.userId),
     ]);
 
     return {

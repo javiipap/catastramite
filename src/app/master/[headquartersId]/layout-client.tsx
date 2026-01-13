@@ -31,7 +31,7 @@ export function MasterLayoutClient({
     // Perform async check for role
     const checkAccess = async () => {
       if (!isLoading && headquartersId && user) {
-        const result = await getUserRoleAction({ userId: user.id, headquartersId })
+        const result = await getUserRoleAction({ userId: user.userId, headquartersId })
         if (result?.data !== 'master') {
           router.push("/")
         }

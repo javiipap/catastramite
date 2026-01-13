@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
-import { useAuth } from "@/lib/auth-context"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Users } from "lucide-react"
 import {
@@ -24,7 +23,7 @@ import {
 } from "@/lib/actions/headquarters-users"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import type { User, UserRole } from "@/lib/types"
+import type { UserRole } from "@/lib/types"
 
 export default function MasterUsersPage() {
   const { data: headquarters } = useHeadquartersStore()
@@ -53,7 +52,7 @@ export default function MasterUsersPage() {
         email,
         role
       });
-      if (res?.serverError) throw new Error(res.serverError);
+      if (res?.serverError) throw res.serverError;
     },
     onSuccess: () => {
       toast.success("User added successfully");
@@ -73,7 +72,7 @@ export default function MasterUsersPage() {
         headquartersId: headquarters.headquartersId,
         userId
       });
-      if (res?.serverError) throw new Error(res.serverError);
+      if (res?.serverError) throw res.serverError;
     },
     onSuccess: () => {
       toast.success("User removed successfully");
@@ -157,7 +156,7 @@ export default function MasterUsersPage() {
       ) : (
         <div className="grid gap-4">
           {users?.map((user) => (
-            <Card key={user.id}>
+            <Card key={user.userId}>
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
@@ -177,7 +176,7 @@ export default function MasterUsersPage() {
                   size="icon"
                   onClick={() => {
                     if (confirm("Are you sure you want to remove this user?")) {
-                      removeUserMutation.mutate(user.id);
+                      removeUserMutation.mutate(user.userId);
                     }
                   }}
                   disabled={removeUserMutation.isPending}

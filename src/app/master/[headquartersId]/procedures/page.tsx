@@ -60,7 +60,7 @@ export default function MasterProceduresPage() {
         name,
         description,
         fields: fields.map((c, i) => ({ ...c, id: `${i + 1}` })),
-        userId: user.id,
+
       }, {
         onSuccess: () => {
           setName("")
@@ -199,7 +199,7 @@ export default function MasterProceduresPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {headquartersProcedures.map((procedure) => (
-            <Card key={procedure.id} className="hover:shadow-lg transition-shadow">
+            <Card key={procedure.procedureId} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="text-lg">{procedure.name}</CardTitle>
                 <CardDescription className="line-clamp-2">{procedure.description}</CardDescription>

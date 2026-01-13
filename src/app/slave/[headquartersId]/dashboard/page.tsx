@@ -98,7 +98,7 @@ export default function SlaveDashboardPage() {
                   .slice(0, 5)
                   .reverse()
                   .map((request) => (
-                    <div key={request.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                    <div key={request.requestId} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
                       <div>
                         <p className="font-medium">{request.procedureName}</p>
                         <p className="text-xs text-muted-foreground">
@@ -144,13 +144,13 @@ export default function SlaveDashboardPage() {
             ) : (
               <div className="space-y-4">
                 {headquartersProcedures.slice(0, 5).map((procedure) => (
-                  <div key={procedure.id} className="flex items-start justify-between border-b pb-4 last:border-0 last:pb-0">
+                  <div key={procedure.procedureId} className="flex items-start justify-between border-b pb-4 last:border-0 last:pb-0">
                     <div>
                       <p className="font-medium">{procedure.name}</p>
                       <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
                     </div>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/slave/${currentHeadquarters?.headquartersId}/procedures/${procedure.id}`}>Start</Link>
+                      <Link href={`/slave/${currentHeadquarters?.headquartersId}/procedures/${procedure.procedureId}`}>Start</Link>
                     </Button>
                   </div>
                 ))}

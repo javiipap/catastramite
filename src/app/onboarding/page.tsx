@@ -35,7 +35,7 @@ export default function OnboardingPage() {
       // Refresh session to get updated user data
       await authClient.getSession();
 
-      router.push("/");
+      router.push("/login");
       router.refresh();
     } catch (err) {
       console.error(err);

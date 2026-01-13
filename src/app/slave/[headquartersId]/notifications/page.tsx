@@ -27,12 +27,12 @@ export default function SlaveNotificationsPage() {
             .slice()
             .reverse()
             .map((notification) => (
-              <Card key={notification.id} className="overflow-hidden">
+              <Card key={notification.notificationId} className="overflow-hidden">
                 <CardHeader className="bg-muted/20 pb-4">
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">
-                        {notification.title}
-                        {notification.priority === "high" && <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">Important</span>}
+                      {notification.title}
+                      {notification.priority === "high" && <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">Important</span>}
                     </CardTitle>
                     <span className="text-xs text-muted-foreground flex items-center">
                       <Calendar className="mr-1 h-3 w-3" />

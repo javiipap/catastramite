@@ -1,48 +1,61 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { addNotification } from "@/lib/actions/notifications"
-import { Notification } from "@/lib/types"
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { addNotification } from '@/lib/actions/notifications';
+import { Notification } from '@/lib/types';
+import { useAuth } from '@/lib/auth-context';
 
 export function useCreateNotification() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: addNotification,
     onMutate: async (newItem) => {
-        await queryClient.cancelQueries({ queryKey: ["notifications"] })
-        const previousNotifications = queryClient.getQueryData<Notification[]>(["notifications"])
-        
-        if (previousNotifications) {
-            const optNotif: any = {
-                id: "temp-" + Date.now(),
-                headquartersId: newItem.headquartersId,
-                title: newItem.title,
-                message: newItem.message,
-                priority: newItem.priority,
-                createdAt: new Date(),
-                createdBy: newItem.userId
-            }
-            queryClient.setQueryData(["notifications"], [...previousNotifications, optNotif])
-        }
-        
-        return { previousNotifications }
+      await queryClient.cancelQueries({ queryKey: ['notifications'] });
+      const previousNotifications = queryClient.getQueryData<Notification[]>([
+        'notifications',
+      ]);
+
+      if (previousNotifications) {
+        const optNotif: any = {
+          id: 'temp-' + Date.now(),
+          headquartersId: newItem.headquartersId,
+          title: newItem.title,
+          message: newItem.message,
+          priority: newItem.priority,
+          createdAt: new Date(),
+          createdBy: user?.id || '',
+        };
+        queryClient.setQueryData(
+          ['notifications'],
+          [...previousNotifications, optNotif]
+        );
+      }
+
+      return { previousNotifications };
     },
     onSuccess: (result, vars, context) => {
-        if (result?.serverError || result?.validationErrors) {
-             toast.error("Error creating notification")
-             if (context?.previousNotifications) {
-                queryClient.setQueryData(["notifications"], context.previousNotifications)
-             }
-             return
+      if (result?.serverError || result?.validationErrors) {
+        toast.error('Error creating notification');
+        if (context?.previousNotifications) {
+          queryClient.setQueryData(
+            ['notifications'],
+            context.previousNotifications
+          );
         }
-        toast.success("Notification created successfully")
-        queryClient.invalidateQueries({ queryKey: ["notifications"] })
+        return;
+      }
+      toast.success('Notification created successfully');
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
     onError: (err, vars, context) => {
-        toast.error("Failed to create notification")
-        if (context?.previousNotifications) {
-            queryClient.setQueryData(["notifications"], context.previousNotifications)
-        }
-    }
-  })
+      toast.error('Failed to create notification');
+      if (context?.previousNotifications) {
+        queryClient.setQueryData(
+          ['notifications'],
+          context.previousNotifications
+        );
+      }
+    },
+  });
 }

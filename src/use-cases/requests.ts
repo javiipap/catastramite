@@ -46,7 +46,7 @@ export class RequestsUseCases {
   }
 
   async updateRequestStatus(
-    id: string,
+    requestId: string,
     status: RequestStatus,
     hq: Pick<UserHeadquarters, 'headquartersId'>,
     user: Pick<User, 'id'>
@@ -55,6 +55,6 @@ export class RequestsUseCases {
     if (role !== 'master') {
       throw new Error('Unauthorized: Master access required');
     }
-    return this.db.updateRequestStatus(id, status, hq.headquartersId);
+    return this.db.updateRequestStatus(requestId, status, hq.headquartersId);
   }
 }
