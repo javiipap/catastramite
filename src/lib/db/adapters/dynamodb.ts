@@ -206,7 +206,8 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   async updateRequestStatus(
     id: string,
     status: RequestStatus,
-    headquartersId: string
+    headquartersId: string,
+    feedback?: string
   ): Promise<AppRequest> {
     // We need to know the SK (REQ#{id}), assuming we don't need to query it first?
     // But update in DynamoDB requires full Key (PK + SK).
@@ -218,10 +219,11 @@ export class DynamoDBAdapter implements DatabaseAdapter {
         PK: this.pk("HQ", headquartersId),
         SK: this.pk("REQ", id),
       },
-      UpdateExpression: "SET #s = :s, updatedAt = :u",
+      UpdateExpression: "SET #s = :s, feedback = :f, updatedAt = :u",
       ExpressionAttributeNames: { "#s": "status" },
       ExpressionAttributeValues: {
         ":s": status,
+        ":f": feedback || null,
         ":u": new Date().toISOString(),
       },
       ReturnValues: "ALL_NEW",
@@ -435,6 +437,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
       applicantName: item.applicantName,
       status: item.status,
       data: item.data,
+      feedback: item.feedback,
       createdAt: new Date(item.createdAt),
       updatedAt: new Date(item.updatedAt),
     };

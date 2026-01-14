@@ -3,7 +3,8 @@
 import { useAuth } from "@/lib/auth-context"
 import { HeadquartersSelector } from "@/components/headquarters-selector"
 import { Button } from "@/components/ui/button"
-import { Building2, LogOut, User } from "lucide-react"
+import { Building2, LogOut, User, ArrowLeftRight } from "lucide-react"
+import Link from "next/link"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,27 +65,34 @@ export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
-            <ModeToggle />
-            <DropdownMenu>
+          <ModeToggle />
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
+              <Button variant="ghost" size="icon" className="rounded-full">
                 <User className="h-5 w-5" />
-                </Button>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
+              <DropdownMenuLabel>
                 <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.name}</p>
-                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  <p className="text-sm font-medium leading-none">{user?.name}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={`/master/${headquartersId}/dashboard`} className="cursor-pointer">
+                  <ArrowLeftRight className="mr-2 h-4 w-4" />
+                  Switch to Admin View
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
-                </DropdownMenuItem>
+              </DropdownMenuItem>
             </DropdownMenuContent>
-            </DropdownMenu>
+          </DropdownMenu>
         </div>
       </div>
     </header>

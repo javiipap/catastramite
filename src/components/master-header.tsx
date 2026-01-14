@@ -3,7 +3,9 @@
 import { useAuth } from "@/lib/auth-context"
 import { HeadquartersSelector } from "@/components/headquarters-selector"
 import { Button } from "@/components/ui/button"
-import { Building2, LogOut, User } from "lucide-react"
+import { Building2, LogOut, User, Users, ArrowLeftRight } from "lucide-react"
+import Link from "next/link"
+import { useParams } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +21,8 @@ import { ModeToggle } from "@/components/mode-toggle"
 
 export function MasterHeader() {
   const { user, logout } = useAuth()
+  const params = useParams()
+  const headquartersId = params?.headquartersId as string | undefined
 
   return (
     <header className="border-b bg-card">
@@ -73,6 +77,15 @@ export function MasterHeader() {
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {headquartersId && (
+                <DropdownMenuItem asChild>
+                  <Link href={`/slave/${headquartersId}/dashboard`} className="cursor-pointer">
+                    <ArrowLeftRight className="mr-2 h-4 w-4" />
+                    Switch to Citizen View
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />

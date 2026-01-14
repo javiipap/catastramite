@@ -206,7 +206,8 @@ export class JsonAdapter implements DatabaseAdapter {
   async updateRequestStatus(
     id: string,
     status: RequestStatus,
-    headquartersId: string
+    headquartersId: string,
+    feedback?: string
   ): Promise<AppRequest> {
     const db = await readDB();
     const index = db.requests.findIndex((r) => r.requestId === id);
@@ -215,6 +216,9 @@ export class JsonAdapter implements DatabaseAdapter {
       throw new Error("Request mismatch");
 
     db.requests[index].status = status;
+    if (feedback !== undefined) {
+      db.requests[index].feedback = feedback;
+    }
     db.requests[index].updatedAt = new Date();
     await writeDB(db);
     return db.requests[index];
