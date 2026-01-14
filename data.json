@@ -95,6 +95,12 @@
       "name": "kjkj",
       "description": "",
       "createdAt": "2026-01-13T19:35:44.146Z"
+    },
+    {
+      "headquartersId": "1768383449201",
+      "name": "Mi querido perrito",
+      "description": "",
+      "createdAt": "2026-01-14T09:37:29.201Z"
     }
   ],
   "userHeadquarters": [
@@ -187,9 +193,93 @@
       "userId": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF",
       "headquartersId": "1768332944146",
       "role": "master"
+    },
+    {
+      "userId": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL",
+      "headquartersId": "1768383449201",
+      "role": "master"
     }
   ],
-  "notifications": [],
-  "procedures": [],
-  "requests": []
+  "notifications": [
+    {
+      "notificationId": "1768382755041",
+      "headquartersId": "1768332877206",
+      "title": "marcos la chupa",
+      "message": "hola que tal",
+      "priority": "medium",
+      "createdAt": "2026-01-14T09:25:55.041Z",
+      "createdBy": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF"
+    }
+  ],
+  "procedures": [
+    {
+      "procedureId": "1768383449205",
+      "headquartersId": "1768383449201",
+      "name": "Instancia General",
+      "description": "Trámite para presentación de escritos, solicitudes y comunicaciones generales.",
+      "fields": [
+        {
+          "id": "expone",
+          "name": "Expone",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "solicita",
+          "name": "Solicita",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "createdAt": "2026-01-14T09:37:29.205Z",
+      "createdBy": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL"
+    },
+    {
+      "procedureId": "1768383542368",
+      "headquartersId": "1768383449201",
+      "name": "Llegar tarde a comer",
+      "description": "Llego tarde, sorry",
+      "fields": [
+        {
+          "id": "1",
+          "name": "Hora de llegada",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "createdAt": "2026-01-14T09:39:02.368Z",
+      "createdBy": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL"
+    }
+  ],
+  "requests": [
+    {
+      "requestId": "1768383571170",
+      "headquartersId": "1768383449201",
+      "procedureId": "1768383542368",
+      "procedureName": "Llegar tarde a comer",
+      "applicantId": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL",
+      "applicantName": "Javier Padilla Pío",
+      "status": "approved",
+      "data": {
+        "Hora de llegada": "2026-01-16"
+      },
+      "createdAt": "2026-01-14T09:39:31.170Z",
+      "updatedAt": "2026-01-14T09:40:01.637Z"
+    },
+    {
+      "requestId": "1768383907356",
+      "headquartersId": "1768383449201",
+      "procedureId": "1768383449205",
+      "procedureName": "Instancia General",
+      "applicantId": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL",
+      "applicantName": "Javier Padilla Pío",
+      "status": "in_review",
+      "data": {
+        "Expone": "adsfklasdfj",
+        "Solicita": "adsflnaefi"
+      },
+      "createdAt": "2026-01-14T09:45:07.356Z",
+      "updatedAt": "2026-01-14T09:45:20.588Z"
+    }
+  ]
 }

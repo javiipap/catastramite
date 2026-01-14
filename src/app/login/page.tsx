@@ -10,7 +10,7 @@ export default async function LoginPage() {
 
   if (session?.user.role) {
     redirect(`/${session.user.role}/headquarters`);
-  } else if (!session?.user.role) {
+  } else if (session?.user && !session?.user.role) {
     console.log('LOGIN', session?.user)
     redirect('/onboarding');
   }
