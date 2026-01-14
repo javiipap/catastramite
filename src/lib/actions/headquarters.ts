@@ -12,7 +12,6 @@ import {
 
 export const createHeadquarters = mutateMasterAction(
   createHeadquartersSchema,
-  // @ts-ignore
   async ({ name, description }, { user }) => {
     const newHeadquarters: Headquarters = {
       headquartersId: Date.now().toString(),

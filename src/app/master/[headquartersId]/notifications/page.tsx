@@ -19,7 +19,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 import { Bell, Plus, Calendar } from "lucide-react"
-
+import type { Priority } from "@/lib/types"
 import { useCreateNotification } from "@/lib/mutations/notifications"
 
 export default function MasterNotificationsPage() {
@@ -30,7 +30,7 @@ export default function MasterNotificationsPage() {
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [message, setMessage] = useState("")
-  const [priority, setPriority] = useState<"low" | "medium" | "high">("medium")
+  const [priority, setPriority] = useState<Priority>("medium")
 
   const addMutation = useCreateNotification()
 
@@ -93,7 +93,7 @@ export default function MasterNotificationsPage() {
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="priority" className="text-sm font-medium">Priority</label>
-                  <Select value={priority} onValueChange={(v) => setPriority(v as any)}>
+                  <Select value={priority} onValueChange={(v) => setPriority(v as Priority)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>

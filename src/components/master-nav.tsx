@@ -1,16 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useParams, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, FileText, FolderOpen, Bell, Users } from "lucide-react"
 
-interface MasterNavProps {
-  headquartersId?: string
-}
-
-export function MasterNav({ headquartersId }: MasterNavProps) {
+export function MasterNav() {
   const pathname = usePathname()
+  const pathParams = useParams();
+
+  const headquartersId = pathParams.headquartersId
 
   if (!headquartersId) return null
 

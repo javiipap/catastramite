@@ -17,7 +17,7 @@ interface FormState {
   role: UserRole;
 }
 
-export default function OnboardingForm({ name, role, age }: Pick<User, 'name' | 'role' | 'age'>) {
+export default function OnboardingForm({ name, role, age }: Partial<User>) {
   const router = useRouter();
 
   const [formState, setFormState] = useState<FormState>({

@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { Procedure, FormField } from "@/lib/schemas/procedures";
+import type { Procedure } from "@/lib/schemas/procedures";
 import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
 import {
   createProcedureSchema,

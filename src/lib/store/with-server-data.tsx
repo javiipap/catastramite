@@ -4,31 +4,29 @@ import { headers } from 'next/headers';
 import { User } from 'better-auth';
 import { redirect } from 'next/navigation';
 
-interface ProviderProps<TData, TArgs> {
+interface ProviderProps<TData, TArgs = {}> { // eslint-disable-line @typescript-eslint/no-empty-object-type
   initialData: TData;
-  args?: TArgs;
+  args: TArgs;
   children: ReactNode;
   user: User;
 }
 
-type WrapperProps = {
+type WrapperProps<TArgs> = {
   children: ReactNode;
-  params?: Promise<any> | any;
-  searchParams?: Promise<any> | any;
+  params: Promise<TArgs>;
 }
 
-// Define compatible SafeAction type
-type SafeAction<TInput, TOutput> = (input: TInput) => Promise<{
+type SafeAction<TOutput, TInput> = (input: TInput) => Promise<{
   data?: TOutput;
-  serverError?: any;
+  serverError?: Error;
   validationErrors?: unknown;
 }>;
 
-export function withServerData<TData, TArgs>(
-  action: SafeAction<TArgs, TData>,
+export function withServerData<TData, TArgs = {}>( // eslint-disable-line @typescript-eslint/no-empty-object-type
+  action: SafeAction<TData, TArgs>,
   Provider: React.ComponentType<ProviderProps<TData, TArgs>>
 ) {
-  return async (props: WrapperProps) => {
+  return async function StoreProvider(props: WrapperProps<TArgs>) {
     const params = await props.params;
 
     const session = await auth.api.getSession({
@@ -36,7 +34,6 @@ export function withServerData<TData, TArgs>(
     });
 
     if (!session?.user) {
-      console.log('NO USER')
       redirect('/login');
     }
 
@@ -45,7 +42,7 @@ export function withServerData<TData, TArgs>(
     const result = await action(input as TArgs);
 
     if (result?.serverError) {
-      throw new Error(result.serverError);
+      throw result.serverError;
     }
 
     if (result?.validationErrors) {
@@ -53,7 +50,7 @@ export function withServerData<TData, TArgs>(
     }
 
     return (
-      <Provider initialData={result.data as TData} args={params as TArgs} user={session.user}>
+      <Provider initialData={result.data as TData} args={params} user={session.user}>
         {props.children}
       </Provider>
     );

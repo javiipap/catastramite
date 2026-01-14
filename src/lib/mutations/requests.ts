@@ -100,6 +100,11 @@ export function useUpdateRequestStatus() {
     onSuccess: (result, vars, context) => {
       toast.success("Status updated successfully");
 
+      queryClient.setQueryData<Request[]>(
+        ["requests", vars.headquartersId],
+        [...context.previousRequests, result]
+      );
+
       queryClient.invalidateQueries({
         queryKey: ["requests", vars.headquartersId],
       });

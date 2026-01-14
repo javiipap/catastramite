@@ -1,5 +1,6 @@
 import OnboardingForm from '@/app/onboarding/form'
 import { auth } from '@/lib/auth';
+import { UserRole } from '@/lib/types';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -16,7 +17,7 @@ export default async function OnboardingPage() {
 
   return (
     <div className='min-h-screen flex items-center justify-center'>
-      <OnboardingForm name={session.user.name} role={session.user.role} age={session.user.age} />
+      <OnboardingForm name={session.user.name} role={session.user.role as UserRole} age={session.user.age} />
     </div>
   )
 }

@@ -20,8 +20,8 @@ export function useCreateProcedure() {
           newItem.headquartersId,
         ]) ?? [];
 
-      const optProcedure: any = {
-        id: "temp-" + Date.now(),
+      const optProcedure: Procedure = {
+        procedureId: "temp-" + Date.now(),
         headquartersId: newItem.headquartersId,
         name: newItem.name,
         description: newItem.description,
@@ -29,7 +29,7 @@ export function useCreateProcedure() {
         createdAt: new Date(),
         createdBy: user?.userId || "",
       };
-      queryClient.setQueryData(
+      queryClient.setQueryData<Procedure[]>(
         ["procedures", newItem.headquartersId],
         [...previousProcedures, optProcedure]
       );

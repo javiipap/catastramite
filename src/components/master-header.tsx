@@ -12,17 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { MasterNav } from "@/components/master-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 
-interface MasterHeaderProps {
-  headquartersId?: string
-}
-
-export function MasterHeader({ headquartersId }: MasterHeaderProps) {
+export function MasterHeader() {
   const { user, logout } = useAuth()
 
   return (
@@ -41,7 +36,7 @@ export function MasterHeader({ headquartersId }: MasterHeaderProps) {
                   <Building2 className="h-6 w-6" />
                   <span className="font-bold text-lg">E-Government Portal</span>
                 </div>
-                <MasterNav headquartersId={headquartersId} />
+                <MasterNav />
                 <div className="mt-8 pt-6 border-t">
                   <p className="text-sm text-muted-foreground mb-2 px-2">Current Headquarters</p>
                   <div className="px-2">

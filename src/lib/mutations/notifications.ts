@@ -14,26 +14,25 @@ export function useCreateNotification() {
       await queryClient.cancelQueries({
         queryKey: ["notifications", newItem.headquartersId],
       });
-      const previousNotifications = queryClient.getQueryData<Notification[]>([
-        "notifications",
-        newItem.headquartersId,
-      ]);
+      const previousNotifications =
+        queryClient.getQueryData<Notification[]>([
+          "notifications",
+          newItem.headquartersId,
+        ]) ?? [];
 
-      if (previousNotifications) {
-        const optNotif: any = {
-          id: "temp-" + Date.now(),
-          headquartersId: newItem.headquartersId,
-          title: newItem.title,
-          message: newItem.message,
-          priority: newItem.priority,
-          createdAt: new Date(),
-          createdBy: user?.userId || "",
-        };
-        queryClient.setQueryData(
-          ["notifications", newItem.headquartersId],
-          [...previousNotifications, optNotif]
-        );
-      }
+      const optNotif: Notification = {
+        notificationId: "temp-" + Date.now(),
+        headquartersId: newItem.headquartersId,
+        title: newItem.title,
+        message: newItem.message,
+        priority: newItem.priority,
+        createdAt: new Date(),
+        createdBy: user?.userId || "",
+      };
+      queryClient.setQueryData<Notification[]>(
+        ["notifications", newItem.headquartersId],
+        [...previousNotifications, optNotif]
+      );
 
       return { previousNotifications };
     },

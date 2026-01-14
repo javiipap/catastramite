@@ -130,7 +130,7 @@ export default function HeadquartersPage() {
             <div className="bg-muted p-4 rounded-full mb-4">
               <Building2 className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">You don't have any headquarters assigned</h3>
+            <h3 className="text-lg font-semibold mb-2">You don&apos;t have any headquarters assigned</h3>
             <p className="text-muted-foreground max-w-sm mb-6">
               Create your first headquarters to start managing electronic procedures or request access to an existing one.
             </p>

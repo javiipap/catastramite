@@ -47,12 +47,11 @@ export default function MasterUsersPage() {
   const addUserMutation = useMutation({
     mutationFn: async () => {
       if (!headquarters) return;
-      const res = await addUserToHeadquartersAction({
+      await addUserToHeadquartersAction({
         headquartersId: headquarters.headquartersId,
         email,
         role
       });
-      if (res?.serverError) throw res.serverError;
     },
     onSuccess: () => {
       toast.success("User added successfully");
@@ -68,11 +67,10 @@ export default function MasterUsersPage() {
   const removeUserMutation = useMutation({
     mutationFn: async (userId: string) => {
       if (!headquarters) return;
-      const res = await removeUserFromHeadquartersAction({
+      await removeUserFromHeadquartersAction({
         headquartersId: headquarters.headquartersId,
         userId
       });
-      if (res?.serverError) throw res.serverError;
     },
     onSuccess: () => {
       toast.success("User removed successfully");

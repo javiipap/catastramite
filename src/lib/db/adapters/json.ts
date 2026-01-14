@@ -48,7 +48,7 @@ const INITIAL_DB: DB = {
   requests: [],
 };
 
-function reviver(key: string, value: any) {
+function reviver(key: string, value: unknown) {
   if (
     typeof value === "string" &&
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)

@@ -6,7 +6,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 interface CreateQueryStoreOptions<
   TData,
-  TArgs = undefined,
+  TArgs extends {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
   TQuery = undefined
 > {
   baseQueryKey: string[];
@@ -19,7 +19,7 @@ interface CreateQueryStoreOptions<
 interface ProviderProps<TData, TArgs, TQuery> {
   initialData: TData;
   initialOptions?: TQuery;
-  args?: TArgs;
+  args: TArgs;
   children: ReactNode;
 }
 
@@ -32,7 +32,7 @@ interface StoreContextValue<TData, TQuery> {
   refetch: () => void;
 }
 
-export function createQueryStore<TData, TArgs = undefined, TQuery = undefined>(
+export function createQueryStore<TData, TArgs extends {} = {}, TQuery = undefined>(  // eslint-disable-line @typescript-eslint/no-empty-object-type
   options: CreateQueryStoreOptions<TData, TArgs, TQuery>
 ) {
   const DataContext = createContext<
