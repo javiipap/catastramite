@@ -280,6 +280,21 @@
       },
       "createdAt": "2026-01-14T09:45:07.356Z",
       "updatedAt": "2026-01-14T09:45:20.588Z"
+    },
+    {
+      "requestId": "1768384653977",
+      "headquartersId": "1768383449201",
+      "procedureId": "1768383449205",
+      "procedureName": "Instancia General",
+      "applicantId": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL",
+      "applicantName": "Javier Padilla Pío",
+      "status": "pending",
+      "data": {
+        "Expone": "asdflkp",
+        "Solicita": "adfnk"
+      },
+      "createdAt": "2026-01-14T09:57:33.977Z",
+      "updatedAt": "2026-01-14T09:57:33.977Z"
     }
   ]
 }

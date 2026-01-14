@@ -144,7 +144,7 @@ export default function MasterNotificationsPage() {
             .slice()
             .reverse()
             .map((notification) => (
-              <Card key={notification.notificationId}>
+              <Card key={`notification_${notification.notificationId}`}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">

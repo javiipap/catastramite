@@ -35,12 +35,13 @@ export const addRequestAction = mutateMasterAction(
 
 export const updateRequestStatusAction = mutateMasterAction(
   updateRequestStatusSchema,
-  async ({ requestId, status, headquartersId }, { user }) => {
+  async ({ requestId, status, headquartersId, feedback }, { user }) => {
     return useCases.requests.updateRequestStatus(
       requestId,
       status,
       { headquartersId },
-      user
+      user,
+      feedback
     );
   }
 );

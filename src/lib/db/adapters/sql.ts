@@ -280,12 +280,14 @@ export class SqlAdapter implements DatabaseAdapter {
   async updateRequestStatus(
     id: string,
     status: RequestStatus,
-    headquartersId: string
+    headquartersId: string,
+    feedback?: string
   ): Promise<AppRequest> {
     await db
       .update(requests)
       .set({
         status: status,
+        feedback: feedback,
         updatedAt: new Date(),
       })
       .where(
@@ -369,6 +371,7 @@ export class SqlAdapter implements DatabaseAdapter {
       applicantName: row.applicantName,
       status: row.status as RequestStatus,
       data: row.data as Record<string, unknown>,
+      feedback: row.feedback || undefined,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     };

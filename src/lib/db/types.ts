@@ -7,7 +7,7 @@ import {
   Notification as AppNotification,
   RequestStatus,
   User,
-} from '@/lib/types';
+} from "@/lib/types";
 
 export interface DatabaseAdapter {
   // Users
@@ -50,7 +50,8 @@ export interface DatabaseAdapter {
   updateRequestStatus(
     requestId: string,
     status: RequestStatus,
-    headquartersId: string
+    headquartersId: string,
+    feedback?: string
   ): Promise<AppRequest>;
 
   // Notifications

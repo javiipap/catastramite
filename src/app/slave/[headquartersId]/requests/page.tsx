@@ -128,6 +128,13 @@ export default function SlaveRequestsPage() {
                 </div>
               </div>
 
+              {selectedRequest.feedback && (
+                <div className="bg-muted p-4 rounded-md">
+                  <h4 className="font-medium mb-1">Feedback</h4>
+                  <p className="text-sm italic">{selectedRequest.feedback}</p>
+                </div>
+              )}
+
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Submitted Information</h4>
                 <div className="space-y-3">

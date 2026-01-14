@@ -107,6 +107,7 @@ export const requests = sqliteTable("requests", {
   applicantName: text("applicant_name").notNull(),
   status: text("status").notNull(), // 'pending' | 'in_review' | 'approved' | 'rejected'
   data: text("data", { mode: "json" }).notNull(), // Record<string, unknown>
+  feedback: text("feedback"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });

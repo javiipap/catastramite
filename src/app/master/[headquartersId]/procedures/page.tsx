@@ -159,7 +159,7 @@ export default function MasterProceduresPage() {
                   {fields.length > 0 && (
                     <div className="space-y-2 pt-2 border-t">
                       {fields.map((field, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 rounded bg-background border">
+                        <div key={`procedure_${headquarters.headquartersId}-${index}`} className="flex items-center justify-between p-2 rounded bg-background border">
                           <div className="flex-1">
                             <span className="text-sm font-medium">{field.name}</span>
                             <span className="text-xs text-muted-foreground ml-2">({field.type})</span>

@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const requestStatusSchema = z.enum([
-  'pending',
-  'in_review',
-  'approved',
-  'rejected',
+  "pending",
+  "in_review",
+  "approved",
+  "rejected",
 ]);
 
 export const requestSchema = z.object({
@@ -16,6 +16,7 @@ export const requestSchema = z.object({
   applicantName: z.string(),
   status: requestStatusSchema,
   data: z.record(z.string(), z.unknown()),
+  feedback: z.string().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -35,8 +36,10 @@ export const updateRequestStatusSchema = requestSchema
     requestId: true,
     status: true,
   })
+
   .extend({
     headquartersId: z.string(),
+    feedback: z.string().optional(),
   });
 
 export const getRequestsSchema = z.object({

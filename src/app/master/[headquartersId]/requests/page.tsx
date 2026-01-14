@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import type { Request } from "@/lib/types"
 
 import { useUpdateRequestStatus } from "@/lib/mutations/requests"
 
 import { useAuth } from "@/lib/auth-context"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 
 export default function MasterRequestsPage() {
   const { data: headquarters } = useHeadquartersStore()
@@ -22,6 +24,11 @@ export default function MasterRequestsPage() {
 
   const [filter, setFilter] = useState<string>("all")
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
+
+  // Action dialog state
+  const [actionRequest, setActionRequest] = useState<Request | null>(null)
+  const [actionType, setActionType] = useState<"approved" | "rejected" | null>(null)
+  const [feedback, setFeedback] = useState("")
 
   const filteredRequests = filter === "all" ? requests : requests.filter((r) => r.status === filter)
 
@@ -35,6 +42,32 @@ export default function MasterRequestsPage() {
       rejected: "bg-red-100 text-red-800 hover:bg-red-200",
     }
     return styles[status]
+  }
+
+  const handleActionClick = (request: Request, type: "approved" | "rejected") => {
+    setActionRequest(request)
+    setActionType(type)
+    setFeedback("")
+  }
+
+  const confirmAction = () => {
+    if (actionRequest && actionType && headquarters && user) {
+      updateMutation.mutate({
+        requestId: actionRequest.requestId,
+        status: actionType,
+        headquartersId: headquarters.headquartersId,
+        feedback: feedback || undefined
+      }, {
+        onSuccess: () => {
+          setActionRequest(null)
+          setActionType(null)
+          setFeedback("")
+          if (selectedRequest?.requestId === actionRequest.requestId) {
+            setSelectedRequest(null)
+          }
+        }
+      })
+    }
   }
 
   if (!headquarters) return null;
@@ -116,11 +149,7 @@ export default function MasterRequestsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
-                          if (user) {
-                            updateMutation.mutate({ requestId: request.requestId, status: "approved", headquartersId: headquarters.headquartersId })
-                          }
-                        }}
+                        onClick={() => handleActionClick(request, "approved")}
                         className="text-green-700 hover:text-green-800"
                       >
                         Approve
@@ -128,11 +157,7 @@ export default function MasterRequestsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
-                          if (user) {
-                            updateMutation.mutate({ requestId: request.requestId, status: "rejected", headquartersId: headquarters.headquartersId })
-                          }
-                        }}
+                        onClick={() => handleActionClick(request, "rejected")}
                         className="text-red-700 hover:text-red-800"
                       >
                         Reject
@@ -146,6 +171,7 @@ export default function MasterRequestsPage() {
         </div>
       )}
 
+      {/* Details Dialog */}
       <Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -193,6 +219,13 @@ export default function MasterRequestsPage() {
                 </div>
               </div>
 
+              {selectedRequest.feedback && (
+                <div className="bg-muted p-4 rounded-md">
+                  <h4 className="font-medium mb-1">Feedback</h4>
+                  <p className="text-sm italic">{selectedRequest.feedback}</p>
+                </div>
+              )}
+
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Form Data</h4>
                 <div className="space-y-3">
@@ -208,22 +241,14 @@ export default function MasterRequestsPage() {
               {(selectedRequest.status === "pending" || selectedRequest.status === "in_review") && (
                 <div className="flex gap-2 pt-4 border-t">
                   <Button
-                    onClick={() => {
-                      if (headquarters && user) {
-                        updateMutation.mutate({ requestId: selectedRequest.requestId, status: "approved", headquartersId: headquarters.headquartersId })
-                      }
-                    }}
+                    onClick={() => handleActionClick(selectedRequest, "approved")}
                     className="flex-1"
                   >
                     Approve Request
                   </Button>
                   <Button
                     variant="destructive"
-                    onClick={() => {
-                      if (headquarters && user) {
-                        updateMutation.mutate({ requestId: selectedRequest.requestId, status: "rejected", headquartersId: headquarters.headquartersId })
-                      }
-                    }}
+                    onClick={() => handleActionClick(selectedRequest, "rejected")}
                     className="flex-1"
                   >
                     Reject Request
@@ -232,6 +257,44 @@ export default function MasterRequestsPage() {
               )}
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Action Confirmation Dialog */}
+      <Dialog open={!!actionRequest} onOpenChange={(open) => !open && setActionRequest(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {actionType === "approved" ? "Approve Request" : "Reject Request"}
+            </DialogTitle>
+            <DialogDescription>
+              {actionType === "approved"
+                ? "Are you sure you want to approve this request?"
+                : "Are you sure you want to reject this request?"}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Feedback (Optional)</Label>
+              <Textarea
+                placeholder="Add a comment or reason for this decision..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setActionRequest(null)}>Cancel</Button>
+              <Button
+                variant={actionType === "rejected" ? "destructive" : "default"}
+                onClick={confirmAction}
+                disabled={updateMutation.isPending}
+              >
+                {updateMutation.isPending ? "Processing..." : (actionType === "approved" ? "Confirm Approval" : "Confirm Rejection")}
+              </Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
