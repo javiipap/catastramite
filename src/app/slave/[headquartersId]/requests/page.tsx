@@ -99,7 +99,7 @@ export default function SlaveRequestsPage() {
                   )}
                 </CardContent>
                 {request.feedback && (
-                  <CardContent className="pt-0 border-t bg-amber-50/50 py-3">
+                  <CardContent className="pt-0 border-t border-b bg-muted/50 py-3">
                     <p className="text-sm text-muted-foreground italic line-clamp-2">
                       &quot;{request.feedback}&quot;
                     </p>
