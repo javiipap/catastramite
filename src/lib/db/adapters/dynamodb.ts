@@ -7,6 +7,7 @@ import {
   UpdateCommand,
   TransactWriteCommand,
   BatchGetCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DatabaseAdapter } from "../types";
 import {
@@ -55,27 +56,100 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   }
 
   async getUsersByHeadquarters(
-    hqId: string
+    hqId: string,
   ): Promise<(User & { role: UserRole })[]> {
-    throw new Error("Method not implemented.");
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :pk AND begins_with(GSI1SK, :sk)",
+      ExpressionAttributeValues: {
+        ":pk": this.pk("HQ", hqId),
+        ":sk": this.pk("USER", ""),
+      },
+    });
+
+    const result = await docClient.send(command);
+    if (!result.Items || result.Items.length === 0) return [];
+
+    const userRoles = result.Items.map((item) => ({
+      userId: item.GSI1SK.split("#")[1],
+      role: item.role as UserRole,
+    }));
+
+    const distinctUserIds = [...new Set(userRoles.map((u) => u.userId))];
+    if (distinctUserIds.length === 0) return [];
+
+    const keys = distinctUserIds.map((userId) => ({
+      PK: this.pk("USER", userId),
+      SK: "METADATA",
+    }));
+
+    // Note: Assuming less than 100 items (BatchGet limit) for simplicity
+    const batchCommand = new BatchGetCommand({
+      RequestItems: {
+        [TABLE_NAME]: {
+          Keys: keys,
+        },
+      },
+    });
+
+    const batchResult = await docClient.send(batchCommand);
+    const userItems = batchResult.Responses?.[TABLE_NAME] || [];
+    const usersMap = new Map<string, User>();
+    userItems.forEach((item) => {
+      const u = this.mapToUser(item);
+      usersMap.set(u.userId, u);
+    });
+
+    const results: (User & { role: UserRole })[] = [];
+    userRoles.forEach((ur) => {
+      const user = usersMap.get(ur.userId);
+      if (user) {
+        results.push({ ...user, role: ur.role });
+      }
+    });
+
+    return results;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    throw new Error("Method not implemented.");
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
+      ExpressionAttributeValues: {
+        ":pk": `EMAIL#${email}`,
+        ":sk": "METADATA",
+      },
+    });
+
+    const result = await docClient.send(command);
+    if (result.Items && result.Items.length > 0) {
+      return this.mapToUser(result.Items[0]);
+    }
+    return undefined;
   }
 
   async removeUserFromHeadquarters(
     userId: string,
-    hqId: string
+    hqId: string,
   ): Promise<void> {
-    throw new Error("Method not implemented.");
+    const command = new DeleteCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        PK: this.pk("USER", userId),
+        SK: this.pk("HQ", hqId),
+      },
+    });
+
+    await docClient.send(command);
   }
 
   // ... (Reads omitted/unchanged) ...
 
   async createHeadquarters(
     hq: Headquarters,
-    userId: string
+    userId: string,
   ): Promise<Headquarters> {
     const command = new TransactWriteCommand({
       TransactItems: [
@@ -114,7 +188,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
 
   async updateHeadquarters(
     id: string,
-    updates: Partial<Headquarters>
+    updates: Partial<Headquarters>,
   ): Promise<Headquarters> {
     // Build Update Expression
     const expAttrValues: Record<string, any> = {};
@@ -207,7 +281,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     id: string,
     status: RequestStatus,
     headquartersId: string,
-    feedback?: string
+    feedback?: string,
   ): Promise<AppRequest> {
     // We need to know the SK (REQ#{id}), assuming we don't need to query it first?
     // But update in DynamoDB requires full Key (PK + SK).
@@ -234,7 +308,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
   }
 
   async createNotification(
-    notification: AppNotification
+    notification: AppNotification,
   ): Promise<AppNotification> {
     const command = new PutCommand({
       TableName: TABLE_NAME,
@@ -314,7 +388,7 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     return items.map(this.mapToHeadquarters).map((h) => ({
       ...h,
       userHeadquarters: userHqs.filter(
-        (uh) => uh.headquartersId === h.headquartersId
+        (uh) => uh.headquartersId === h.headquartersId,
       ),
     }));
   }
@@ -452,6 +526,20 @@ export class DynamoDBAdapter implements DatabaseAdapter {
       priority: item.priority,
       createdAt: new Date(item.createdAt),
       createdBy: item.createdBy,
+    };
+  }
+
+  private mapToUser(item: any): User {
+    return {
+      userId: item.PK.split("#")[1],
+      name: item.name,
+      email: item.email,
+      emailVerified: item.emailVerified,
+      image: item.image,
+      createdAt: new Date(item.createdAt),
+      updatedAt: new Date(item.updatedAt),
+      role: item.role || null,
+      age: item.age || null,
     };
   }
 }

@@ -20,6 +20,7 @@ interface DB {
   notifications: AppNotification[];
   procedures: Procedure[];
   requests: AppRequest[];
+  users: User[];
 }
 
 const INITIAL_DB: DB = {
@@ -46,6 +47,28 @@ const INITIAL_DB: DB = {
   notifications: [],
   procedures: [],
   requests: [],
+  users: [
+    {
+      userId: "1",
+      name: "Admin User",
+      email: "admin@example.com",
+      emailVerified: true,
+      image: null,
+      createdAt: new Date("2025-01-01"),
+      updatedAt: new Date("2025-01-01"),
+      role: "master" as any,
+    },
+    {
+      userId: "2",
+      name: "Standard User",
+      email: "user@example.com",
+      emailVerified: true,
+      image: null,
+      createdAt: new Date("2025-01-01"),
+      updatedAt: new Date("2025-01-01"),
+      role: "slave" as any,
+    },
+  ],
 };
 
 function reviver(key: string, value: unknown) {
@@ -122,18 +145,35 @@ export class JsonAdapter implements DatabaseAdapter {
   async getUsersByHeadquarters(
     hqId: string
   ): Promise<(User & { role: UserRole })[]> {
-    throw new Error("Method not implemented.");
+    const db = await readDB();
+    const relations = db.userHeadquarters.filter(
+      (uh) => uh.headquartersId === hqId
+    );
+
+    const results: (User & { role: UserRole })[] = [];
+    for (const rel of relations) {
+      const user = db.users.find((u) => u.userId === rel.userId);
+      if (user) {
+        results.push({ ...user, role: rel.role });
+      }
+    }
+    return results;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    throw new Error("Method not implemented.");
+    const db = await readDB();
+    return db.users.find((u) => u.email === email);
   }
 
   async removeUserFromHeadquarters(
     userId: string,
     hqId: string
   ): Promise<void> {
-    throw new Error("Method not implemented.");
+    const db = await readDB();
+    db.userHeadquarters = db.userHeadquarters.filter(
+      (uh) => !(uh.userId === userId && uh.headquartersId === hqId)
+    );
+    await writeDB(db);
   }
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {

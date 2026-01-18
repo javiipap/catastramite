@@ -13,7 +13,7 @@ interface ProviderProps<TData, TArgs = {}> { // eslint-disable-line @typescript-
 
 type WrapperProps<TArgs> = {
   children: ReactNode;
-  params: Promise<TArgs>;
+  params: Promise<TArgs> | TArgs;
 }
 
 type SafeAction<TOutput, TInput> = (input: TInput) => Promise<{
@@ -26,8 +26,8 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
   action: SafeAction<TData, TArgs>,
   Provider: React.ComponentType<ProviderProps<TData, TArgs>>
 ) {
-  return async function StoreProvider(props: WrapperProps<TArgs>) {
-    const params = await props.params;
+  return async function StoreProvider({ children, params = {} as TArgs }: WrapperProps<TArgs>) {
+    const resolvedParams = await params;
 
     const session = await auth.api.getSession({
       headers: await headers()
@@ -37,7 +37,7 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
       redirect('/login');
     }
 
-    const hasParams = params && Object.keys(params).length > 0;
+    const hasParams = resolvedParams && Object.keys(resolvedParams).length > 0;
     const input = hasParams ? params : undefined;
     const result = await action(input as TArgs);
 
@@ -50,8 +50,8 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
     }
 
     return (
-      <Provider initialData={result.data as TData} args={params} user={session.user}>
-        {props.children}
+      <Provider initialData={result.data as TData} args={resolvedParams} user={session.user}>
+        {children}
       </Provider>
     );
   };
