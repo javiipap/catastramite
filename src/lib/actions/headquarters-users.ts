@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { masterAction, mutateMasterAction } from "@/lib/safe-action";
+import { masterAction, mutateHeadquartersAction } from "@/lib/safe-action";
 import { revalidatePath } from "next/cache";
 import {
   getHeadquartersUsersSchema,
@@ -15,7 +15,7 @@ export const getHeadquartersUsersAction = masterAction
     return useCases.headquarters.getHeadquartersUsers({ headquartersId }, user);
   });
 
-export const addUserToHeadquartersAction = mutateMasterAction(
+export const addUserToHeadquartersAction = mutateHeadquartersAction(
   addUserToHeadquartersSchema,
   async ({ headquartersId, email, role }, { user: actor }) => {
     const user = await useCases.headquarters.getUserByEmail(email);
@@ -29,21 +29,21 @@ export const addUserToHeadquartersAction = mutateMasterAction(
         headquartersId: headquartersId,
         role: role,
       },
-      actor
+      actor,
     );
 
     revalidatePath(`/master/${headquartersId}/users`);
-  }
+  },
 );
 
-export const removeUserFromHeadquartersAction = mutateMasterAction(
+export const removeUserFromHeadquartersAction = mutateHeadquartersAction(
   removeUserFromHeadquartersSchema,
   async ({ headquartersId, userId }, { user: actor }) => {
     await useCases.headquarters.removeUserFromHeadquarters(
       userId,
       headquartersId,
-      actor
+      actor,
     );
     revalidatePath(`/master/${headquartersId}/users`);
-  }
+  },
 );

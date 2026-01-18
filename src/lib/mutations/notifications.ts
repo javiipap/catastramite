@@ -27,11 +27,11 @@ export function useCreateNotification() {
         message: newItem.message,
         priority: newItem.priority,
         createdAt: new Date(),
-        createdBy: user?.userId || "",
+        createdBy: user?.id || "",
       };
       queryClient.setQueryData<Notification[]>(
         ["notifications", newItem.headquartersId],
-        [...previousNotifications, optNotif]
+        [...previousNotifications, optNotif],
       );
 
       return { previousNotifications };
@@ -41,7 +41,7 @@ export function useCreateNotification() {
 
       queryClient.setQueryData(
         ["notifications", vars.headquartersId],
-        [...(context.previousNotifications ?? []), result]
+        [...(context.previousNotifications ?? []), result],
       );
 
       queryClient.invalidateQueries({
@@ -55,7 +55,7 @@ export function useCreateNotification() {
       if (context?.previousNotifications) {
         queryClient.setQueryData(
           ["notifications", vars.headquartersId],
-          context.previousNotifications
+          context.previousNotifications,
         );
       }
     },

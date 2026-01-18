@@ -3,11 +3,11 @@
 import { createContext, useContext, type ReactNode } from "react"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import type { User } from "./types"
+import type { SessionUser } from '@/lib/auth'
 
 interface AuthContextType {
-  user: User | null
-  login: () => Promise<void>
+  user: SessionUser | null
+  login: (callbackUrl?: string) => Promise<void>
   logout: () => Promise<void>
   isLoading: boolean
 }
@@ -18,10 +18,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: session, isPending: isLoading } = authClient.useSession()
   const router = useRouter()
 
-  const login = async () => {
+  const login = async (callbackUrl?: string) => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/onboarding",
+      callbackURL: callbackUrl || "/onboarding",
     })
   }
 
@@ -38,16 +38,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Map session.user to our User type
   if (session?.user) {
     console.log("AuthProvider - raw session.user:", session.user);
-    console.log("AuthProvider - session.user.role:", session.user.role);
   }
 
-  const user: User | null = session?.user
-    ? {
-      ...session.user,
-      userId: session.user.id,
-      role: session.user.role,
-    } as unknown as User
-    : null
+  const user: SessionUser | null = (session?.user as unknown as SessionUser) ?? null
 
   if (user) {
     console.log("AuthProvider - mapped user:", user);

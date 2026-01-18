@@ -14,10 +14,7 @@ export default async function MasterLayout({ children }: Props) {
   });
 
 
-  if (!session?.user.role) {
-    console.log('Master layout' + session?.user)
-    redirect('/login');
-  }
+
 
   return (
     <div className="h-screen flex flex-col bg-muted/30">

@@ -1,7 +1,16 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./db/drizzle/client";
-import { user, session, account, verification } from "./db/drizzle/schema";
+import {
+  user,
+  session,
+  account,
+  verification,
+  headquarters,
+  userHeadquarters,
+} from "./db/drizzle/schema";
+import { customSession } from "better-auth/plugins";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -21,10 +30,6 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-      },
       age: {
         type: "number",
         required: false,
@@ -34,6 +39,32 @@ export const auth = betterAuth({
   advanced: {
     cookiePrefix: "catastramite",
   },
+  plugins: [
+    customSession(async ({ user, session }) => {
+      const userHqs = await db
+        .select({
+          id: headquarters.id,
+          name: headquarters.name,
+          role: userHeadquarters.role,
+        })
+        .from(userHeadquarters)
+        .innerJoin(
+          headquarters,
+          eq(userHeadquarters.headquartersId, headquarters.id),
+        )
+        .where(eq(userHeadquarters.userId, user.id));
+
+      return {
+        user: {
+          ...user,
+          headquarters: userHqs,
+          age: (user as any).age,
+        },
+        session,
+      };
+    }),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
+export type SessionUser = (typeof auth.$Infer.Session)["user"];

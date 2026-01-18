@@ -2,13 +2,13 @@
 
 import { useCases } from "@/use-cases";
 import { Notification as AppNotification } from "@/lib/schemas/notifications";
-import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
+import { mutateHeadquartersAction, slaveAction } from "@/lib/safe-action";
 import {
   createNotificationSchema,
   getNotificationsSchema,
 } from "@/lib/schemas/notifications";
 
-export const addNotificationAction = mutateMasterAction(
+export const addNotificationAction = mutateHeadquartersAction(
   createNotificationSchema,
   async ({ headquartersId, title, message, priority }, { user }) => {
     const newNotification: AppNotification = {
@@ -22,7 +22,7 @@ export const addNotificationAction = mutateMasterAction(
     };
 
     return useCases.notifications.createNotification(newNotification, user);
-  }
+  },
 );
 
 export const getNotificationsAction = slaveAction

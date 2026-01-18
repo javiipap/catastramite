@@ -27,11 +27,11 @@ export function useCreateProcedure() {
         description: newItem.description,
         fields: newItem.fields,
         createdAt: new Date(),
-        createdBy: user?.userId || "",
+        createdBy: user?.id || "",
       };
       queryClient.setQueryData<Procedure[]>(
         ["procedures", newItem.headquartersId],
-        [...previousProcedures, optProcedure]
+        [...previousProcedures, optProcedure],
       );
 
       return { previousProcedures };
@@ -41,7 +41,7 @@ export function useCreateProcedure() {
 
       queryClient.setQueryData<Procedure[]>(
         ["procedures", vars.headquartersId],
-        [...(context?.previousProcedures || []), result]
+        [...(context?.previousProcedures || []), result],
       );
 
       queryClient.invalidateQueries({
@@ -61,7 +61,7 @@ export function useCreateProcedure() {
       if (context?.previousProcedures) {
         queryClient.setQueryData<Procedure[]>(
           ["procedures", vars.headquartersId],
-          context.previousProcedures
+          context.previousProcedures,
         );
       }
     },

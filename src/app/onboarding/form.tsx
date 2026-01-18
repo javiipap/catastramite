@@ -3,27 +3,29 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { User, UserRole } from '@/lib/types'
+import type { User } from '@/lib/types'
+import { isValidRedirect } from '@/lib/utils'
 
 interface FormState {
   name: string;
   age: string;
-  role: UserRole;
 }
 
-export default function OnboardingForm({ name, role, age }: Partial<User>) {
+interface OnboardingFormProps extends Partial<User> {
+  callbackUrl?: string;
+}
+
+export default function OnboardingForm({ name, age, callbackUrl }: OnboardingFormProps) {
   const router = useRouter();
 
   const [formState, setFormState] = useState<FormState>({
     name: name || '',
     age: age?.toString() || '',
-    role: role || 'slave',
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -40,15 +42,16 @@ export default function OnboardingForm({ name, role, age }: Partial<User>) {
     setIsLoading(true);
 
     try {
-      console.log("OnboardingPage - Updating user with role:", formState.role);
       await authClient.updateUser({ ...formState, age: parseInt(formState.age) });
 
-      // Refresh session to get updated user data
       await authClient.getSession();
 
-      // Use the local 'role' variable which we know is what the user selected
-      console.log("OnboardingPage - Redirecting to:", `/${formState.role}/headquarters`);
-      router.push(`/${formState.role}/headquarters`);
+      let targetUrl = `/headquarters`;
+      if (callbackUrl && isValidRedirect(callbackUrl)) {
+        targetUrl = callbackUrl;
+      }
+
+      router.push(targetUrl);
     } catch (err) {
       console.error(err);
     } finally {
@@ -86,19 +89,6 @@ export default function OnboardingForm({ name, role, age }: Partial<User>) {
               required
               min={18}
             />
-          </div>
-
-          <div className='space-y-2'>
-            <Label htmlFor='role'>Role</Label>
-            <Select value={formState.role} onValueChange={(value) => setFormState({ ...formState, role: value as UserRole })} required>
-              <SelectTrigger>
-                <SelectValue placeholder='Select a role' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='master'>Master</SelectItem>
-                <SelectItem value='slave'>Slave</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           <Button type='submit' className='w-full' disabled={isLoading}>

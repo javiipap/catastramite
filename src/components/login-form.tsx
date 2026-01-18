@@ -6,13 +6,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
+import { useSearchParams } from "next/navigation";
+
 export function LoginForm() {
   const { login, isLoading } = useAuth()
   const [error, setError] = useState("")
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || undefined
 
   const handleLogin = async () => {
     try {
-      await login()
+      await login(callbackUrl)
     } catch {
       setError("Failed to initiate login")
     }

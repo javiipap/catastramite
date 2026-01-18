@@ -20,7 +20,7 @@ export const masterAction = actionClient.use(async ({ next }) => {
     throw new Error();
   }
 
-  if (session.user.role !== "master") {
+  if (!session.user.headquarters.some((h: any) => h.role === "master")) {
     throw new Error();
   }
 
@@ -39,10 +39,17 @@ export const slaveAction = actionClient.use(async ({ next }) => {
   return next({ ctx: { user: session.user } });
 });
 
-export const mutateMasterAction =
-  <TSchema extends z.ZodType, TData>(
+export const mutateHeadquartersAction =
+  <
+    TSchema extends z.ZodType<
+      {
+        headquartersId: string;
+      } & Record<string, any>
+    >,
+    TData,
+  >(
     schema: TSchema,
-    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>
+    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
@@ -55,17 +62,21 @@ export const mutateMasterAction =
       throw new Error();
     }
 
-    if (session.user.role !== "master") {
+    const headquarters = session.user.headquarters.find(
+      (h: any) => h.id === parsedInput.headquartersId,
+    );
+
+    if (!headquarters || headquarters.role !== "master") {
       throw new Error();
     }
 
     return handler(parsedInput, { user: session.user });
   };
 
-export const mutateSlaveAction =
+export const mutateAction =
   <TSchema extends z.ZodType, TData>(
     schema: TSchema,
-    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>
+    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);

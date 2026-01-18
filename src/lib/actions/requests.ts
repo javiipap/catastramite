@@ -2,14 +2,14 @@
 
 import { useCases } from "@/use-cases";
 import { Request as AppRequest } from "@/lib/schemas/requests";
-import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
+import { mutateHeadquartersAction, slaveAction } from "@/lib/safe-action";
 import {
   createRequestSchema,
   updateRequestStatusSchema,
   getRequestsSchema,
 } from "@/lib/schemas/requests";
 
-export const addRequestAction = mutateMasterAction(
+export const addRequestAction = mutateHeadquartersAction(
   createRequestSchema,
   async (request, { user }) => {
     if (request.applicantId !== user.id) {
@@ -30,10 +30,10 @@ export const addRequestAction = mutateMasterAction(
     };
 
     return useCases.requests.createRequest(newRequest, user);
-  }
+  },
 );
 
-export const updateRequestStatusAction = mutateMasterAction(
+export const updateRequestStatusAction = mutateHeadquartersAction(
   updateRequestStatusSchema,
   async ({ requestId, status, headquartersId, feedback }, { user }) => {
     return useCases.requests.updateRequestStatus(
@@ -41,9 +41,9 @@ export const updateRequestStatusAction = mutateMasterAction(
       status,
       { headquartersId },
       user,
-      feedback
+      feedback,
     );
-  }
+  },
 );
 
 export const getRequestsAction = slaveAction

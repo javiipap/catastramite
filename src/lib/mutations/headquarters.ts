@@ -4,7 +4,43 @@ import {
   createHeadquarters,
   updateHeadquarters,
 } from "@/lib/actions/headquarters";
+import {
+  addUserToHeadquartersAction,
+  removeUserFromHeadquartersAction,
+} from "@/lib/actions/headquarters-users";
 import { Headquarters } from "@/lib/types";
+
+export function useAddUserToHeadquarters() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addUserToHeadquartersAction,
+    onSuccess: () => {
+      toast.success("User added successfully");
+      queryClient.invalidateQueries({ queryKey: ["hq-users"] });
+      queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to add user");
+    },
+  });
+}
+
+export function useRemoveUserFromHeadquarters() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeUserFromHeadquartersAction,
+    onSuccess: () => {
+      toast.success("User removed successfully");
+      queryClient.invalidateQueries({ queryKey: ["hq-users"] });
+      queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to remove user");
+    },
+  });
+}
 
 export function useCreateHeadquarters() {
   const queryClient = useQueryClient();

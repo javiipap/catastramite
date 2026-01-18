@@ -101,6 +101,12 @@
       "name": "Mi querido perrito",
       "description": "",
       "createdAt": "2026-01-14T09:37:29.201Z"
+    },
+    {
+      "headquartersId": "1768469371765",
+      "name": "La sede de Jorge",
+      "description": "",
+      "createdAt": "2026-01-15T09:29:31.765Z"
     }
   ],
   "userHeadquarters": [
@@ -198,6 +204,11 @@
       "userId": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL",
       "headquartersId": "1768383449201",
       "role": "master"
+    },
+    {
+      "userId": "R6vFnCk5o4Ho1x7sUKov5sfRxECpesZ7",
+      "headquartersId": "1768469371765",
+      "role": "master"
     }
   ],
   "notifications": [
@@ -209,6 +220,15 @@
       "priority": "medium",
       "createdAt": "2026-01-14T09:25:55.041Z",
       "createdBy": "h8pgFlgBVcxmWqkFSMghzYq8jLilKGlF"
+    },
+    {
+      "notificationId": "1768469413900",
+      "headquartersId": "1768469371765",
+      "title": "La compra",
+      "message": "Jorge vete a hacer la puta compra.\nCompra unas naranjitas",
+      "priority": "high",
+      "createdAt": "2026-01-15T09:30:13.900Z",
+      "createdBy": "R6vFnCk5o4Ho1x7sUKov5sfRxECpesZ7"
     }
   ],
   "procedures": [
@@ -249,6 +269,28 @@
       ],
       "createdAt": "2026-01-14T09:39:02.368Z",
       "createdBy": "X3oP3NuUHpmrplZAYsNlCetKgPIGFefL"
+    },
+    {
+      "procedureId": "1768469371769",
+      "headquartersId": "1768469371765",
+      "name": "Instancia General",
+      "description": "Trámite para presentación de escritos, solicitudes y comunicaciones generales.",
+      "fields": [
+        {
+          "id": "expone",
+          "name": "Expone",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "solicita",
+          "name": "Solicita",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "createdAt": "2026-01-15T09:29:31.769Z",
+      "createdBy": "R6vFnCk5o4Ho1x7sUKov5sfRxECpesZ7"
     }
   ],
   "requests": [
@@ -310,6 +352,22 @@
       },
       "createdAt": "2026-01-14T10:02:50.746Z",
       "updatedAt": "2026-01-14T10:03:16.755Z"
+    },
+    {
+      "requestId": "1768469543691",
+      "headquartersId": "1768469371765",
+      "procedureId": "1768469371769",
+      "procedureName": "Instancia General",
+      "applicantId": "R6vFnCk5o4Ho1x7sUKov5sfRxECpesZ7",
+      "applicantName": "Javier Padilla Pío",
+      "status": "rejected",
+      "data": {
+        "Expone": "algo",
+        "Solicita": "algo algoa algo\n"
+      },
+      "createdAt": "2026-01-15T09:32:23.691Z",
+      "updatedAt": "2026-01-15T09:33:23.540Z",
+      "feedback": "chúpala\n"
     }
   ]
 }

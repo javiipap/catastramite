@@ -18,7 +18,7 @@ export default function SlaveRequestsPage() {
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
 
   // Filter client side for current user
-  const myRequests = requests.filter((r) => r.applicantId === user?.userId)
+  const myRequests = requests.filter((r) => r.applicantId === user?.id)
   const filteredRequests = filter === "all" ? myRequests : myRequests.filter((r) => r.status === filter)
 
   const getStatusBadge = (status: Request["status"]) => {

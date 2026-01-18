@@ -51,7 +51,7 @@ export default function SlaveProcedurePage() {
         procedureId: procedure.procedureId,
         procedureName: procedure.name,
         headquartersId: procedure.headquartersId,
-        applicantId: user.userId,
+        applicantId: user.id,
         applicantName: user.name,
         status: "pending",
         data: formData,

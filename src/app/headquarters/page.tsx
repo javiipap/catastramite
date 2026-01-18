@@ -3,13 +3,13 @@
 import { useState } from "react"
 import type React from "react"
 
-import { useMasterHeadquartersListStore } from "@/lib/queries/headquarters"
+import { useHeadquartersListStore } from "@/lib/queries/headquarters"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Building2, ExternalLink, Link as LinkIcon, Lock } from "lucide-react"
+import { Plus, Building2, ExternalLink, Link as LinkIcon } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -20,19 +20,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
-import { generateInviteToken } from "@/lib/tokens"
-import { toast } from "sonner"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
+import { InviteUserDialog } from '@/components/invite-user-dialog'
 
 export default function HeadquartersPage() {
-  const { data: headquarters } = useMasterHeadquartersListStore()
+  const { data: headquarters } = useHeadquartersListStore()
   const { user } = useAuth()
   const router = useRouter()
 
   const [isOpen, setIsOpen] = useState(false)
-  const [inviteOpen, setInviteOpen] = useState(false)
   const [newHeadquartersName, setNewHeadquartersName] = useState("")
-  const [inviteLink, setInviteLink] = useState<string | null>(null)
 
   const createMutation = useCreateHeadquarters()
 
@@ -48,24 +45,9 @@ export default function HeadquartersPage() {
     }
   }
 
-  const handleInvite = (headquartersId: string) => {
-    // setSelectedHeadquartersId(headquartersId)
-    const token = generateInviteToken(headquartersId)
-    const link = `${window.location.origin}/login?token=${token}`
-    setInviteLink(link)
-    setInviteOpen(true)
-  }
-
-  const copyToClipboard = () => {
-    if (inviteLink) {
-      navigator.clipboard.writeText(inviteLink)
-      toast.success("Link copied to clipboard")
-    }
-  }
-
   const handleEnterHeadquarters = (headquartersId: string) => {
     // Check role to determine destination
-    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.userId)
+    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
     if (relation?.role === 'master') {
       router.push(`/master/${headquartersId}/dashboard`)
     } else {
@@ -76,12 +58,12 @@ export default function HeadquartersPage() {
   if (!user) return null
 
   return (
-    <div className="py-10 mx-auto p-6">
+    <div className="py-10 mx-auto p-6 container">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Headquarters</h1>
           <p className="text-muted-foreground mt-1">
-            Manage your electronic headquarters and access their panels
+            Access your electronic headquarters or create a new one
           </p>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -132,7 +114,7 @@ export default function HeadquartersPage() {
             </div>
             <h3 className="text-lg font-semibold mb-2">You don&apos;t have any headquarters assigned</h3>
             <p className="text-muted-foreground max-w-sm mb-6">
-              Create your first headquarters to start managing electronic procedures or request access to an existing one.
+              Create your first headquarters or ask an admin for an invitation.
             </p>
             <Button onClick={() => setIsOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
@@ -143,13 +125,13 @@ export default function HeadquartersPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {headquarters.map((h) => {
-            const relation = h.userHeadquarters?.find(uh => uh.userId === user.userId)
-            const role = relation?.role || 'slave'
+            const relation = h.userHeadquarters?.find(uh => uh.userId === user.id)
+            const role = relation?.role || 'slave' // Fallback to slave if logic fails but relation should exist
             const isMaster = role === 'master'
 
             return (
               <Card key={h.headquartersId} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
-                <div className="h-2 w-full bg-primary" />
+                <div className={`h-2 w-full ${isMaster ? 'bg-primary' : 'bg-secondary'}`} />
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="line-clamp-1 text-xl">{h.name}</CardTitle>
@@ -174,9 +156,7 @@ export default function HeadquartersPage() {
                     Access <ExternalLink className="ml-2 h-3 w-3" />
                   </Button>
                   {isMaster && (
-                    <Button variant="outline" size="icon" onClick={() => handleInvite(h.headquartersId)} title="Invite users">
-                      <LinkIcon className="h-4 w-4" />
-                    </Button>
+                    <InviteUserDialog headquartersId={h.headquartersId} icon={<LinkIcon className="h-4 w-4" />} />
                   )}
                 </div>
               </Card>
@@ -184,33 +164,6 @@ export default function HeadquartersPage() {
           })}
         </div>
       )}
-
-      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Invite User</DialogTitle>
-            <DialogDescription>Generate a secure link to invite users to this headquarters.</DialogDescription>
-          </DialogHeader>
-          <div className="py-4 space-y-4">
-            {inviteLink ? (
-              <div className="space-y-2">
-                <Label>Invitation Link</Label>
-                <div className="flex gap-2">
-                  <Input value={inviteLink} readOnly />
-                  <Button size="icon" onClick={copyToClipboard}>
-                    <Lock className="h-4 w-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground">This link expires in 24 hours.</p>
-              </div>
-            ) : (
-              <div className="flex justify-center p-4">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

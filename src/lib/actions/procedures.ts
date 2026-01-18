@@ -2,13 +2,13 @@
 
 import { useCases } from "@/use-cases";
 import type { Procedure } from "@/lib/schemas/procedures";
-import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
+import { mutateHeadquartersAction, slaveAction } from "@/lib/safe-action";
 import {
   createProcedureSchema,
   getProceduresSchema,
 } from "@/lib/schemas/procedures";
 
-export const addProcedure = mutateMasterAction(
+export const addProcedure = mutateHeadquartersAction(
   createProcedureSchema,
   async ({ headquartersId, name, description, fields }, { user }) => {
     const newProcedure: Procedure = {
@@ -22,7 +22,7 @@ export const addProcedure = mutateMasterAction(
     };
 
     return useCases.procedures.createProcedure(newProcedure, user);
-  }
+  },
 );
 
 export const getProceduresAction = slaveAction

@@ -27,10 +27,10 @@ export function HeadquartersSelector() {
 
   // Fetch user headquarters on client side
   const { data: userHeadquarters = [] } = useQuery({
-    queryKey: ['userHeadquarters', user?.userId],
+    queryKey: ['userHeadquarters', user?.id],
     queryFn: async () => {
       if (!user) return []
-      const result = await getUserHeadquartersObjectsAction({ userId: user.userId })
+      const result = await getUserHeadquartersObjectsAction({ userId: user.id })
       return result?.data || []
     },
     enabled: !!user
@@ -80,7 +80,7 @@ export function HeadquartersSelector() {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <a href="/master/headquarters" className="w-full cursor-pointer font-medium text-primary">
+          <a href="/headquarters" className="w-full cursor-pointer font-medium text-primary">
             Manage Headquarters
           </a>
         </DropdownMenuItem>

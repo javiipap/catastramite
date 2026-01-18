@@ -2,7 +2,11 @@
 
 import { useCases } from "@/use-cases";
 import { Headquarters } from "@/lib/schemas/headquarters";
-import { mutateMasterAction, slaveAction } from "@/lib/safe-action";
+import {
+  mutateAction,
+  mutateHeadquartersAction,
+  slaveAction,
+} from "@/lib/safe-action";
 import {
   createHeadquartersSchema,
   updateHeadquartersSchema,
@@ -10,7 +14,7 @@ import {
   getUserHeadquartersRelationsSchema,
 } from "@/lib/schemas/headquarters";
 
-export const createHeadquarters = mutateMasterAction(
+export const createHeadquarters = mutateAction(
   createHeadquartersSchema,
   async ({ name, description }, { user }) => {
     const newHeadquarters: Headquarters = {
@@ -34,10 +38,10 @@ export const createHeadquarters = mutateMasterAction(
         },
       ],
     } as Headquarters;
-  }
+  },
 );
 
-export const updateHeadquarters = mutateMasterAction(
+export const updateHeadquarters = mutateHeadquartersAction(
   updateHeadquartersSchema,
   async ({ headquartersId, name, description }, { user }) => {
     const updates: Partial<Headquarters> = { name };
@@ -48,9 +52,9 @@ export const updateHeadquarters = mutateMasterAction(
     return useCases.headquarters.updateHeadquarters(
       headquartersId,
       updates,
-      user
+      user,
     );
-  }
+  },
 );
 
 export const getHeadquartersAction = slaveAction
@@ -76,11 +80,11 @@ export const getUserHeadquartersAction = slaveAction.action(
     return useCases.headquarters.getUserHeadquartersObjects({
       userId: user.id,
     });
-  }
+  },
 );
 
 export const getMasterHeadquartersAction = slaveAction.action(
   async ({ ctx: { user } }) => {
     return useCases.headquarters.getMasterHeadquarters({ userId: user.id });
-  }
+  },
 );

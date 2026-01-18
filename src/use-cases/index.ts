@@ -1,10 +1,11 @@
-import { getDB } from '@/lib/db';
-import { HeadquartersUseCases } from './headquarters';
-import { UsersUseCases } from './users';
-import { ProceduresUseCases } from './procedures';
-import { RequestsUseCases } from './requests';
-import { NotificationsUseCases } from './notifications';
-import { DashboardUseCases } from './dashboard';
+import { getDB } from "@/lib/db";
+import { HeadquartersUseCases } from "./headquarters";
+import { UsersUseCases } from "./users";
+import { ProceduresUseCases } from "./procedures";
+import { RequestsUseCases } from "./requests";
+import { NotificationsUseCases } from "./notifications";
+import { DashboardUseCases } from "./dashboard";
+import { InvitationsUseCases } from "./invitations";
 
 class UseCaseFactory {
   private static _headquarters: HeadquartersUseCases;
@@ -13,6 +14,7 @@ class UseCaseFactory {
   private static _requests: RequestsUseCases;
   private static _notifications: NotificationsUseCases;
   private static _dashboard: DashboardUseCases;
+  private static _invitations: InvitationsUseCases;
 
   static get headquarters(): HeadquartersUseCases {
     if (!this._headquarters) {
@@ -54,6 +56,13 @@ class UseCaseFactory {
       this._dashboard = new DashboardUseCases(getDB());
     }
     return this._dashboard;
+  }
+
+  static get invitations(): InvitationsUseCases {
+    if (!this._invitations) {
+      this._invitations = new InvitationsUseCases(getDB());
+    }
+    return this._invitations;
   }
 }
 

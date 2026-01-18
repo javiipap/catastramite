@@ -17,17 +17,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  addUserToHeadquartersAction,
-  removeUserFromHeadquartersAction,
   getHeadquartersUsersAction
 } from "@/lib/actions/headquarters-users"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
+import { useAddUserToHeadquarters, useRemoveUserFromHeadquarters } from "@/lib/mutations/headquarters"
 import type { UserRole } from "@/lib/types"
+import { InviteUserDialog } from '@/components/invite-user-dialog'
 
 export default function MasterUsersPage() {
   const { data: headquarters } = useHeadquartersStore()
-  const queryClient = useQueryClient()
 
   const [isOpen, setIsOpen] = useState(false)
   const [email, setEmail] = useState("")
@@ -44,45 +42,22 @@ export default function MasterUsersPage() {
   })
 
   // Mutations
-  const addUserMutation = useMutation({
-    mutationFn: async () => {
-      if (!headquarters) return;
-      await addUserToHeadquartersAction({
+  const { mutateAsync: addUser, isPending: isAddingUser } = useAddUserToHeadquarters();
+  const { mutate: removeUser, isPending: isRemovingUser } = useRemoveUserFromHeadquarters();
+
+  const handleSubmit = async () => {
+    if (!headquarters) return;
+    try {
+      await addUser({
         headquartersId: headquarters.headquartersId,
         email,
         role
       });
-    },
-    onSuccess: () => {
-      toast.success("User added successfully");
       setIsOpen(false);
       setEmail("");
-      queryClient.invalidateQueries({ queryKey: ["hq-users"] });
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to add user");
+    } catch {
+      // Error is handled by the mutation hook
     }
-  });
-
-  const removeUserMutation = useMutation({
-    mutationFn: async (userId: string) => {
-      if (!headquarters) return;
-      await removeUserFromHeadquartersAction({
-        headquartersId: headquarters.headquartersId,
-        userId
-      });
-    },
-    onSuccess: () => {
-      toast.success("User removed successfully");
-      queryClient.invalidateQueries({ queryKey: ["hq-users"] });
-    },
-    onError: (err) => {
-      toast.error(err.message || "Failed to remove user");
-    }
-  });
-
-  const handleSubmit = () => {
-    addUserMutation.mutate();
   }
 
   if (!headquarters) return null
@@ -95,12 +70,15 @@ export default function MasterUsersPage() {
           <p className="text-muted-foreground">Manage members of this headquarters</p>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add User
-            </Button>
-          </DialogTrigger>
+          <div className="flex items-center gap-4">
+            <InviteUserDialog headquartersId={headquarters.headquartersId} />
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add User
+              </Button>
+            </DialogTrigger>
+          </div>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add User to Headquarters</DialogTitle>
@@ -133,9 +111,9 @@ export default function MasterUsersPage() {
               <Button
                 onClick={handleSubmit}
                 className="w-full"
-                disabled={addUserMutation.isPending || !email}
+                disabled={isAddingUser || !email}
               >
-                {addUserMutation.isPending ? "Adding..." : "Add User"}
+                {isAddingUser ? "Adding..." : "Add User"}
               </Button>
             </div>
           </DialogContent>
@@ -174,10 +152,15 @@ export default function MasterUsersPage() {
                   size="icon"
                   onClick={() => {
                     if (confirm("Are you sure you want to remove this user?")) {
-                      removeUserMutation.mutate(user.userId);
+                      if (headquarters) {
+                        removeUser({
+                          headquartersId: headquarters.headquartersId,
+                          userId: user.userId
+                        });
+                      }
                     }
                   }}
-                  disabled={removeUserMutation.isPending}
+                  disabled={isRemovingUser}
                 >
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
