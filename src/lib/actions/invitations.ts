@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { mutateHeadquartersAction } from "@/lib/safe-action";
+import { mutateAction, mutateHeadquartersAction } from "@/lib/safe-action";
 import {
   createInvitationSchema,
   acceptInvitationSchema,
@@ -19,7 +19,7 @@ export const createInvitationTokenAction = mutateHeadquartersAction(
   },
 );
 
-export const acceptInvitationAction = mutateHeadquartersAction(
+export const acceptInvitationAction = mutateAction(
   acceptInvitationSchema,
   async ({ token }, { user }) => {
     await useCases.invitations.acceptInvitation(token, user);

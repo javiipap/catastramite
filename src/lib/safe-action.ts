@@ -20,7 +20,7 @@ export const masterAction = actionClient.use(async ({ next }) => {
     throw new Error();
   }
 
-  if (!session.user.headquarters.some((h: any) => h.role === "master")) {
+  if (!session.user.headquarters.some((h) => h.role === "master")) {
     throw new Error();
   }
 
@@ -44,7 +44,7 @@ export const mutateHeadquartersAction =
     TSchema extends z.ZodType<
       {
         headquartersId: string;
-      } & Record<string, any>
+      } & Record<string, unknown>
     >,
     TData,
   >(
@@ -63,7 +63,7 @@ export const mutateHeadquartersAction =
     }
 
     const headquarters = session.user.headquarters.find(
-      (h: any) => h.id === parsedInput.headquartersId,
+      (h) => h.id === parsedInput.headquartersId,
     );
 
     if (!headquarters || headquarters.role !== "master") {

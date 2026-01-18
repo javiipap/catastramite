@@ -1,4 +1,4 @@
-import { cn, isValidRedirect } from "@/lib/utils"
+import { isValidRedirect } from "@/lib/utils"
 import { LoginForm } from "@/components/login-form"
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';

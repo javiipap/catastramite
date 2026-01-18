@@ -194,7 +194,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Reason:</span>
-                      <span className="font-medium text-foreground">"Tired"</span>
+                      <span className="font-medium text-foreground">&quot;Tired&quot;</span>
                     </div>
                   </div>
                 </div>

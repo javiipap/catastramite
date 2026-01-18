@@ -3,7 +3,7 @@
 import { useAuth } from "@/lib/auth-context"
 import { HeadquartersSelector } from "@/components/headquarters-selector"
 import { Button } from "@/components/ui/button"
-import { Building2, LogOut, User, Users, ArrowLeftRight } from "lucide-react"
+import { Building2, LogOut, User, ArrowLeftRight } from "lucide-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import {
