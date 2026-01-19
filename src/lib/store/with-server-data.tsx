@@ -38,7 +38,7 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
     }
 
     const hasParams = resolvedParams && Object.keys(resolvedParams).length > 0;
-    const input = hasParams ? params : undefined;
+    const input = hasParams ? resolvedParams : undefined;
     const result = await action(input as TArgs);
 
     if (result?.serverError) {

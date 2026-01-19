@@ -11,6 +11,8 @@ import {
 } from "./db/drizzle/schema";
 import { customSession } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
+import { getHeadquartersUsersAction } from "@/lib/actions/headquarters-users";
+import { useCases } from "@/use-cases";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -41,23 +43,14 @@ export const auth = betterAuth({
   },
   plugins: [
     customSession(async ({ user, session }) => {
-      const userHqs = await db
-        .select({
-          id: headquarters.id,
-          name: headquarters.name,
-          role: userHeadquarters.role,
-        })
-        .from(userHeadquarters)
-        .innerJoin(
-          headquarters,
-          eq(userHeadquarters.headquartersId, headquarters.id),
-        )
-        .where(eq(userHeadquarters.userId, user.id));
+      const headquarters = await useCases.headquarters.getUserHeadquarters({
+        userId: user.id,
+      });
 
       return {
         user: {
           ...user,
-          headquarters: userHqs,
+          headquarters,
           age: (user as any).age,
         },
         session,

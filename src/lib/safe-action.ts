@@ -63,7 +63,7 @@ export const mutateHeadquartersAction =
     }
 
     const headquarters = session.user.headquarters.find(
-      (h) => h.id === parsedInput.headquartersId,
+      (h) => h.headquartersId === parsedInput.headquartersId,
     );
 
     if (!headquarters || headquarters.role !== "master") {
