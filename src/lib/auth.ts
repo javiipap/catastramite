@@ -1,18 +1,10 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "./db/drizzle/client";
-import {
-  user,
-  session,
-  account,
-  verification,
-  headquarters,
-  userHeadquarters,
-} from "./db/drizzle/schema";
+import { user, session, account, verification } from "./db/drizzle/schema";
 import { customSession } from "better-auth/plugins";
-import { eq } from "drizzle-orm";
-import { getHeadquartersUsersAction } from "@/lib/actions/headquarters-users";
 import { useCases } from "@/use-cases";
+import { Resource } from "sst/resource";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -26,8 +18,8 @@ export const auth = betterAuth({
   }),
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: Resource.CLIENT_ID.value,
+      clientSecret: Resource.CLIENT_SECRET.value,
     },
   },
   user: {

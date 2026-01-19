@@ -31,20 +31,34 @@ export class SqlAdapter implements DatabaseAdapter {
       .where(
         and(
           eq(userHeadquarters.userId, userId),
-          eq(userHeadquarters.headquartersId, hqId)
-        )
+          eq(userHeadquarters.headquartersId, hqId),
+        ),
       )
-      .get();
+      .limit(1);
 
-    return result ? (result.role as UserRole) : null;
+    const maxRole = result.reduce(
+      (max, current) => {
+        if (!max) {
+          return current.role;
+        }
+
+        if (current.role === "master") {
+          return current.role;
+        }
+
+        return max;
+      },
+      null as UserRole | null,
+    );
+
+    return maxRole;
   }
 
   async getUserHeadquarters(userId: string): Promise<UserHeadquarters[]> {
     const results = await db
       .select()
       .from(userHeadquarters)
-      .where(eq(userHeadquarters.userId, userId))
-      .all();
+      .where(eq(userHeadquarters.userId, userId));
 
     return results.map((r) => ({
       userId: r.userId,
@@ -62,15 +76,14 @@ export class SqlAdapter implements DatabaseAdapter {
     const hqsResult = await db
       .select()
       .from(headquarters)
-      .where(inArray(headquarters.id, hqIds))
-      .all();
+      .where(inArray(headquarters.id, hqIds));
 
     return hqsResult.map((row) => {
       const hq = this.mapToHeadquarters(row);
       return {
         ...hq,
         userHeadquarters: userHqs.filter(
-          (uh) => uh.headquartersId === hq.headquartersId
+          (uh) => uh.headquartersId === hq.headquartersId,
         ),
       };
     });
@@ -80,34 +93,30 @@ export class SqlAdapter implements DatabaseAdapter {
     // Check if exists
     const existing = await this.getUserRole(uh.userId, uh.headquartersId);
     if (!existing) {
-      await db
-        .insert(userHeadquarters)
-        .values({
-          userId: uh.userId,
-          headquartersId: uh.headquartersId,
-          role: uh.role,
-        })
-        .run();
+      await db.insert(userHeadquarters).values({
+        userId: uh.userId,
+        headquartersId: uh.headquartersId,
+        role: uh.role,
+      });
     }
   }
 
   async removeUserFromHeadquarters(
     userId: string,
-    hqId: string
+    hqId: string,
   ): Promise<void> {
     await db
       .delete(userHeadquarters)
       .where(
         and(
           eq(userHeadquarters.userId, userId),
-          eq(userHeadquarters.headquartersId, hqId)
-        )
-      )
-      .run();
+          eq(userHeadquarters.headquartersId, hqId),
+        ),
+      );
   }
 
   async getUsersByHeadquarters(
-    hqId: string
+    hqId: string,
   ): Promise<(User & { role: UserRole })[]> {
     const results = await db
       .select({
@@ -116,8 +125,7 @@ export class SqlAdapter implements DatabaseAdapter {
       })
       .from(userHeadquarters)
       .innerJoin(user, eq(userHeadquarters.userId, user.id))
-      .where(eq(userHeadquarters.headquartersId, hqId))
-      .all();
+      .where(eq(userHeadquarters.headquartersId, hqId));
 
     return results.map(({ user, role }) => ({
       ...user,
@@ -127,11 +135,11 @@ export class SqlAdapter implements DatabaseAdapter {
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const result = await db
+    const [result] = await db
       .select()
       .from(user)
       .where(eq(user.email, email))
-      .get();
+      .limit(1);
 
     if (!result) return undefined;
     return {
@@ -143,37 +151,33 @@ export class SqlAdapter implements DatabaseAdapter {
   // --- Headquarters ---
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
-    const result = await db
+    const [result] = await db
       .select()
       .from(headquarters)
       .where(eq(headquarters.id, id))
-      .get();
+      .limit(1);
 
     return result ? this.mapToHeadquarters(result) : undefined;
   }
 
   async createHeadquarters(
     hq: Headquarters,
-    userId: string
+    userId: string,
   ): Promise<Headquarters> {
     // Transaction
-    db.transaction(() => {
-      db.insert(headquarters)
-        .values({
-          id: hq.headquartersId,
-          name: hq.name,
-          description: hq.description || null,
-          createdAt: hq.createdAt,
-        })
-        .run();
+    await db.transaction(async (tx) => {
+      await tx.insert(headquarters).values({
+        id: hq.headquartersId,
+        name: hq.name,
+        description: hq.description || null,
+        createdAt: hq.createdAt,
+      });
 
-      db.insert(userHeadquarters)
-        .values({
-          userId: userId,
-          headquartersId: hq.headquartersId,
-          role: "master",
-        })
-        .run();
+      await tx.insert(userHeadquarters).values({
+        userId: userId,
+        headquartersId: hq.headquartersId,
+        role: "master",
+      });
     });
 
     return hq;
@@ -181,7 +185,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
   async updateHeadquarters(
     id: string,
-    updates: Partial<Headquarters>
+    updates: Partial<Headquarters>,
   ): Promise<Headquarters> {
     if (Object.keys(updates).length === 0) {
       const hq = await this.getHeadquartersById(id);
@@ -195,8 +199,7 @@ export class SqlAdapter implements DatabaseAdapter {
         name: updates.name,
         description: updates.description,
       })
-      .where(eq(headquarters.id, id))
-      .run();
+      .where(eq(headquarters.id, id));
 
     const updated = await this.getHeadquartersById(id);
     if (!updated) throw new Error("Headquarters not found after update");
@@ -209,27 +212,21 @@ export class SqlAdapter implements DatabaseAdapter {
     const results = await db
       .select()
       .from(procedures)
-      .where(eq(procedures.headquartersId, hqId))
-      .all();
+      .where(eq(procedures.headquartersId, hqId));
 
     return results.map(this.mapToProcedure);
   }
 
   async createProcedure(procedure: Procedure): Promise<Procedure> {
-    await db
-      .insert(procedures)
-      .values({
-        id: procedure.procedureId,
-        headquartersId: procedure.headquartersId,
-        name: procedure.name,
-        description: procedure.description,
-        fields: procedure.fields as unknown as string, // JSON handled by Drizzle schema? No, better-sqlite3 needs stringify if we didn't use valid json mode.
-        // Wait, I defined it as `text(..., { mode: 'json' })`. Drizzle handles parsing/stringifying.
-        // But TS might complain about type mismatch if strict.
-        createdAt: procedure.createdAt,
-        createdBy: procedure.createdBy,
-      })
-      .run();
+    await db.insert(procedures).values({
+      id: procedure.procedureId,
+      headquartersId: procedure.headquartersId,
+      name: procedure.name,
+      description: procedure.description,
+      fields: procedure.fields as any,
+      createdAt: procedure.createdAt,
+      createdBy: procedure.createdBy,
+    });
 
     return procedure;
   }
@@ -240,8 +237,7 @@ export class SqlAdapter implements DatabaseAdapter {
     const results = await db
       .select()
       .from(requests)
-      .where(eq(requests.headquartersId, hqId))
-      .all();
+      .where(eq(requests.headquartersId, hqId));
 
     return results.map(this.mapToRequest);
   }
@@ -251,29 +247,28 @@ export class SqlAdapter implements DatabaseAdapter {
       .select()
       .from(requests)
       .where(
-        and(eq(requests.headquartersId, hqId), eq(requests.applicantId, userId))
-      )
-      .all();
+        and(
+          eq(requests.headquartersId, hqId),
+          eq(requests.applicantId, userId),
+        ),
+      );
 
     return results.map(this.mapToRequest);
   }
 
   async createRequest(request: AppRequest): Promise<AppRequest> {
-    await db
-      .insert(requests)
-      .values({
-        id: request.requestId,
-        headquartersId: request.headquartersId,
-        procedureId: request.procedureId,
-        procedureName: request.procedureName,
-        applicantId: request.applicantId,
-        applicantName: request.applicantName,
-        status: request.status,
-        data: request.data as unknown as string, // Handled by mode: 'json'
-        createdAt: request.createdAt,
-        updatedAt: request.updatedAt,
-      })
-      .run();
+    await db.insert(requests).values({
+      id: request.requestId,
+      headquartersId: request.headquartersId,
+      procedureId: request.procedureId,
+      procedureName: request.procedureName,
+      applicantId: request.applicantId,
+      applicantName: request.applicantName,
+      status: request.status,
+      data: request.data as any,
+      createdAt: request.createdAt,
+      updatedAt: request.updatedAt,
+    });
     return request;
   }
 
@@ -281,7 +276,7 @@ export class SqlAdapter implements DatabaseAdapter {
     id: string,
     status: RequestStatus,
     headquartersId: string,
-    feedback?: string
+    feedback?: string,
   ): Promise<AppRequest> {
     await db
       .update(requests)
@@ -291,15 +286,14 @@ export class SqlAdapter implements DatabaseAdapter {
         updatedAt: new Date(),
       })
       .where(
-        and(eq(requests.id, id), eq(requests.headquartersId, headquartersId))
-      )
-      .run();
+        and(eq(requests.id, id), eq(requests.headquartersId, headquartersId)),
+      );
 
-    const updated = await db
+    const [updated] = await db
       .select()
       .from(requests)
       .where(eq(requests.id, id))
-      .get();
+      .limit(1);
     if (!updated) throw new Error("Request not found");
 
     return this.mapToRequest(updated);
@@ -311,27 +305,23 @@ export class SqlAdapter implements DatabaseAdapter {
     const results = await db
       .select()
       .from(notifications)
-      .where(eq(notifications.headquartersId, hqId))
-      .all();
+      .where(eq(notifications.headquartersId, hqId));
 
     return results.map(this.mapToNotification);
   }
 
   async createNotification(
-    notification: AppNotification
+    notification: AppNotification,
   ): Promise<AppNotification> {
-    await db
-      .insert(notifications)
-      .values({
-        id: notification.notificationId,
-        headquartersId: notification.headquartersId,
-        title: notification.title,
-        message: notification.message,
-        priority: notification.priority,
-        createdAt: notification.createdAt,
-        createdBy: notification.createdBy,
-      })
-      .run();
+    await db.insert(notifications).values({
+      id: notification.notificationId,
+      headquartersId: notification.headquartersId,
+      title: notification.title,
+      message: notification.message,
+      priority: notification.priority,
+      createdAt: notification.createdAt,
+      createdBy: notification.createdBy,
+    });
 
     return notification;
   }
@@ -339,7 +329,7 @@ export class SqlAdapter implements DatabaseAdapter {
   // --- Mappers ---
 
   private mapToHeadquarters(
-    row: typeof headquarters.$inferSelect
+    row: typeof headquarters.$inferSelect,
   ): Headquarters {
     return {
       headquartersId: row.id,
@@ -378,7 +368,7 @@ export class SqlAdapter implements DatabaseAdapter {
   }
 
   private mapToNotification(
-    row: typeof notifications.$inferSelect
+    row: typeof notifications.$inferSelect,
   ): AppNotification {
     return {
       notificationId: row.id,

@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
+import { Resource } from "sst/resource";
 
-const SECRET = new TextEncoder().encode(process.env.BETTER_AUTH_SECRET);
+const SECRET = new TextEncoder().encode(Resource.BETTER_AUTH_SECRET.value);
 
 export async function generateToken(
   payload: object,

@@ -5,7 +5,23 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyWeb": {
+    "BETTER_AUTH_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "CatastramiteTable": {
+      "name": string
+      "type": "sst.aws.Dynamo"
+    }
+    "CatastramiteWeb": {
       "type": "sst.aws.Nextjs"
       "url": string
     }

@@ -1,18 +1,19 @@
-import { DatabaseAdapter } from './types';
-import { JsonAdapter } from './adapters/json';
-import { DynamoDBAdapter } from './adapters/dynamodb'; 
-import { SqlAdapter } from './adapters/sql';
+import { DatabaseAdapter } from "./types";
+import { JsonAdapter } from "./adapters/json";
+import { DynamoDBAdapter } from "./adapters/dynamodb";
+import { SqlAdapter } from "./adapters/sql";
+import { env } from "@/env";
 
 // Factory to create the appropriate adapter based on env vars
 export function getDB(): DatabaseAdapter {
-  const adapterType = process.env.DB_ADAPTER || 'json';
+  const adapterType = env.DB_ADAPTER;
 
   switch (adapterType) {
-    case 'dynamodb':
+    case "dynamodb":
       return new DynamoDBAdapter();
-    case 'sql':
+    case "sql":
       return new SqlAdapter();
-    case 'json':
+    case "json":
     default:
       return new JsonAdapter();
   }

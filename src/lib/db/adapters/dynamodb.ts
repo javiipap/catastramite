@@ -21,13 +21,13 @@ import {
   RequestStatus,
   User,
 } from "@/lib/types";
+import { Resource } from "sst/resource";
 
 // Configuration from env or defaults
-const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "Catastramite";
-const REGION = process.env.AWS_REGION || "us-east-1";
+const TABLE_NAME = Resource.CatastramiteTable.name;
 
 // Client initialization
-const client = new DynamoDBClient({ region: REGION });
+const client = new DynamoDBClient({ region: "eu-west-1" });
 const docClient = DynamoDBDocumentClient.from(client);
 
 export class DynamoDBAdapter implements DatabaseAdapter {
