@@ -2,6 +2,11 @@ import { withServerData } from "@/lib/store/with-server-data"
 import { getHeadquartersAction } from "@/lib/actions/headquarters"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
 import { SlaveLayoutClient } from "./layout-client"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Headquarters",
+};
 
 const DataProvider = withServerData(getHeadquartersAction, HeadquartersProvider);
 

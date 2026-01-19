@@ -4,6 +4,13 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Access your headquarters and manage your contracts.",
+};
+
 export default async function LoginPage({
   searchParams,
 }: {

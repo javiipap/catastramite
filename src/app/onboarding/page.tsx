@@ -5,6 +5,13 @@ import { redirect } from 'next/navigation';
 
 import { isValidRedirect } from "@/lib/utils";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Onboarding",
+  description: "Complete your profile to get started.",
+};
+
 export default async function OnboardingPage({
   searchParams,
 }: {

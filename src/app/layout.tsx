@@ -11,8 +11,11 @@ const _geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'Catastramite',
-  description: 'La solución a todos tus problemas',
+  title: {
+    template: '%s | Catastramite',
+    default: 'Catastramite',
+  },
+  description: 'Bureaucracy for your Bedroom. Streamline your power dynamics with official forms, request tracking, and automated compliance auditing.',
   icons: {
     icon: [
       {

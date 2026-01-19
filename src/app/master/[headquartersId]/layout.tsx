@@ -3,6 +3,11 @@ import { getHeadquartersAction } from "@/lib/actions/headquarters"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
 import { MasterGuard } from "@/components/master-guard"
 import { MasterNav } from '@/components/master-nav'
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Headquarters Control",
+};
 
 const DataProvider = withServerData(getHeadquartersAction, HeadquartersProvider);
 

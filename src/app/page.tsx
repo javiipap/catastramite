@@ -3,6 +3,13 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Gavel, Lock, Scroll } from "lucide-react"
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Bureaucracy for your Bedroom",
+  description: "Streamline your power dynamics with official forms, request tracking, and automated compliance auditing. Love deserves paperwork.",
+};
+
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">

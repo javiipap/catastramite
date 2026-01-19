@@ -1,5 +1,10 @@
 import type React from "react"
 import { MasterHeader } from "@/components/master-header"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Headquarters Management",
+};
 
 interface Props {
   children: React.ReactNode,

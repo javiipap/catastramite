@@ -8,6 +8,12 @@ import { acceptInvitationAction } from "@/lib/actions/invitations";
 import { verifyToken } from "@/services/jwt";
 import { InvitationPayload } from "@/use-cases/invitations";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invitation",
+  description: "Accept your invitation to join a headquarters.",
+};
 
 interface InvitationPageProps {
   searchParams: Promise<{ token?: string }>;

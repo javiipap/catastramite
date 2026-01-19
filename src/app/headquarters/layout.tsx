@@ -3,6 +3,13 @@ import { getUserHeadquartersAction } from "@/lib/actions/headquarters"
 import { HeadquartersListProvider } from "@/lib/queries/headquarters"
 import { HeadquartersHeader } from "@/components/headquarters-header";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Headquarters",
+  description: "Manage your electronic headquarters and access your procedures.",
+};
+
 const DataLayout = withServerData(() => getUserHeadquartersAction(), HeadquartersListProvider);
 
 export default async function HeadquartersLayout({ children }: { children: React.ReactNode }) {
