@@ -39,8 +39,11 @@ export default $config({
     const CLIENT_SECRET = new sst.Secret("CLIENT_SECRET");
     const CLIENT_ID = new sst.Secret("CLIENT_ID");
     const auth = new sst.aws.Auth("Auth", {
-      issuer: "src/functions/auth.handler",
-      link: [CLIENT_ID, CLIENT_SECRET, table],
+      issuer: {
+        handler: "src/functions/auth.handler",
+        link: [CLIENT_ID, CLIENT_SECRET, table],
+        runtime: "nodejs22.x",
+      },
     });
 
     new sst.aws.Nextjs("CatastramiteWeb", {
@@ -51,7 +54,7 @@ export default $config({
         NEXT_PUBLIC_AUTH_URL: auth.url,
       },
       server: {
-        install: ["better-sqlite3"],
+        runtime: "nodejs22.x",
       },
       domain: {
         name: "www.catastramite.com",
