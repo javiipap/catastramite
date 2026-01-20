@@ -25,14 +25,14 @@ export const createHeadquarters = mutateAction(
     };
 
     await useCases.headquarters.createHeadquarters(newHeadquarters, {
-      userId: user.id,
+      userId: user.userId,
     });
 
     return {
       ...newHeadquarters,
       userHeadquarters: [
         {
-          userId: user.id,
+          userId: user.userId,
           headquartersId: newHeadquarters.headquartersId,
           role: "master",
         },
@@ -78,13 +78,13 @@ export const getUserHeadquartersObjectsAction = slaveAction
 export const getUserHeadquartersAction = slaveAction.action(
   async ({ ctx: { user } }) => {
     return useCases.headquarters.getUserHeadquartersObjects({
-      userId: user.id,
+      userId: user.userId,
     });
   },
 );
 
 export const getMasterHeadquartersAction = slaveAction.action(
   async ({ ctx: { user } }) => {
-    return useCases.headquarters.getMasterHeadquarters({ userId: user.id });
+    return useCases.headquarters.getMasterHeadquarters({ userId: user.userId });
   },
 );

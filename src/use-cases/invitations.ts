@@ -1,5 +1,5 @@
 import type { DatabaseAdapter } from "@/lib/db/types";
-import type { User } from "better-auth";
+import type { User } from "@/lib/types";
 import { generateToken, verifyToken } from "@/services/jwt";
 import { UserRole } from "@/lib/types";
 
@@ -14,9 +14,9 @@ export class InvitationsUseCases {
   async createInvitationToken(
     headquartersId: string,
     role: UserRole,
-    actor: Pick<User, "id">
+    actor: Pick<User, "userId">,
   ): Promise<string> {
-    const userRole = await this.db.getUserRole(actor.id, headquartersId);
+    const userRole = await this.db.getUserRole(actor.userId, headquartersId);
     if (userRole !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
@@ -30,7 +30,7 @@ export class InvitationsUseCases {
 
   async acceptInvitation(
     token: string,
-    user: Pick<User, "id">
+    user: Pick<User, "userId">,
   ): Promise<{ headquartersId: string }> {
     const payload = await verifyToken<InvitationPayload>(token);
 
@@ -41,14 +41,14 @@ export class InvitationsUseCases {
     const { headquartersId, role } = payload;
 
     // Check if user is already a member
-    const existingRole = await this.db.getUserRole(user.id, headquartersId);
+    const existingRole = await this.db.getUserRole(user.userId, headquartersId);
     if (existingRole) {
       // User is already a member. Don't update role.
       return { headquartersId };
     }
 
     await this.db.addUserToHeadquarters({
-      userId: user.id,
+      userId: user.userId,
       headquartersId,
       role,
     });

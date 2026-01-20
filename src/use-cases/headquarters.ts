@@ -1,14 +1,14 @@
 import { DEFAULT_PROCEDURE_TEMPLATE } from "@/lib/constants/procedures";
 import type { DatabaseAdapter } from "@/lib/db/types";
 import type { Headquarters, UserHeadquarters } from "@/lib/types";
-import type { User } from "better-auth";
+import type { User } from "@/lib/types";
 
 export class HeadquartersUseCases {
   constructor(private db: DatabaseAdapter) {}
 
   async createHeadquarters(
     hq: Headquarters,
-    user: Pick<UserHeadquarters, "userId">
+    user: Pick<UserHeadquarters, "userId">,
   ): Promise<Headquarters> {
     const createdHq = await this.db.createHeadquarters(hq, user.userId);
 
@@ -27,9 +27,9 @@ export class HeadquartersUseCases {
 
   async getHeadquarters(
     params: { headquartersId: string },
-    user: Pick<User, "id">
+    user: Pick<User, "userId">,
   ): Promise<Headquarters | undefined> {
-    const role = await this.db.getUserRole(user.id, params.headquartersId);
+    const role = await this.db.getUserRole(user.userId, params.headquartersId);
     if (!role) {
       throw new Error("Unauthorized: Access denied");
     }
@@ -39,9 +39,9 @@ export class HeadquartersUseCases {
   async updateHeadquarters(
     headquartersId: string,
     updates: Partial<Headquarters>,
-    user: Pick<User, "id">
+    user: Pick<User, "userId">,
   ): Promise<Headquarters> {
-    const role = await this.db.getUserRole(user.id, headquartersId);
+    const role = await this.db.getUserRole(user.userId, headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
@@ -50,9 +50,9 @@ export class HeadquartersUseCases {
 
   async addUserToHeadquarters(
     uh: UserHeadquarters,
-    actor: Pick<User, "id">
+    actor: Pick<User, "userId">,
   ): Promise<void> {
-    const role = await this.db.getUserRole(actor.id, uh.headquartersId);
+    const role = await this.db.getUserRole(actor.userId, uh.headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
@@ -60,33 +60,33 @@ export class HeadquartersUseCases {
   }
 
   async getUserHeadquarters(
-    user: Pick<UserHeadquarters, "userId">
+    user: Pick<UserHeadquarters, "userId">,
   ): Promise<UserHeadquarters[]> {
     return this.db.getUserHeadquarters(user.userId);
   }
 
   async getUserHeadquartersObjects(
-    user: Pick<UserHeadquarters, "userId">
+    user: Pick<UserHeadquarters, "userId">,
   ): Promise<Headquarters[]> {
     return this.db.getUserHeadquartersObjects(user.userId);
   }
 
   async getMasterHeadquarters(
-    user: Pick<UserHeadquarters, "userId">
+    user: Pick<UserHeadquarters, "userId">,
   ): Promise<Headquarters[]> {
     const allHqs = await this.db.getUserHeadquartersObjects(user.userId);
     return allHqs.filter((hq) =>
       hq.userHeadquarters?.some(
-        (uh) => uh.userId === user.userId && uh.role === "master"
-      )
+        (uh) => uh.userId === user.userId && uh.role === "master",
+      ),
     );
   }
 
   async getHeadquartersUsers(
     params: Pick<UserHeadquarters, "headquartersId">,
-    user: Pick<User, "id">
+    user: Pick<User, "userId">,
   ) {
-    const role = await this.db.getUserRole(user.id, params.headquartersId);
+    const role = await this.db.getUserRole(user.userId, params.headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
@@ -96,9 +96,9 @@ export class HeadquartersUseCases {
   async removeUserFromHeadquarters(
     userId: string,
     headquartersId: string,
-    actor: Pick<User, "id">
+    actor: Pick<User, "userId">,
   ): Promise<void> {
-    const role = await this.db.getUserRole(actor.id, headquartersId);
+    const role = await this.db.getUserRole(actor.userId, headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }

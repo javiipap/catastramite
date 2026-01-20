@@ -4,7 +4,7 @@ import {
   RequestStatus,
   UserHeadquarters,
 } from "@/lib/types";
-import { User } from "better-auth";
+import { User } from "@/lib/types";
 import {
   sendRequestCreatedEmail,
   sendRequestStatusUpdatedEmail,
@@ -15,12 +15,12 @@ export class RequestsUseCases {
 
   async createRequest(
     request: AppRequest,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
   ): Promise<AppRequest> {
-    if (request.applicantId !== user.id) {
+    if (request.applicantId !== user.userId) {
       throw new Error("Unauthorized: Cannot create request for another user");
     }
-    const role = await this.db.getUserRole(user.id, request.headquartersId);
+    const role = await this.db.getUserRole(user.userId, request.headquartersId);
     if (!role) {
       throw new Error("Unauthorized: Access denied");
     }
@@ -31,7 +31,7 @@ export class RequestsUseCases {
     const hqUsers = await this.db.getUsersByHeadquarters(
       request.headquartersId,
     );
-    const applicant = hqUsers.find((u) => u.userId === user.id);
+    const applicant = hqUsers.find((u) => u.userId === user.userId);
     const masters = hqUsers.filter((u) => u.role === "master");
 
     if (applicant) {
@@ -45,7 +45,7 @@ export class RequestsUseCases {
 
     for (const master of masters) {
       // Avoid sending double email if master is also applicant (unlikely but possible)
-      if (master.userId !== user.id) {
+      if (master.userId !== user.userId) {
         await sendRequestCreatedEmail(
           master.name,
           master.email,
@@ -60,9 +60,9 @@ export class RequestsUseCases {
 
   async getRequests(
     hq: Pick<UserHeadquarters, "headquartersId">,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
   ): Promise<AppRequest[]> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
@@ -71,23 +71,23 @@ export class RequestsUseCases {
 
   async getUserRequests(
     hq: Pick<UserHeadquarters, "headquartersId">,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
   ): Promise<AppRequest[]> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (!role) {
       throw new Error("Unauthorized: Access denied");
     }
-    return this.db.getUserRequests(hq.headquartersId, user.id);
+    return this.db.getUserRequests(hq.headquartersId, user.userId);
   }
 
   async updateRequestStatus(
     requestId: string,
     status: RequestStatus,
     hq: Pick<UserHeadquarters, "headquartersId">,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
     feedback?: string,
   ): Promise<AppRequest> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }

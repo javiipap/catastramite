@@ -38,14 +38,17 @@ export default $config({
 
     const CLIENT_SECRET = new sst.Secret("CLIENT_SECRET");
     const CLIENT_ID = new sst.Secret("CLIENT_ID");
-    const BETTER_AUTH_SECRET = new sst.Secret("BETTER_AUTH_SECRET");
+    const auth = new sst.aws.Auth("Auth", {
+      issuer: "src/functions/auth.handler",
+      link: [CLIENT_ID, CLIENT_SECRET, table],
+    });
 
     new sst.aws.Nextjs("CatastramiteWeb", {
       permissions: [ses],
-      link: [table, CLIENT_SECRET, CLIENT_ID, BETTER_AUTH_SECRET],
+      link: [table, CLIENT_SECRET, CLIENT_ID, auth],
       environment: {
         DB_ADAPTER: "dynamodb",
-        NEXT_PUBLIC_BETTER_AUTH_URL: "https://www.catastramite.com",
+        NEXT_PUBLIC_AUTH_URL: auth.url,
       },
       server: {
         install: ["better-sqlite3"],

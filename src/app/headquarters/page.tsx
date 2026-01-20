@@ -47,7 +47,7 @@ export default function HeadquartersPage() {
 
   const handleEnterHeadquarters = (headquartersId: string) => {
     // Check role to determine destination
-    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.id)
+    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === user?.userId)
     if (relation?.role === 'master') {
       router.push(`/master/${headquartersId}/dashboard`)
     } else {
@@ -125,7 +125,7 @@ export default function HeadquartersPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {headquarters.map((h) => {
-            const relation = h.userHeadquarters?.find(uh => uh.userId === user.id)
+            const relation = h.userHeadquarters?.find(uh => uh.userId === user.userId)
             const role = relation?.role || 'slave' // Fallback to slave if logic fails but relation should exist
             const isMaster = role === 'master'
 

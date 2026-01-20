@@ -1,14 +1,13 @@
 import React, { ReactNode } from 'react';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
-import { User } from 'better-auth';
+import { getSession } from '@/lib/server-auth';
+import { SessionUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 interface ProviderProps<TData, TArgs = {}> { // eslint-disable-line @typescript-eslint/no-empty-object-type
   initialData: TData;
   args: TArgs;
   children: ReactNode;
-  user: User;
+  user: SessionUser;
 }
 
 type WrapperProps<TArgs> = {
@@ -29,9 +28,7 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
   return async function StoreProvider({ children, params = {} as TArgs }: WrapperProps<TArgs>) {
     const resolvedParams = await params;
 
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
+    const session = await getSession();
 
     if (!session?.user) {
       redirect('/login');

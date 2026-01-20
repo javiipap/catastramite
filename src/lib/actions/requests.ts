@@ -12,7 +12,7 @@ import {
 export const addRequestAction = mutateHeadquartersAction(
   createRequestSchema,
   async (request, { user }) => {
-    if (request.applicantId !== user.id) {
+    if (request.applicantId !== user.userId) {
       throw new Error("Unauthorized: Cannot create request for another user");
     }
 

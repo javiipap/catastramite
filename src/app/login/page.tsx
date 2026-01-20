@@ -1,6 +1,6 @@
 import { isValidRedirect } from "@/lib/utils"
 import { LoginForm } from "@/components/login-form"
-import { auth } from '@/lib/auth';
+import { getSession } from "@/lib/server-auth";
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -17,9 +17,7 @@ export default async function LoginPage({
   searchParams: Promise<{ callbackUrl?: string }>
 }) {
   const { callbackUrl } = await searchParams;
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (session?.user) {
     if (callbackUrl && isValidRedirect(callbackUrl)) {

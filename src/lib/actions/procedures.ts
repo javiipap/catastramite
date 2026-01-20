@@ -18,7 +18,7 @@ export const addProcedure = mutateHeadquartersAction(
       description,
       fields: fields,
       createdAt: new Date(),
-      createdBy: user.id,
+      createdBy: user.userId,
     };
 
     return useCases.procedures.createProcedure(newProcedure, user);

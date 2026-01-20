@@ -1,6 +1,6 @@
 import { DatabaseAdapter } from "@/lib/db/types";
 import { Notification as AppNotification, UserHeadquarters } from "@/lib/types";
-import { User } from "better-auth";
+import { User } from "@/lib/types";
 import { sendNotificationCreatedEmail } from "@/services/email";
 
 export class NotificationsUseCases {
@@ -8,10 +8,10 @@ export class NotificationsUseCases {
 
   async createNotification(
     notification: AppNotification,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
   ): Promise<AppNotification> {
     const role = await this.db.getUserRole(
-      user.id,
+      user.userId,
       notification.headquartersId,
     );
     if (role !== "master") {
@@ -39,9 +39,9 @@ export class NotificationsUseCases {
 
   async getNotifications(
     hq: Pick<UserHeadquarters, "headquartersId">,
-    user: Pick<User, "id">,
+    user: Pick<User, "userId">,
   ): Promise<AppNotification[]> {
-    const role = await this.db.getUserRole(user.id, hq.headquartersId);
+    const role = await this.db.getUserRole(user.userId, hq.headquartersId);
     if (!role) {
       throw new Error("Unauthorized: Access denied");
     }

@@ -27,7 +27,7 @@ export function useCreateNotification() {
         message: newItem.message,
         priority: newItem.priority,
         createdAt: new Date(),
-        createdBy: user?.id || "",
+        createdBy: user?.userId || "",
       };
       queryClient.setQueryData<Notification[]>(
         ["notifications", newItem.headquartersId],

@@ -1,7 +1,7 @@
 import { createSafeActionClient } from "next-safe-action";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/server-auth"; // Use getSession directly
 import { headers } from "next/headers";
-import { User } from "better-auth";
+import { SessionUser } from "@/lib/auth"; // Import User from our auth lib
 import { z } from "zod";
 
 export const actionClient = createSafeActionClient({
@@ -12,9 +12,7 @@ export const actionClient = createSafeActionClient({
 });
 
 export const masterAction = actionClient.use(async ({ next }) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.user) {
     throw new Error();
@@ -28,9 +26,7 @@ export const masterAction = actionClient.use(async ({ next }) => {
 });
 
 export const slaveAction = actionClient.use(async ({ next }) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.user) {
     throw new Error();
@@ -49,14 +45,15 @@ export const mutateHeadquartersAction =
     TData,
   >(
     schema: TSchema,
-    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>,
+    handler: (
+      data: z.infer<TSchema>,
+      ctx: { user: SessionUser },
+    ) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session?.user) {
       throw new Error();
@@ -76,14 +73,15 @@ export const mutateHeadquartersAction =
 export const mutateAction =
   <TSchema extends z.ZodType, TData>(
     schema: TSchema,
-    handler: (data: z.infer<TSchema>, ctx: { user: User }) => Promise<TData>,
+    handler: (
+      data: z.infer<TSchema>,
+      ctx: { user: SessionUser },
+    ) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
 
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getSession();
 
     if (!session?.user) {
       throw new Error();

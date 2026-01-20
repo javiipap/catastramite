@@ -18,7 +18,7 @@ export const addNotificationAction = mutateHeadquartersAction(
       message,
       priority,
       createdAt: new Date(),
-      createdBy: user.id,
+      createdBy: user.userId,
     };
 
     return useCases.notifications.createNotification(newNotification, user);

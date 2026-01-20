@@ -1,5 +1,5 @@
 
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/server-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -39,9 +39,7 @@ export default async function InvitationPage({ searchParams }: InvitationPagePro
     );
   }
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session) {
     // Redirect to login with callback URL

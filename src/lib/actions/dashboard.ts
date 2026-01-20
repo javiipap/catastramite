@@ -12,7 +12,7 @@ export const getMasterDashboardDataAction = masterAction
   .inputSchema(dashboardSchema)
   .action(async ({ parsedInput: params, ctx: { user } }) => {
     return useCases.dashboard.getMasterDashboardData(params, {
-      userId: user.id,
+      userId: user.userId,
     });
   });
 
@@ -20,6 +20,6 @@ export const getSlaveDashboardDataAction = slaveAction
   .inputSchema(dashboardSchema)
   .action(async ({ parsedInput: params, ctx: { user } }) => {
     return useCases.dashboard.getSlaveDashboardData(params, {
-      userId: user.id,
+      userId: user.userId,
     });
   });
