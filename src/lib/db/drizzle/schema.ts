@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
-  id: text("id").primaryKey(),
+  userId: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
@@ -30,7 +30,7 @@ export const session = pgTable("session", {
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.userId),
 });
 
 export const account = pgTable("account", {
@@ -39,7 +39,7 @@ export const account = pgTable("account", {
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.userId),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
@@ -72,7 +72,7 @@ export const userHeadquarters = pgTable(
   {
     userId: text("user_id")
       .notNull()
-      .references(() => user.id),
+      .references(() => user.userId),
     headquartersId: text("headquarters_id").notNull(),
     role: text("role", { enum: ["master", "slave"] }).notNull(),
   },
@@ -92,7 +92,7 @@ export const procedures = pgTable("procedures", {
   createdAt: timestamp("created_at").notNull(),
   createdBy: text("created_by")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.userId),
 });
 
 export const requests = pgTable("requests", {
@@ -102,7 +102,7 @@ export const requests = pgTable("requests", {
   procedureName: text("procedure_name").notNull(),
   applicantId: text("applicant_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.userId),
   applicantName: text("applicant_name").notNull(),
   status: text("status").notNull(), // 'pending' | 'in_review' | 'approved' | 'rejected'
   data: json("data").notNull(), // Record<string, unknown>
@@ -120,5 +120,5 @@ export const notifications = pgTable("notifications", {
   createdAt: timestamp("created_at").notNull(),
   createdBy: text("created_by")
     .notNull()
-    .references(() => user.id),
+    .references(() => user.userId),
 });

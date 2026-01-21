@@ -21,7 +21,7 @@ import {
   RequestStatus,
   User,
 } from "@/lib/types";
-import { Resource } from "sst/resource";
+import { Resource } from "sst";
 
 // Configuration from env or defaults
 const TABLE_NAME = Resource.CatastramiteTable.name;

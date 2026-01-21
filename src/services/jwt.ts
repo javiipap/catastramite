@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import { Resource } from "sst/resource";
+import { Resource } from "sst";
 
 const SECRET = new TextEncoder().encode(Resource.BETTER_AUTH_SECRET.value);
 

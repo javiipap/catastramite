@@ -1,7 +1,7 @@
 import { issuer } from "@openauthjs/openauth";
 import { DynamoStorage } from "@openauthjs/openauth/storage/dynamo";
 import { GoogleProvider } from "@openauthjs/openauth/provider/google";
-import { Resource } from "sst/resource";
+import { Resource } from "sst";
 import { handle } from "hono/aws-lambda";
 import { subjects } from "../lib/auth-subjects";
 import { useCases } from "@/use-cases";
