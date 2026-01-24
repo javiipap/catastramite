@@ -6,6 +6,8 @@ import { UserRole } from "@/lib/types";
 export interface InvitationPayload {
   headquartersId: string;
   role: "master" | "slave";
+  iss: string;
+  aud?: string;
 }
 
 export class InvitationsUseCases {
@@ -15,6 +17,7 @@ export class InvitationsUseCases {
     headquartersId: string,
     role: UserRole,
     actor: Pick<User, "userId">,
+    audience?: string,
   ): Promise<string> {
     const userRole = await this.db.getUserRole(actor.userId, headquartersId);
     if (userRole !== "master") {
@@ -24,18 +27,24 @@ export class InvitationsUseCases {
     const payload: InvitationPayload = {
       headquartersId,
       role,
+      iss: actor.userId,
+      aud: audience,
     };
     return generateToken(payload, "1d");
   }
 
   async acceptInvitation(
     token: string,
-    user: Pick<User, "userId">,
+    user: Pick<User, "userId" | "email">,
   ): Promise<{ headquartersId: string }> {
     const payload = await verifyToken<InvitationPayload>(token);
 
     if (!payload || !payload.headquartersId || !payload.role) {
       throw new Error("Invalid or expired invitation token");
+    }
+
+    if (payload.aud && payload.aud !== user.email) {
+      throw new Error("Token is not for this user");
     }
 
     const { headquartersId, role } = payload;

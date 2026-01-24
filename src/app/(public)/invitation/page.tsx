@@ -1,14 +1,15 @@
 
 import { auth } from "@/lib/auth/server";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { acceptInvitationAction } from "@/lib/actions/invitations";
 import { verifyToken } from "@/services/jwt";
 import { InvitationPayload } from "@/use-cases/invitations";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Metadata } from "next";
+import { db } from "@/lib/db";
+import { useCases } from "@/use-cases";
 
 export const metadata: Metadata = {
   title: "Invitation",
@@ -24,18 +25,16 @@ export default async function InvitationPage({ searchParams }: InvitationPagePro
 
   if (!token) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <AlertCircle /> Invalid Link
-            </CardTitle>
-            <CardDescription>
-              This invitation link is missing a token. Please check the link and try again.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
+      <>
+        <CardHeader>
+          <CardTitle className="text-destructive flex items-center gap-2">
+            <AlertCircle /> Invalid Link
+          </CardTitle>
+          <CardDescription>
+            This invitation link is missing a token. Please check the link and try again.
+          </CardDescription>
+        </CardHeader>
+      </>
     );
   }
 
@@ -43,8 +42,8 @@ export default async function InvitationPage({ searchParams }: InvitationPagePro
 
   if (!session.authorized) {
     // Redirect to login with callback URL
-    const callbackUrl = `/invitation?token=${token}`;
-    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    const redirectUrl = `/invitation?token=${token}`;
+    redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
   }
 
   // Verify token content serverside to show details
@@ -52,45 +51,46 @@ export default async function InvitationPage({ searchParams }: InvitationPagePro
 
   if (!payload) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <AlertCircle /> Invalid or Expired Token
-            </CardTitle>
-            <CardDescription>
-              This invitation link is invalid or has expired. Please ask for a new link.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
+      <>
+        <CardHeader>
+          <CardTitle className="text-destructive flex items-center gap-2">
+            <AlertCircle /> Invalid or Expired Token
+          </CardTitle>
+          <CardDescription>
+            This invitation link is invalid or has expired. Please ask for a new link.
+          </CardDescription>
+        </CardHeader>
+      </>
     );
   }
 
-  const { headquartersId, role } = payload;
+  const { headquartersId, role, iss: inviterId } = payload;
+
+  const headquarters = await db.getHeadquartersById(headquartersId);
+  const inviter = inviterId ? await useCases.users.getUser(inviterId) : undefined;
+  const hqName = headquarters?.name || headquartersId;
+  const inviterName = inviter?.name || "a user";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle>You have been invited!</CardTitle>
-          <CardDescription>
-            You have been invited to join headquarters <strong>{headquartersId}</strong> as a{" "}
-            <strong>{role}</strong>.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
-          <form action={async () => {
-            "use server";
-            await acceptInvitationAction({ token });
-          }}>
-            <Button size="lg" className="w-full">
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              Join Headquarters
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <CardHeader className="text-center">
+        <CardTitle>You have been invited!</CardTitle>
+        <CardDescription>
+          <strong>{inviterName}</strong> has invited you to join <strong>{hqName}</strong> as a{" "}
+          <strong>{role}</strong>.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex justify-center">
+        <form action={async () => {
+          "use server";
+          await acceptInvitationAction({ token });
+        }}>
+          <Button size="lg" className="w-full">
+            <CheckCircle2 className="mr-2 h-4 w-4" />
+            Join Headquarters
+          </Button>
+        </form>
+      </CardContent>
+    </>
   );
 }
