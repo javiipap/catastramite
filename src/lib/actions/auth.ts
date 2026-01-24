@@ -2,8 +2,8 @@
 
 import { login, logout } from "@/lib/auth/server";
 
-export async function loginAction() {
-  await login();
+export async function loginAction(redirectUrl?: string) {
+  await login(redirectUrl);
 }
 
 export async function logoutAction() {

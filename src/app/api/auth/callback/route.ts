@@ -8,10 +8,15 @@ export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   if (!code) return NextResponse.redirect(new URL("/", req.url));
 
-  console.log("Callback received code:", code);
-  const redirectUri = req.nextUrl.origin + "/api/auth/callback";
+  const redirectUrl = req.nextUrl.searchParams.get("redirect");
 
-  const exchanged = await client.exchange(code, redirectUri);
+  console.log("Callback received code:", code);
+  const callbackUrl =
+    req.nextUrl.origin +
+    "/api/auth/callback" +
+    (redirectUrl ? `?redirect=${redirectUrl}` : "");
+
+  const exchanged = await client.exchange(code, callbackUrl);
   if (exchanged.err) {
     console.error("Token exchange failed:", exchanged.err);
     return NextResponse.redirect(new URL("/?error=auth", req.url));
@@ -33,5 +38,7 @@ export async function GET(req: NextRequest) {
 
   await setHeadquartersCookie(userId, headquarters);
 
-  return NextResponse.redirect(new URL("/login", req.url));
+  return NextResponse.redirect(
+    new URL(redirectUrl || "/headquarters", req.url),
+  );
 }

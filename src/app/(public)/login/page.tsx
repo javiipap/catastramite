@@ -1,7 +1,6 @@
 import { isValidRedirect } from "@/lib/utils"
-import { LoginForm } from "@/components/login-form"
+import { LoginForm } from "@/app/(public)/login/login-form"
 import { auth } from "@/lib/auth/server";
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { Metadata } from "next";
@@ -14,24 +13,22 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>
+  searchParams: Promise<{ redirect?: string }>
 }) {
-  const { callbackUrl } = await searchParams;
+  const { redirect: redirectUrl } = await searchParams;
   const session = await auth();
 
   if (session.authorized) {
-    if (callbackUrl && isValidRedirect(callbackUrl)) {
-      redirect(callbackUrl);
+    if (redirectUrl && isValidRedirect(redirectUrl)) {
+      redirect(redirectUrl);
     }
 
     if (session.authorized && session.subject.age) {
       redirect(`/headquarters`);
     }
 
-    // console.log('LOGIN', session.subject);
-    const validCallback = isValidRedirect(callbackUrl) ? callbackUrl : undefined;
-    const onboardingUrl = validCallback ? `/onboarding?callbackUrl=${encodeURIComponent(validCallback)}` : '/onboarding';
-    redirect(onboardingUrl);
+    const validRedirectUrl = isValidRedirect(redirectUrl) ? redirectUrl : undefined;
+    redirect(validRedirectUrl ?? '/headquarters');
   }
 
   return (

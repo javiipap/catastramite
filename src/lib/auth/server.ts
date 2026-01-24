@@ -27,12 +27,12 @@ export type SuccessfullAuth = {
   token: string;
 };
 
-export async function getLoginLink() {
+export async function getLoginLink(redirectUrl?: string) {
   const headers = await getHeaders();
   const host = headers.get("host");
   const protocol = host?.includes("localhost") ? "http" : "https";
   const { url } = await client.authorize(
-    `${protocol}://${host}/api/auth/callback`,
+    `${protocol}://${host}/api/auth/callback${redirectUrl ? `?redirect=${redirectUrl}` : ""}`,
     "code",
     { provider: "google" },
   );
@@ -40,7 +40,7 @@ export async function getLoginLink() {
   return url;
 }
 
-export async function login() {
+export async function login(redirectUrl?: string) {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");
   const refreshToken = cookies.get("refresh_token");
@@ -56,7 +56,7 @@ export async function login() {
     }
   }
 
-  const link = await getLoginLink();
+  const link = await getLoginLink(redirectUrl);
 
   return redirect(link);
 }

@@ -1,24 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-
 import { useSearchParams } from "next/navigation";
-
 import { loginAction } from "@/lib/actions/auth";
 
 export function LoginForm() {
-  const { isLoading } = useAuth()
   const [error, setError] = useState("")
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || undefined
+  const redirectUrl = searchParams.get("redirect") || undefined
 
   const handleLogin = async () => {
     try {
-      await loginAction()
+      await loginAction(redirectUrl)
     } catch {
       setError("Failed to initiate login")
     }
@@ -36,12 +32,8 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Button
-            className="w-full"
-            onClick={handleLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? "Connecting..." : "Sign in with Google"}
+          <Button className="w-full" onClick={handleLogin}>
+            Sign in with Google
           </Button>
 
           {error && (

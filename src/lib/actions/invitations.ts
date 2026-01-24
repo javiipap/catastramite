@@ -23,6 +23,6 @@ export const acceptInvitationAction = mutateAction(
   acceptInvitationSchema,
   async ({ token }, { user }) => {
     await useCases.invitations.acceptInvitation(token, user);
-    redirect(`/slave/headquarters`);
+    redirect(`/headquarters`);
   },
 );
