@@ -16,7 +16,6 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  role: text("role", { enum: ["master", "slave"] }).notNull(),
   age: integer("age"),
 });
 
@@ -84,7 +83,7 @@ export const userHeadquarters = pgTable(
 );
 
 export const procedures = pgTable("procedures", {
-  id: text("id").primaryKey(),
+  procedureId: text("id").primaryKey(),
   headquartersId: text("headquarters_id").notNull(),
   name: text("name").notNull(),
   description: text("description").notNull(),
@@ -96,7 +95,7 @@ export const procedures = pgTable("procedures", {
 });
 
 export const requests = pgTable("requests", {
-  id: text("id").primaryKey(),
+  requestId: text("id").primaryKey(),
   headquartersId: text("headquarters_id").notNull(),
   procedureId: text("procedure_id").notNull(),
   procedureName: text("procedure_name").notNull(),
@@ -112,7 +111,7 @@ export const requests = pgTable("requests", {
 });
 
 export const notifications = pgTable("notifications", {
-  id: text("id").primaryKey(),
+  notificationId: text("id").primaryKey(),
   headquartersId: text("headquarters_id").notNull(),
   title: text("title").notNull(),
   message: text("message").notNull(),

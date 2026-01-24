@@ -148,6 +148,35 @@ export class SqlAdapter implements DatabaseAdapter {
     };
   }
 
+  async getUser(userId: string): Promise<User | undefined> {
+    const [result] = await db
+      .select()
+      .from(user)
+      .where(eq(user.userId, userId))
+      .limit(1);
+
+    if (!result) return undefined;
+    return {
+      ...result,
+      userId: result.userId,
+    };
+  }
+
+  async createUser(userData: User): Promise<User> {
+    await db.insert(user).values(userData);
+    return userData;
+  }
+
+  async updateUser(userId: string, data: Partial<User>): Promise<User> {
+    if (Object.keys(data).length > 0) {
+      await db.update(user).set(data).where(eq(user.userId, userId));
+    }
+
+    const updated = await this.getUser(userId);
+    if (!updated) throw new Error("User not found after update");
+    return updated;
+  }
+
   // --- Headquarters ---
 
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
@@ -218,15 +247,9 @@ export class SqlAdapter implements DatabaseAdapter {
   }
 
   async createProcedure(procedure: Procedure): Promise<Procedure> {
-    await db.insert(procedures).values({
-      id: procedure.procedureId,
-      headquartersId: procedure.headquartersId,
-      name: procedure.name,
-      description: procedure.description,
-      fields: procedure.fields as any,
-      createdAt: procedure.createdAt,
-      createdBy: procedure.createdBy,
-    });
+    await db
+      .insert(procedures)
+      .values({ ...procedure, fields: procedure.fields as any });
 
     return procedure;
   }
@@ -257,18 +280,7 @@ export class SqlAdapter implements DatabaseAdapter {
   }
 
   async createRequest(request: AppRequest): Promise<AppRequest> {
-    await db.insert(requests).values({
-      id: request.requestId,
-      headquartersId: request.headquartersId,
-      procedureId: request.procedureId,
-      procedureName: request.procedureName,
-      applicantId: request.applicantId,
-      applicantName: request.applicantName,
-      status: request.status,
-      data: request.data as any,
-      createdAt: request.createdAt,
-      updatedAt: request.updatedAt,
-    });
+    await db.insert(requests).values({ ...request, data: request.data as any });
     return request;
   }
 
@@ -286,13 +298,16 @@ export class SqlAdapter implements DatabaseAdapter {
         updatedAt: new Date(),
       })
       .where(
-        and(eq(requests.id, id), eq(requests.headquartersId, headquartersId)),
+        and(
+          eq(requests.requestId, id),
+          eq(requests.headquartersId, headquartersId),
+        ),
       );
 
     const [updated] = await db
       .select()
       .from(requests)
-      .where(eq(requests.id, id))
+      .where(eq(requests.requestId, id))
       .limit(1);
     if (!updated) throw new Error("Request not found");
 
@@ -313,15 +328,7 @@ export class SqlAdapter implements DatabaseAdapter {
   async createNotification(
     notification: AppNotification,
   ): Promise<AppNotification> {
-    await db.insert(notifications).values({
-      id: notification.notificationId,
-      headquartersId: notification.headquartersId,
-      title: notification.title,
-      message: notification.message,
-      priority: notification.priority,
-      createdAt: notification.createdAt,
-      createdBy: notification.createdBy,
-    });
+    await db.insert(notifications).values(notification);
 
     return notification;
   }
@@ -341,7 +348,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
   private mapToProcedure(row: typeof procedures.$inferSelect): Procedure {
     return {
-      procedureId: row.id,
+      procedureId: row.procedureId,
       headquartersId: row.headquartersId,
       name: row.name,
       description: row.description,
@@ -353,7 +360,7 @@ export class SqlAdapter implements DatabaseAdapter {
 
   private mapToRequest(row: typeof requests.$inferSelect): AppRequest {
     return {
-      requestId: row.id,
+      requestId: row.requestId,
       headquartersId: row.headquartersId,
       procedureId: row.procedureId,
       procedureName: row.procedureName,
@@ -371,7 +378,7 @@ export class SqlAdapter implements DatabaseAdapter {
     row: typeof notifications.$inferSelect,
   ): AppNotification {
     return {
-      notificationId: row.id,
+      notificationId: row.notificationId,
       headquartersId: row.headquartersId,
       title: row.title,
       message: row.message,
