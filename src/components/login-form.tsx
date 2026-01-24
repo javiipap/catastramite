@@ -1,22 +1,24 @@
 "use client"
 
 import { useState } from "react"
-import { useAuth } from "@/lib/auth-context"
+import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 import { useSearchParams } from "next/navigation";
 
+import { loginAction } from "@/lib/actions/auth";
+
 export function LoginForm() {
-  const { login, isLoading } = useAuth()
+  const { isLoading } = useAuth()
   const [error, setError] = useState("")
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || undefined
 
   const handleLogin = async () => {
     try {
-      await login(callbackUrl)
+      await loginAction()
     } catch {
       setError("Failed to initiate login")
     }

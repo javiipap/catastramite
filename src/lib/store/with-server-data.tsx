@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { getSession } from '@/lib/server-auth';
+import { auth } from "@/lib/auth/server";
 import { SessionUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -28,9 +28,9 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
   return async function StoreProvider({ children, params = {} as TArgs }: WrapperProps<TArgs>) {
     const resolvedParams = await params;
 
-    const session = await getSession();
+    const session = await auth();
 
-    if (!session?.user) {
+    if (!session.authorized) {
       redirect('/login');
     }
 
@@ -47,7 +47,7 @@ export function withServerData<TData, TArgs = {}>( // eslint-disable-line @types
     }
 
     return (
-      <Provider initialData={result.data as TData} args={resolvedParams} user={session.user}>
+      <Provider initialData={result.data as TData} args={resolvedParams} user={session.subject}>
         {children}
       </Provider>
     );

@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addProcedure } from "@/lib/actions/procedures";
 import { Procedure } from "@/lib/types";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth/context";
 
 export function useCreateProcedure() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { subject } = useAuth();
 
   return useMutation({
     mutationFn: addProcedure,
@@ -27,7 +27,7 @@ export function useCreateProcedure() {
         description: newItem.description,
         fields: newItem.fields,
         createdAt: new Date(),
-        createdBy: user?.userId || "",
+        createdBy: subject?.userId || "",
       };
       queryClient.setQueryData<Procedure[]>(
         ["procedures", newItem.headquartersId],

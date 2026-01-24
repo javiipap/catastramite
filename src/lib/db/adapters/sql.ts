@@ -76,7 +76,7 @@ export class SqlAdapter implements DatabaseAdapter {
     const hqsResult = await db
       .select()
       .from(headquarters)
-      .where(inArray(headquarters.id, hqIds));
+      .where(inArray(headquarters.headquartersId, hqIds));
 
     return hqsResult.map((row) => {
       const hq = this.mapToHeadquarters(row);
@@ -124,12 +124,12 @@ export class SqlAdapter implements DatabaseAdapter {
         role: userHeadquarters.role,
       })
       .from(userHeadquarters)
-      .innerJoin(user, eq(userHeadquarters.userId, user.id))
+      .innerJoin(user, eq(userHeadquarters.userId, user.userId))
       .where(eq(userHeadquarters.headquartersId, hqId));
 
     return results.map(({ user, role }) => ({
       ...user,
-      userId: user.id,
+      userId: user.userId,
       role: role as UserRole,
     }));
   }
@@ -144,7 +144,7 @@ export class SqlAdapter implements DatabaseAdapter {
     if (!result) return undefined;
     return {
       ...result,
-      userId: result.id,
+      userId: result.userId,
     };
   }
 
@@ -154,7 +154,7 @@ export class SqlAdapter implements DatabaseAdapter {
     const [result] = await db
       .select()
       .from(headquarters)
-      .where(eq(headquarters.id, id))
+      .where(eq(headquarters.headquartersId, id))
       .limit(1);
 
     return result ? this.mapToHeadquarters(result) : undefined;
@@ -167,7 +167,7 @@ export class SqlAdapter implements DatabaseAdapter {
     // Transaction
     await db.transaction(async (tx) => {
       await tx.insert(headquarters).values({
-        id: hq.headquartersId,
+        headquartersId: hq.headquartersId,
         name: hq.name,
         description: hq.description || null,
         createdAt: hq.createdAt,
@@ -199,7 +199,7 @@ export class SqlAdapter implements DatabaseAdapter {
         name: updates.name,
         description: updates.description,
       })
-      .where(eq(headquarters.id, id));
+      .where(eq(headquarters.headquartersId, id));
 
     const updated = await this.getHeadquartersById(id);
     if (!updated) throw new Error("Headquarters not found after update");
@@ -332,7 +332,7 @@ export class SqlAdapter implements DatabaseAdapter {
     row: typeof headquarters.$inferSelect,
   ): Headquarters {
     return {
-      headquartersId: row.id,
+      headquartersId: row.headquartersId,
       name: row.name,
       description: row.description || undefined,
       createdAt: row.createdAt,

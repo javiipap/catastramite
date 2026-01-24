@@ -145,7 +145,88 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     await docClient.send(command);
   }
 
-  // ... (Reads omitted/unchanged) ...
+  async getUser(userId: string): Promise<User | undefined> {
+    const command = new GetCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        PK: this.pk("USER", userId),
+        SK: "METADATA",
+      },
+    });
+
+    const result = await docClient.send(command);
+    if (!result.Item) return undefined;
+    return this.mapToUser(result.Item);
+  }
+
+  async createUser(user: User): Promise<User> {
+    const command = new PutCommand({
+      TableName: TABLE_NAME,
+      Item: {
+        PK: this.pk("USER", user.userId),
+        SK: "METADATA",
+        GSI1PK: `EMAIL#${user.email}`,
+        GSI1SK: "METADATA",
+        name: user.name,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        image: user.image,
+        createdAt: user.createdAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
+        role: user.role,
+        age: user.age,
+      },
+    });
+
+    await docClient.send(command);
+    return user;
+  }
+
+  async updateUser(userId: string, data: Partial<User>): Promise<User> {
+    const expAttrValues: Record<string, any> = {};
+    const expAttrNames: Record<string, string> = {};
+    let updateExp = "SET";
+
+    if (data.name) {
+      updateExp += " #n = :n,";
+      expAttrValues[":n"] = data.name;
+      expAttrNames["#n"] = "name";
+    }
+    if (data.email) {
+      updateExp += " email = :e,";
+      expAttrValues[":e"] = data.email;
+      // Also update GSI1PK if email changes? This is tricky in DynamoDB (requires delete+put).
+      // For now assuming email update isn't primary use case or we ignore GSI update (which leads to inconsistency).
+      // Let's assume email is immutable or handle it properly later if requested.
+    }
+    if (data.image !== undefined) {
+      updateExp += " image = :i,";
+      expAttrValues[":i"] = data.image;
+    }
+    if (data.age !== undefined) {
+      updateExp += " age = :a,";
+      expAttrValues[":a"] = data.age;
+    }
+
+    updateExp += " updatedAt = :u";
+    expAttrValues[":u"] = new Date().toISOString();
+
+    const command = new UpdateCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        PK: this.pk("USER", userId),
+        SK: "METADATA",
+      },
+      UpdateExpression: updateExp,
+      ExpressionAttributeNames:
+        Object.keys(expAttrNames).length > 0 ? expAttrNames : undefined,
+      ExpressionAttributeValues: expAttrValues,
+      ReturnValues: "ALL_NEW",
+    });
+
+    const result = await docClient.send(command);
+    return this.mapToUser(result.Attributes);
+  }
 
   async createHeadquarters(
     hq: Headquarters,

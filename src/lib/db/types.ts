@@ -17,23 +17,26 @@ export interface DatabaseAdapter {
   getUserHeadquartersObjects(userId: string): Promise<Headquarters[]>;
   addUserToHeadquarters(uh: UserHeadquarters): Promise<void>;
   getUsersByHeadquarters(
-    headquartersId: string
+    headquartersId: string,
   ): Promise<(User & { role: UserRole })[]>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUser(userId: string): Promise<User | undefined>;
+  createUser(user: User): Promise<User>;
+  updateUser(userId: string, data: Partial<User>): Promise<User>;
   removeUserFromHeadquarters(
     userId: string,
-    headquartersId: string
+    headquartersId: string,
   ): Promise<void>;
 
   // Headquarters
 
   getHeadquartersById(
-    headquartersId: string
+    headquartersId: string,
   ): Promise<Headquarters | undefined>;
   createHeadquarters(hq: Headquarters, userId: string): Promise<Headquarters>;
   updateHeadquarters(
     headquartersId: string,
-    updates: Partial<Headquarters>
+    updates: Partial<Headquarters>,
   ): Promise<Headquarters>;
 
   // Procedures
@@ -44,14 +47,14 @@ export interface DatabaseAdapter {
   getRequests(headquartersId: string): Promise<AppRequest[]>;
   getUserRequests(
     headquartersId: string,
-    userId: string
+    userId: string,
   ): Promise<AppRequest[]>;
   createRequest(request: AppRequest): Promise<AppRequest>;
   updateRequestStatus(
     requestId: string,
     status: RequestStatus,
     headquartersId: string,
-    feedback?: string
+    feedback?: string,
   ): Promise<AppRequest>;
 
   // Notifications

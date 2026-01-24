@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/server-auth";
+import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
 import { useCases } from "@/use-cases";
 import { redirect } from "next/navigation";
@@ -10,15 +10,15 @@ interface MasterGuardProps {
 }
 
 export async function MasterGuard({ headquartersId, children }: MasterGuardProps) {
-  const session = await getSession();
+  const session = await auth();
 
-  if (!session?.user) {
+  if (!session.authorized) {
     console.log('MASTER-GUARD: NO USER')
     redirect('/login');
   }
 
   const role = await useCases.users.getUserRole(
-    { userId: session.user.userId },
+    { userId: session.subject.userId },
     { headquartersId }
   );
 

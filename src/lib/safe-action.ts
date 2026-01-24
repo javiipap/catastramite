@@ -1,5 +1,5 @@
 import { createSafeActionClient } from "next-safe-action";
-import { getSession } from "@/lib/server-auth"; // Use getSession directly
+import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
 import { SessionUser } from "@/lib/auth"; // Import User from our auth lib
 import { z } from "zod";
@@ -12,27 +12,27 @@ export const actionClient = createSafeActionClient({
 });
 
 export const masterAction = actionClient.use(async ({ next }) => {
-  const session = await getSession();
+  const session = await auth();
 
-  if (!session?.user) {
+  if (!session.authorized) {
     throw new Error();
   }
 
-  if (!session.user.headquarters.some((h) => h.role === "master")) {
+  if (!session.subject.headquarters.some((h) => h.role === "master")) {
     throw new Error();
   }
 
-  return next({ ctx: { user: session.user } });
+  return next({ ctx: { user: session.subject } });
 });
 
 export const slaveAction = actionClient.use(async ({ next }) => {
-  const session = await getSession();
+  const session = await auth();
 
-  if (!session?.user) {
+  if (!session.authorized) {
     throw new Error();
   }
 
-  return next({ ctx: { user: session.user } });
+  return next({ ctx: { user: session.subject } });
 });
 
 export const mutateHeadquartersAction =
@@ -53,13 +53,13 @@ export const mutateHeadquartersAction =
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
 
-    const session = await getSession();
+    const session = await auth();
 
-    if (!session?.user) {
+    if (!session.authorized) {
       throw new Error();
     }
 
-    const headquarters = session.user.headquarters.find(
+    const headquarters = session.subject.headquarters.find(
       (h) => h.headquartersId === parsedInput.headquartersId,
     );
 
@@ -67,7 +67,7 @@ export const mutateHeadquartersAction =
       throw new Error();
     }
 
-    return handler(parsedInput, { user: session.user });
+    return handler(parsedInput, { user: session.subject });
   };
 
 export const mutateAction =
@@ -81,11 +81,11 @@ export const mutateAction =
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
 
-    const session = await getSession();
+    const session = await auth();
 
-    if (!session?.user) {
+    if (!session.authorized) {
       throw new Error();
     }
 
-    return handler(parsedInput, { user: session.user });
+    return handler(parsedInput, { user: session.subject });
   };

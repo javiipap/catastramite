@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/lib/auth-context"
+import { useAuth } from "@/lib/auth/context"
 // import { useDataStore } from "@/lib/data-store"
 import { Button } from "@/components/ui/button"
 import { Building2, ChevronDown, Check } from "lucide-react"

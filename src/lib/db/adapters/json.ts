@@ -101,11 +101,11 @@ async function writeDB(data: DB): Promise<void> {
 export class JsonAdapter implements DatabaseAdapter {
   async getUserRole(
     userId: string,
-    headquartersId: string
+    headquartersId: string,
   ): Promise<UserRole | null> {
     const db = await readDB();
     const relation = db.userHeadquarters.find(
-      (uh) => uh.userId === userId && uh.headquartersId === headquartersId
+      (uh) => uh.userId === userId && uh.headquartersId === headquartersId,
     );
     return relation?.role || null;
   }
@@ -124,7 +124,7 @@ export class JsonAdapter implements DatabaseAdapter {
       .map((h) => ({
         ...h,
         userHeadquarters: relations.filter(
-          (r) => r.headquartersId === h.headquartersId
+          (r) => r.headquartersId === h.headquartersId,
         ),
       }));
   }
@@ -133,7 +133,7 @@ export class JsonAdapter implements DatabaseAdapter {
     const db = await readDB();
     const exists = db.userHeadquarters.some(
       (item) =>
-        item.userId === uh.userId && item.headquartersId === uh.headquartersId
+        item.userId === uh.userId && item.headquartersId === uh.headquartersId,
     );
 
     if (!exists) {
@@ -143,11 +143,11 @@ export class JsonAdapter implements DatabaseAdapter {
   }
 
   async getUsersByHeadquarters(
-    hqId: string
+    hqId: string,
   ): Promise<(User & { role: UserRole })[]> {
     const db = await readDB();
     const relations = db.userHeadquarters.filter(
-      (uh) => uh.headquartersId === hqId
+      (uh) => uh.headquartersId === hqId,
     );
 
     const results: (User & { role: UserRole })[] = [];
@@ -165,13 +165,35 @@ export class JsonAdapter implements DatabaseAdapter {
     return db.users.find((u) => u.email === email);
   }
 
+  async getUser(userId: string): Promise<User | undefined> {
+    const db = await readDB();
+    return db.users.find((u) => u.userId === userId);
+  }
+
+  async createUser(user: User): Promise<User> {
+    const db = await readDB();
+    db.users.push(user);
+    await writeDB(db);
+    return user;
+  }
+
+  async updateUser(userId: string, data: Partial<User>): Promise<User> {
+    const db = await readDB();
+    const index = db.users.findIndex((u) => u.userId === userId);
+    if (index === -1) throw new Error("User not found");
+
+    db.users[index] = { ...db.users[index], ...data, updatedAt: new Date() };
+    await writeDB(db);
+    return db.users[index];
+  }
+
   async removeUserFromHeadquarters(
     userId: string,
-    hqId: string
+    hqId: string,
   ): Promise<void> {
     const db = await readDB();
     db.userHeadquarters = db.userHeadquarters.filter(
-      (uh) => !(uh.userId === userId && uh.headquartersId === hqId)
+      (uh) => !(uh.userId === userId && uh.headquartersId === hqId),
     );
     await writeDB(db);
   }
@@ -183,7 +205,7 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async createHeadquarters(
     hq: Headquarters,
-    userId: string
+    userId: string,
   ): Promise<Headquarters> {
     const db = await readDB();
     db.headquarters.push(hq);
@@ -198,7 +220,7 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async updateHeadquarters(
     id: string,
-    updates: Partial<Headquarters>
+    updates: Partial<Headquarters>,
   ): Promise<Headquarters> {
     const db = await readDB();
     const index = db.headquarters.findIndex((h) => h.headquartersId === id);
@@ -228,11 +250,11 @@ export class JsonAdapter implements DatabaseAdapter {
 
   async getUserRequests(
     headquartersId: string,
-    userId: string
+    userId: string,
   ): Promise<AppRequest[]> {
     const db = await readDB();
     return db.requests.filter(
-      (r) => r.applicantId === userId && r.headquartersId === headquartersId
+      (r) => r.applicantId === userId && r.headquartersId === headquartersId,
     );
   }
 
@@ -247,7 +269,7 @@ export class JsonAdapter implements DatabaseAdapter {
     id: string,
     status: RequestStatus,
     headquartersId: string,
-    feedback?: string
+    feedback?: string,
   ): Promise<AppRequest> {
     const db = await readDB();
     const index = db.requests.findIndex((r) => r.requestId === id);
@@ -270,7 +292,7 @@ export class JsonAdapter implements DatabaseAdapter {
   }
 
   async createNotification(
-    notification: AppNotification
+    notification: AppNotification,
   ): Promise<AppNotification> {
     const db = await readDB();
     db.notifications.push(notification);

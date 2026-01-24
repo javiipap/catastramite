@@ -48,12 +48,12 @@ export default $config({
 
     const CLIENT_SECRET = new sst.Secret("CLIENT_SECRET");
     const CLIENT_ID = new sst.Secret("CLIENT_ID");
-    const BETTER_AUTH_SECRET = new sst.Secret("BETTER_AUTH_SECRET");
+    const AUTH_SECRET = new sst.Secret("AUTH_SECRET");
 
     const auth = new sst.aws.Auth("Auth", {
       issuer: {
         handler: "src/functions/auth.handler",
-        link: [CLIENT_ID, CLIENT_SECRET, table, BETTER_AUTH_SECRET],
+        link: [CLIENT_ID, CLIENT_SECRET, table, AUTH_SECRET],
         environment: {
           DB_ADAPTER: "dynamodb",
           NEXT_PUBLIC_AUTH_URL: AUTH_URL,
@@ -69,7 +69,7 @@ export default $config({
 
     new sst.aws.Nextjs("CatastramiteWeb", {
       permissions: [ses],
-      link: [table, CLIENT_SECRET, CLIENT_ID, auth, BETTER_AUTH_SECRET],
+      link: [table, CLIENT_SECRET, CLIENT_ID, auth, AUTH_SECRET],
       environment: {
         DB_ADAPTER: "dynamodb",
         NEXT_PUBLIC_AUTH_URL: AUTH_URL,

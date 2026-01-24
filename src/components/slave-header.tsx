@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/lib/auth-context"
+import { useAuth } from "@/lib/auth/context"
 import { HeadquartersSelector } from "@/components/headquarters-selector"
 import { Button } from "@/components/ui/button"
 import { Building2, LogOut, User, ArrowLeftRight } from "lucide-react"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useAuth } from "@/lib/auth-context"
+import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
 import { Building2, LogOut, User } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"

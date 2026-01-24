@@ -6,10 +6,10 @@ export const env = createEnv({
     DB_ADAPTER: z.string().min(1),
   },
   client: {
-    NEXT_PUBLIC_BETTER_AUTH_URL: z.string().min(1),
+    NEXT_PUBLIC_AUTH_URL: z.string().min(1),
   },
   runtimeEnv: {
-    NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
+    NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
     DB_ADAPTER: process.env.DB_ADAPTER,
   },
 });

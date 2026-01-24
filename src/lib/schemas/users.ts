@@ -40,6 +40,11 @@ export const getUserRoleSchema = z.object({
   headquartersId: z.string(),
 });
 
+export const updateUserSchema = z.object({
+  name: z.string().min(1),
+  age: z.number().min(8),
+});
+
 export type UserRole = z.infer<typeof userRoleSchema>;
 export type User = z.infer<typeof userSchema>;
 export type UserHeadquarters = z.infer<typeof userHeadquartersSchema>;

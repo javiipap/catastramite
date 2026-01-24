@@ -54,7 +54,7 @@ export default function HomePage() {
               {/* Hero Image */}
               <div className="relative w-full max-w-lg aspect-square md:aspect-video rounded-3xl overflow-hidden shadow-2xl border bg-muted">
                 <Image
-                  src="/hero-image.jpg"
+                  src="/catastramite.svg"
                   alt="Couple reviewing a contract"
                   fill
                   className="object-cover"

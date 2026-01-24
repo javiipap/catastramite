@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "sst shell next build",
-    "dev": "sst shell next dev",
+    "dev": "next dev",
     "lint": "eslint",
-    "start": "sst shell next start",
     "deploy": "sst deploy --stage=prod"
   },
   "dependencies": {

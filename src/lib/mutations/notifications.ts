@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addNotificationAction } from "@/lib/actions/notifications";
 import { Notification } from "@/lib/types";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth/context";
 
 export function useCreateNotification() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { subject } = useAuth();
 
   return useMutation({
     mutationFn: addNotificationAction,
@@ -27,7 +27,7 @@ export function useCreateNotification() {
         message: newItem.message,
         priority: newItem.priority,
         createdAt: new Date(),
-        createdBy: user?.userId || "",
+        createdBy: subject?.userId || "",
       };
       queryClient.setQueryData<Notification[]>(
         ["notifications", newItem.headquartersId],

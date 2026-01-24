@@ -61,7 +61,7 @@ export const verification = pgTable("verification", {
 });
 
 export const headquarters = pgTable("headquarters", {
-  id: text("id").primaryKey(),
+  headquartersId: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").notNull(),
