@@ -24,10 +24,15 @@ export const { Provider: MasterHeadquartersListProvider, useStore: useMasterHead
   });
 
 export const { Provider: HeadquartersProvider, useStore: useHeadquartersStore } =
-  createQueryStore<Headquarters | undefined, { headquartersId: string }>({
+  createQueryStore<Headquarters, { headquartersId: string }>({
     baseQueryKey: ['headquarters-detail'],
     clientFetcher: async ({ headquartersId }) => {
       const result = await getHeadquartersAction({ headquartersId });
-      return result?.data;
+      if (!result?.data) {
+        // redirect to /headquarters
+        throw new Error('Headquarters not found');
+      }
+
+      return result.data;
     },
   });

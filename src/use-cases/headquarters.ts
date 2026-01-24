@@ -87,9 +87,11 @@ export class HeadquartersUseCases {
     user: Pick<User, "userId">,
   ) {
     const role = await this.db.getUserRole(user.userId, params.headquartersId);
+
     if (role !== "master") {
       throw new Error("Unauthorized: Master access required");
     }
+
     return this.db.getUsersByHeadquarters(params.headquartersId);
   }
 

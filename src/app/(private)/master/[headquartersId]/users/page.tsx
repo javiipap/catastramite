@@ -16,13 +16,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  getHeadquartersUsersAction
-} from "@/lib/actions/headquarters-users"
-import { useQuery } from "@tanstack/react-query"
 import { useAddUserToHeadquarters, useRemoveUserFromHeadquarters } from "@/lib/mutations/headquarters"
 import type { UserRole } from "@/lib/types"
 import { InviteUserDialog } from '@/components/invite-user-dialog'
+import { useUserHeadquartersStore } from '@/lib/queries/user-headquarters'
 
 export default function MasterUsersPage() {
   const { data: headquarters } = useHeadquartersStore()
@@ -31,36 +28,22 @@ export default function MasterUsersPage() {
   const [email, setEmail] = useState("")
   const [role, setRole] = useState<UserRole>("slave")
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: ["hq-users", headquarters?.headquartersId],
-    queryFn: async () => {
-      if (!headquarters?.headquartersId) return [];
-      const res = await getHeadquartersUsersAction({ headquartersId: headquarters.headquartersId });
-      return res?.data ?? [];
-    },
-    enabled: !!headquarters?.headquartersId
-  })
+  const { data: users } = useUserHeadquartersStore();
 
   // Mutations
   const { mutateAsync: addUser, isPending: isAddingUser } = useAddUserToHeadquarters();
   const { mutate: removeUser, isPending: isRemovingUser } = useRemoveUserFromHeadquarters();
 
   const handleSubmit = async () => {
-    if (!headquarters) return;
-    try {
-      await addUser({
-        headquartersId: headquarters.headquartersId,
-        email,
-        role
-      });
-      setIsOpen(false);
-      setEmail("");
-    } catch {
-      // Error is handled by the mutation hook
-    }
-  }
+    await addUser({
+      headquartersId: headquarters.headquartersId,
+      email,
+      role
+    });
 
-  if (!headquarters) return null
+    setIsOpen(false);
+    setEmail("");
+  }
 
   return (
     <div className="space-y-6">
@@ -120,9 +103,7 @@ export default function MasterUsersPage() {
         </Dialog>
       </div>
 
-      {isLoading ? (
-        <div>Loading users...</div>
-      ) : users?.length === 0 ? (
+      {users.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Users className="h-12 w-12 text-muted-foreground mb-4" />
@@ -131,7 +112,7 @@ export default function MasterUsersPage() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {users?.map((user) => (
+          {users.map((user) => (
             <Card key={user.userId}>
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="flex items-center gap-4">

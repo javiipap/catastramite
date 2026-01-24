@@ -1,6 +1,5 @@
 "use server";
 
-import { cookies as getCookies } from "next/headers";
 import { useCases } from "@/use-cases";
 import { Headquarters } from "@/lib/schemas/headquarters";
 import {
@@ -69,12 +68,6 @@ export const getHeadquartersAction = slaveAction
   .inputSchema(getHeadquartersSchema)
   .action(async ({ parsedInput: { headquartersId }, ctx: { user } }) => {
     return useCases.headquarters.getHeadquarters({ headquartersId }, user);
-  });
-
-export const getUserHeadquartersRelationsAction = slaveAction
-  .inputSchema(getUserHeadquartersRelationsSchema)
-  .action(async ({ parsedInput: { userId } }) => {
-    return useCases.headquarters.getUserHeadquarters({ userId });
   });
 
 export const getUserHeadquartersObjectsAction = slaveAction

@@ -4,12 +4,28 @@ import { HeadquartersProvider } from "@/lib/queries/headquarters"
 import { MasterGuard } from "@/components/master-guard"
 import { MasterNav } from '@/components/master-nav'
 import { Metadata } from "next";
+import { redirect } from 'next/navigation'
+import { Headquarters } from '@/lib/types'
 
 export const metadata: Metadata = {
   title: "Headquarters Control",
 };
 
-const DataProvider = withServerData(getHeadquartersAction, HeadquartersProvider);
+const fetcher = async (params: { headquartersId: string }) => {
+  const headquarters = await getHeadquartersAction(params)
+
+  if (!headquarters.data) {
+    redirect('/headquarters')
+  }
+
+  return {
+    headquarters: headquarters.data as Headquarters,
+    serverError: headquarters.serverError,
+    validationErrors: headquarters.validationErrors,
+  }
+}
+
+const DataProvider = withServerData(fetcher, HeadquartersProvider);
 
 export default async function MasterLayout({
   children,

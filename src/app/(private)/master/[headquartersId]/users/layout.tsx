@@ -1,4 +1,7 @@
 
+import { getHeadquartersUsersAction } from '@/lib/actions/headquarters-users';
+import { UserHeadquartersProvider } from '@/lib/queries/user-headquarters';
+import { withServerData } from '@/lib/store/with-server-data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,10 +9,4 @@ export const metadata: Metadata = {
   description: 'Manage members of this headquarters',
 };
 
-export default function UsersLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
-}
+export default withServerData(getHeadquartersUsersAction, UserHeadquartersProvider)
