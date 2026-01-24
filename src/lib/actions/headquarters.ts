@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies as getCookies } from "next/headers";
 import { useCases } from "@/use-cases";
 import { Headquarters } from "@/lib/schemas/headquarters";
 import {
@@ -26,6 +27,18 @@ export const createHeadquarters = mutateAction(
 
     await useCases.headquarters.createHeadquarters(newHeadquarters, {
       userId: user.userId,
+    });
+
+    const cookies = await getCookies();
+    const headquarters = await useCases.headquarters.getUserHeadquarters({
+      userId: user.userId,
+    });
+
+    cookies.set("HEADQUARTERS", JSON.stringify(headquarters), {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      httpOnly: false,
     });
 
     return {
