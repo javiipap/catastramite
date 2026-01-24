@@ -14,6 +14,7 @@ import {
   getHeadquartersSchema,
   getUserHeadquartersRelationsSchema,
 } from "@/lib/schemas/headquarters";
+import { setHeadquartersCookie } from "@/lib/auth/hq-token";
 
 export const createHeadquarters = mutateAction(
   createHeadquartersSchema,
@@ -29,17 +30,11 @@ export const createHeadquarters = mutateAction(
       userId: user.userId,
     });
 
-    const cookies = await getCookies();
     const headquarters = await useCases.headquarters.getUserHeadquarters({
       userId: user.userId,
     });
 
-    cookies.set("HEADQUARTERS", JSON.stringify(headquarters), {
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      httpOnly: false,
-    });
+    await setHeadquartersCookie(user.userId, headquarters);
 
     return {
       ...newHeadquarters,

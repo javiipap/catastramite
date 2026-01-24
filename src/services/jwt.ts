@@ -21,6 +21,7 @@ export async function verifyToken<T>(token: string): Promise<T | null> {
     return payload as T;
   } catch (error) {
     console.error("JWT Verification failed:", error);
+
     return null;
   }
 }

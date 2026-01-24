@@ -4,6 +4,12 @@ import { subjects } from "@/lib/auth/subjects";
 import { redirect } from "next/navigation";
 import { headers as getHeaders } from "next/headers";
 import { InferOutput } from "valibot";
+import { UserHeadquarters } from "@/lib/types";
+import {
+  setHeadquartersCookie,
+  verifyHeadquartersToken,
+} from "@/lib/auth/hq-token";
+import { useCases } from "@/use-cases";
 
 export type AuthReturn =
   | {
@@ -12,7 +18,7 @@ export type AuthReturn =
   | SuccessfullAuth;
 
 export type Subject = InferOutput<typeof subjects.user> & {
-  headquarters?: string;
+  headquarters: UserHeadquarters[];
 };
 
 export type SuccessfullAuth = {
@@ -86,11 +92,37 @@ export async function auth(): Promise<AuthReturn> {
     await setTokens(verified.tokens.access, verified.tokens.refresh);
   }
 
+  let headquarters: UserHeadquarters[] = [];
+  const hqCookie = cookies.get("HEADQUARTERS");
+  const userId = verified.subject.properties.userId;
+
+  let isValid = false;
+  if (hqCookie?.value) {
+    const payload = await verifyHeadquartersToken(hqCookie.value);
+
+    if (payload && payload.userId === userId) {
+      headquarters = payload.headquarters;
+      isValid = true;
+    }
+  }
+
+  if (!isValid) {
+    try {
+      headquarters = await useCases.headquarters.getUserHeadquarters({
+        userId,
+      });
+
+      await setHeadquartersCookie(userId, headquarters);
+    } catch {
+      // Ignored: modifying cookies is not allowed in Server Components
+    }
+  }
+
   return {
     authorized: true,
     subject: {
       ...verified.subject.properties,
-      headquarters: cookies.get("HEADQUARTERS")?.value,
+      headquarters,
     },
     token: verified.tokens?.access ?? accessToken.value,
   };

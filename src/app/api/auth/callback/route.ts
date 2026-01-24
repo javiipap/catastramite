@@ -1,7 +1,8 @@
 import { client, setTokens } from "@/lib/auth";
+import { setHeadquartersCookie } from "@/lib/auth/hq-token";
 import { subjects } from "@/lib/auth/subjects";
+import { useCases } from "@/use-cases";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies as getCookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
@@ -26,18 +27,11 @@ export async function GET(req: NextRequest) {
 
   // Set headquarters cookie
   const userId = verified.subject.properties.userId;
-  const { useCases } = await import("@/use-cases");
   const headquarters = await useCases.headquarters.getUserHeadquarters({
     userId,
   });
 
-  const cookies = await getCookies();
-  cookies.set("HEADQUARTERS", JSON.stringify(headquarters), {
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    httpOnly: false,
-  });
+  await setHeadquartersCookie(userId, headquarters);
 
   return NextResponse.redirect(new URL("/login", req.url));
 }

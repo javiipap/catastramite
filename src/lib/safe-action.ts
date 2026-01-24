@@ -11,29 +11,26 @@ export const actionClient = createSafeActionClient({
   },
 });
 
-export const masterAction = actionClient.use(async ({ next }) => {
+export const masterAction = actionClient.use(async ({ next, clientInput }) => {
   const session = await auth();
 
   if (!session.authorized) {
     throw new Error();
   }
 
-  const currentHeadquartersId = session.subject.headquarters;
+  const headquartersId = (clientInput as { headquartersId?: string })
+    ?.headquartersId;
 
-  if (!currentHeadquartersId) {
-    throw new Error("No headquarters selected");
+  if (!headquartersId) {
+    throw new Error("No headquarters found for user");
   }
 
-  const userHeadquarters = await useCases.headquarters.getUserHeadquarters({
-    userId: session.subject.userId,
-  });
-
-  const isMaster = userHeadquarters.some(
-    (h) => h.headquartersId === currentHeadquartersId && h.role === "master",
+  const hasAccess = session.subject.headquarters.some(
+    (h) => h.headquartersId === headquartersId && h.role === "master",
   );
 
-  if (!isMaster) {
-    throw new Error();
+  if (!hasAccess) {
+    throw new Error("Unauthorized");
   }
 
   return next({ ctx: { user: session.subject } });
@@ -70,11 +67,7 @@ export const mutateHeadquartersAction =
       throw new Error();
     }
 
-    const userHeadquarters = await useCases.headquarters.getUserHeadquarters({
-      userId: session.subject.userId,
-    });
-
-    const membership = userHeadquarters.find(
+    const membership = session.subject.headquarters.find(
       (h) => h.headquartersId === parsedInput.headquartersId,
     );
 
