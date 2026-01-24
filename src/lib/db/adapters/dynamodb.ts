@@ -193,7 +193,6 @@ export class DynamoDBAdapter implements DatabaseAdapter {
         createdAt: user.createdAt.toISOString(),
         updatedAt: user.updatedAt.toISOString(),
         role: user.role,
-        age: user.age,
       },
     });
 
@@ -221,10 +220,6 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     if (data.image !== undefined) {
       updateExp += " image = :i,";
       expAttrValues[":i"] = data.image;
-    }
-    if (data.age !== undefined) {
-      updateExp += " age = :a,";
-      expAttrValues[":a"] = data.age;
     }
 
     updateExp += " updatedAt = :u";
@@ -639,7 +634,6 @@ export class DynamoDBAdapter implements DatabaseAdapter {
       createdAt: new Date(item.createdAt),
       updatedAt: new Date(item.updatedAt),
       role: item.role || null,
-      age: item.age || null,
     };
   }
 }

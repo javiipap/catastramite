@@ -29,7 +29,6 @@ export const handler = handle(
         const claims = value.id as {
           email: string;
           name: string;
-          picture: string;
         };
 
         // Fetch user by email since claims might lack userId
@@ -42,23 +41,15 @@ export const handler = handle(
             userId: userId!,
             email: claims.email,
             name: claims.name || claims.email.split("@")[0], // Fallback name
-            image: claims.picture || null,
             emailVerified: true,
             createdAt: new Date(),
             updatedAt: new Date(),
           });
         }
 
-        // Fetch headquarters... but if new user, they have none, unless added by email previously.
-        // Actually, if they were added by email to a HQ, they might exist as a user record?
-        // No, `addUserToHeadquarters` usually links an existing user.
-        // If we invite by email, we might have a placeholder?
-        // Let's assume for now newly created users have no HQs.
         return ctx.subject("user", {
           email: claims.email,
           name: user?.name || claims.name || claims.email.split("@")[0],
-          picture: user?.image || claims.picture,
-          age: user?.age || undefined, // Include age
           userId: userId!, // Explicitly include userId
         });
       }

@@ -6,7 +6,5 @@ export const subjects = createSubjects({
     userId: string(),
     email: string(),
     name: optional(string()),
-    picture: optional(string()),
-    age: optional(number()),
   }),
 });

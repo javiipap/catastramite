@@ -11,7 +11,6 @@ export const userSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   role: userRoleSchema.optional().nullable(),
-  age: z.number().optional().nullable(),
 });
 
 export const userHeadquartersSchema = z.object({
@@ -48,7 +47,6 @@ export const updateUserRoleInHeadquartersSchema = z.object({
 
 export const updateUserSchema = z.object({
   name: z.string().min(1),
-  age: z.number().min(8),
 });
 
 export type UserRole = z.infer<typeof userRoleSchema>;
