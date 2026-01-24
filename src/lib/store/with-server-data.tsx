@@ -1,13 +1,12 @@
 import React, { ReactNode } from 'react';
-import { auth } from "@/lib/auth/server";
-import { SessionUser } from '@/lib/auth';
+import { auth, Subject } from "@/lib/auth/server";
 import { redirect } from 'next/navigation';
 
 interface ProviderProps<TData, TArgs = {}> { // eslint-disable-line @typescript-eslint/no-empty-object-type
   initialData: TData;
   args: TArgs;
   children: ReactNode;
-  user: SessionUser;
+  user: Subject;
 }
 
 type WrapperProps<TArgs> = {

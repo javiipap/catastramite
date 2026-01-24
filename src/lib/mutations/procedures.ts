@@ -27,7 +27,7 @@ export function useCreateProcedure() {
         description: newItem.description,
         fields: newItem.fields,
         createdAt: new Date(),
-        createdBy: subject?.userId || "",
+        createdBy: subject.userId || "",
       };
       queryClient.setQueryData<Procedure[]>(
         ["procedures", newItem.headquartersId],

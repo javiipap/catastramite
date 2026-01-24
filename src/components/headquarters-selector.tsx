@@ -17,7 +17,7 @@ import { getUserHeadquartersObjectsAction } from "@/lib/actions/headquarters"
 import { useParams, useRouter, usePathname } from "next/navigation"
 
 export function HeadquartersSelector() {
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
   const params = useParams()
   const router = useRouter()
   const pathname = usePathname()

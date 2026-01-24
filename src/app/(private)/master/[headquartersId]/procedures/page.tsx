@@ -26,7 +26,7 @@ import { useCreateProcedure } from "@/lib/mutations/procedures"
 export default function MasterProceduresPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: procedures } = useProceduresStore()
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
 
   const [isOpen, setIsOpen] = useState(false)
   const [name, setName] = useState("")

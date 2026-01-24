@@ -13,7 +13,7 @@ import { FileText, MessageSquare } from "lucide-react"
 
 export default function SlaveRequestsPage() {
   const { data: requests } = useRequestsStore()
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
   const [filter, setFilter] = useState<string>("all")
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
 

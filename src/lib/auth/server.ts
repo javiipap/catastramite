@@ -11,9 +11,13 @@ export type AuthReturn =
     }
   | SuccessfullAuth;
 
+export type Subject = InferOutput<typeof subjects.user> & {
+  headquarters?: string;
+};
+
 export type SuccessfullAuth = {
   authorized: true;
-  subject: InferOutput<typeof subjects.user>;
+  subject: Subject;
   token: string;
 };
 
@@ -83,7 +87,10 @@ export async function auth(): Promise<AuthReturn> {
 
   return {
     authorized: true,
-    subject: verified.subject.properties,
+    subject: {
+      ...verified.subject.properties,
+      headquarters: cookies.get("HEADQUARTERS")?.value,
+    },
     token: verified.tokens?.access ?? accessToken.value,
   };
 }

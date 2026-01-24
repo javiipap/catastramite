@@ -1,7 +1,11 @@
 "use server";
 
-import { login } from "@/lib/auth/server";
+import { login, logout } from "@/lib/auth/server";
 
 export async function loginAction() {
   await login();
+}
+
+export async function logoutAction() {
+  await logout();
 }

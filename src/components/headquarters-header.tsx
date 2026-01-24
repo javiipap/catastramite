@@ -12,9 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { logoutAction } from "@/lib/actions/auth"
 
 export function HeadquartersHeader() {
-  const { user, logout } = useAuth()
+  const { subject: user } = useAuth()
 
   return (
     <header className="border-b bg-card">
@@ -43,7 +44,7 @@ export function HeadquartersHeader() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => logoutAction()} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>

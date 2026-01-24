@@ -17,7 +17,7 @@ export default function SlaveProcedurePage() {
   const params = useParams()
   const router = useRouter()
   const { data: procedures } = useProceduresStore()
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
 
   const [formData, setFormData] = useState<Record<string, string>>({})
 
@@ -52,7 +52,7 @@ export default function SlaveProcedurePage() {
         procedureName: procedure.name,
         headquartersId: procedure.headquartersId,
         applicantId: user.userId,
-        applicantName: user.name,
+        applicantName: user.name || "Unknown",
         status: "pending",
         data: formData,
 

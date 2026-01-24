@@ -18,13 +18,14 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SlaveNav } from "@/components/slave-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
+import { logoutAction } from "@/lib/actions/auth"
 
 interface SlaveHeaderProps {
   headquartersId: string
 }
 
 export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
-  const { user, logout } = useAuth()
+  const { subject: user } = useAuth()
 
   return (
     <header className="border-b bg-card">
@@ -87,7 +88,7 @@ export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => logoutAction()} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>

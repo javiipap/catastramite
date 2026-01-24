@@ -1,8 +1,8 @@
 import { createSafeActionClient } from "next-safe-action";
-import { auth } from "@/lib/auth/server";
-import { headers } from "next/headers";
-import { SessionUser } from "@/lib/auth"; // Import User from our auth lib
+import { auth, type Subject } from "@/lib/auth/server";
 import { z } from "zod";
+
+import { useCases } from "@/use-cases";
 
 export const actionClient = createSafeActionClient({
   handleServerError: (error) => {
@@ -18,7 +18,21 @@ export const masterAction = actionClient.use(async ({ next }) => {
     throw new Error();
   }
 
-  if (!session.subject.headquarters.some((h) => h.role === "master")) {
+  const currentHeadquartersId = session.subject.headquarters;
+
+  if (!currentHeadquartersId) {
+    throw new Error("No headquarters selected");
+  }
+
+  const userHeadquarters = await useCases.headquarters.getUserHeadquarters({
+    userId: session.subject.userId,
+  });
+
+  const isMaster = userHeadquarters.some(
+    (h) => h.headquartersId === currentHeadquartersId && h.role === "master",
+  );
+
+  if (!isMaster) {
     throw new Error();
   }
 
@@ -45,10 +59,7 @@ export const mutateHeadquartersAction =
     TData,
   >(
     schema: TSchema,
-    handler: (
-      data: z.infer<TSchema>,
-      ctx: { user: SessionUser },
-    ) => Promise<TData>,
+    handler: (data: z.infer<TSchema>, ctx: { user: Subject }) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);
@@ -59,11 +70,15 @@ export const mutateHeadquartersAction =
       throw new Error();
     }
 
-    const headquarters = session.subject.headquarters.find(
+    const userHeadquarters = await useCases.headquarters.getUserHeadquarters({
+      userId: session.subject.userId,
+    });
+
+    const membership = userHeadquarters.find(
       (h) => h.headquartersId === parsedInput.headquartersId,
     );
 
-    if (!headquarters || headquarters.role !== "master") {
+    if (!membership || membership.role !== "master") {
       throw new Error();
     }
 
@@ -73,10 +88,7 @@ export const mutateHeadquartersAction =
 export const mutateAction =
   <TSchema extends z.ZodType, TData>(
     schema: TSchema,
-    handler: (
-      data: z.infer<TSchema>,
-      ctx: { user: SessionUser },
-    ) => Promise<TData>,
+    handler: (data: z.infer<TSchema>, ctx: { user: Subject }) => Promise<TData>,
   ) =>
   async (rawData: z.infer<TSchema>) => {
     const parsedInput = schema.parse(rawData);

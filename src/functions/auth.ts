@@ -54,22 +54,12 @@ export const handler = handle(
         // No, `addUserToHeadquarters` usually links an existing user.
         // If we invite by email, we might have a placeholder?
         // Let's assume for now newly created users have no HQs.
-        const headquarters = userId
-          ? await useCases.headquarters.getUserHeadquarters({
-              userId: userId,
-            })
-          : [];
-
         return ctx.subject("user", {
           email: claims.email,
           name: user?.name || claims.name || claims.email.split("@")[0],
           picture: user?.image || claims.picture,
           age: user?.age || undefined, // Include age
           userId: userId!, // Explicitly include userId
-          headquarters: headquarters.map((hq) => ({
-            headquartersId: hq.headquartersId,
-            role: hq.role,
-          })),
         });
       }
       throw new Error("Invalid provider");

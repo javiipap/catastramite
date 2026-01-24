@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useSlaveDashboardStore } from '@/lib/queries/dashboard'
 
 export default function SlaveDashboardPage() {
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
   const { data } = useSlaveDashboardStore();
 
   const { headquarters: currentHeadquarters, procedures: headquartersProcedures, requests: headquartersRequests } = data

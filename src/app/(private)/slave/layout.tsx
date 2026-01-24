@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 export default function SlaveLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth()
+  const { subject: user, isLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {

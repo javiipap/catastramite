@@ -8,11 +8,5 @@ export const subjects = createSubjects({
     name: optional(string()),
     picture: optional(string()),
     age: optional(number()),
-    headquarters: array(
-      object({
-        headquartersId: string(),
-        role: string(),
-      }),
-    ),
   }),
 });

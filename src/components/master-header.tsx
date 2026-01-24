@@ -18,9 +18,10 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { MasterNav } from "@/components/master-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
+import { logoutAction } from "@/lib/actions/auth"
 
 export function MasterHeader() {
-  const { user, logout } = useAuth()
+  const { subject: user } = useAuth()
   const params = useParams()
   const headquartersId = params?.headquartersId as string | undefined
 
@@ -87,7 +88,7 @@ export function MasterHeader() {
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => logoutAction()} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>

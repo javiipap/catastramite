@@ -16,7 +16,7 @@ export function SlaveLayoutClient({
   children: React.ReactNode
   params: Promise<{ headquartersId: string }> | { headquartersId: string }
 }) {
-  const { user, isLoading } = useAuth()
+  const { subject: user, isLoading } = useAuth()
   const { data: headquarters } = useHeadquartersStore()
   const router = useRouter()
   const [headquartersId, setHeadquartersId] = useState<string | null>(null)

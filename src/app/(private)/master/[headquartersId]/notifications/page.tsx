@@ -25,7 +25,7 @@ import { useCreateNotification } from "@/lib/mutations/notifications"
 export default function MasterNotificationsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: notifications } = useNotificationsStore()
-  const { user } = useAuth()
+  const { subject: user } = useAuth()
 
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState("")
