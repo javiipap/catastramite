@@ -40,6 +40,12 @@ export const getUserRoleSchema = z.object({
   headquartersId: z.string(),
 });
 
+export const updateUserRoleInHeadquartersSchema = z.object({
+  headquartersId: z.string(),
+  userId: z.string(),
+  role: userRoleSchema,
+});
+
 export const updateUserSchema = z.object({
   name: z.string().min(1),
   age: z.number().min(8),

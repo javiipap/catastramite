@@ -107,6 +107,23 @@ export class HeadquartersUseCases {
     return this.db.removeUserFromHeadquarters(userId, headquartersId);
   }
 
+  async updateUserRoleInHeadquarters(
+    userId: string,
+    headquartersId: string,
+    newRole: UserHeadquarters["role"],
+    actor: Pick<User, "userId">,
+  ): Promise<void> {
+    const role = await this.db.getUserRole(actor.userId, headquartersId);
+    if (role !== "master") {
+      throw new Error("Unauthorized: Master access required");
+    }
+    return this.db.updateUserRoleInHeadquarters(
+      userId,
+      headquartersId,
+      newRole,
+    );
+  }
+
   async getUserByEmail(email: string) {
     return this.db.getUserByEmail(email);
   }

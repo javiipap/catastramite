@@ -27,6 +27,11 @@ export interface DatabaseAdapter {
     userId: string,
     headquartersId: string,
   ): Promise<void>;
+  updateUserRoleInHeadquarters(
+    userId: string,
+    headquartersId: string,
+    role: UserRole,
+  ): Promise<void>;
 
   // Headquarters
 

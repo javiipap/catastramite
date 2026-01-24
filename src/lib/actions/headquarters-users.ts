@@ -7,6 +7,7 @@ import {
   getHeadquartersUsersSchema,
   addUserToHeadquartersSchema,
   removeUserFromHeadquartersSchema,
+  updateUserRoleInHeadquartersSchema,
 } from "@/lib/schemas/users";
 
 export const getHeadquartersUsersAction = masterAction
@@ -42,6 +43,19 @@ export const removeUserFromHeadquartersAction = mutateHeadquartersAction(
     await useCases.headquarters.removeUserFromHeadquarters(
       userId,
       headquartersId,
+      actor,
+    );
+    revalidatePath(`/master/${headquartersId}/users`);
+  },
+);
+
+export const updateUserRoleInHeadquartersAction = mutateHeadquartersAction(
+  updateUserRoleInHeadquartersSchema,
+  async ({ headquartersId, userId, role }, { user: actor }) => {
+    await useCases.headquarters.updateUserRoleInHeadquarters(
+      userId,
+      headquartersId,
+      role,
       actor,
     );
     revalidatePath(`/master/${headquartersId}/users`);

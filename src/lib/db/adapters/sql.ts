@@ -115,6 +115,22 @@ export class SqlAdapter implements DatabaseAdapter {
       );
   }
 
+  async updateUserRoleInHeadquarters(
+    userId: string,
+    hqId: string,
+    role: UserRole,
+  ): Promise<void> {
+    await db
+      .update(userHeadquarters)
+      .set({ role })
+      .where(
+        and(
+          eq(userHeadquarters.userId, userId),
+          eq(userHeadquarters.headquartersId, hqId),
+        ),
+      );
+  }
+
   async getUsersByHeadquarters(
     hqId: string,
   ): Promise<(User & { role: UserRole })[]> {

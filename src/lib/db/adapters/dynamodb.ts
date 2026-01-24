@@ -145,6 +145,25 @@ export class DynamoDBAdapter implements DatabaseAdapter {
     await docClient.send(command);
   }
 
+  async updateUserRoleInHeadquarters(
+    userId: string,
+    hqId: string,
+    role: UserRole,
+  ): Promise<void> {
+    const command = new UpdateCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        PK: this.pk("USER", userId),
+        SK: this.pk("HQ", hqId),
+      },
+      UpdateExpression: "SET #r = :r",
+      ExpressionAttributeNames: { "#r": "role" },
+      ExpressionAttributeValues: { ":r": role },
+    });
+
+    await docClient.send(command);
+  }
+
   async getUser(userId: string): Promise<User | undefined> {
     const command = new GetCommand({
       TableName: TABLE_NAME,

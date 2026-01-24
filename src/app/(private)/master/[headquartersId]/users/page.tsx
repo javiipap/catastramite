@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAddUserToHeadquarters, useRemoveUserFromHeadquarters } from "@/lib/mutations/headquarters"
+import { useAddUserToHeadquarters, useRemoveUserFromHeadquarters, useUpdateUserRoleInHeadquarters } from "@/lib/mutations/headquarters"
 import type { UserRole } from "@/lib/types"
 import { InviteUserDialog } from '@/components/invite-user-dialog'
 import { useUserHeadquartersStore } from '@/lib/queries/user-headquarters'
@@ -33,6 +33,7 @@ export default function MasterUsersPage() {
   // Mutations
   const { mutateAsync: addUser, isPending: isAddingUser } = useAddUserToHeadquarters();
   const { mutate: removeUser, isPending: isRemovingUser } = useRemoveUserFromHeadquarters();
+  const { mutate: updateRole, isPending: isUpdatingRole } = useUpdateUserRoleInHeadquarters();
 
   const handleSubmit = async () => {
     await addUser({
@@ -123,8 +124,28 @@ export default function MasterUsersPage() {
                     <p className="font-medium">{user.name}</p>
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                   </div>
-                  <div className="ml-4 px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground uppercase font-semibold tracking-wider">
-                    {user.role}
+                  <div className="ml-4">
+                    <Select
+                      value={user.role}
+                      onValueChange={(newRole) => {
+                        if (headquarters) {
+                          updateRole({
+                            headquartersId: headquarters.headquartersId,
+                            userId: user.userId,
+                            role: newRole as UserRole
+                          });
+                        }
+                      }}
+                      disabled={isUpdatingRole}
+                    >
+                      <SelectTrigger className="w-[180px] h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="master">Master (Master)</SelectItem>
+                        <SelectItem value="slave">Employee (Slave)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 

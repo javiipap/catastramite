@@ -7,6 +7,7 @@ import {
 import {
   addUserToHeadquartersAction,
   removeUserFromHeadquartersAction,
+  updateUserRoleInHeadquartersAction,
 } from "@/lib/actions/headquarters-users";
 import { Headquarters } from "@/lib/types";
 
@@ -42,6 +43,22 @@ export function useRemoveUserFromHeadquarters() {
   });
 }
 
+export function useUpdateUserRoleInHeadquarters() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateUserRoleInHeadquartersAction,
+    onSuccess: () => {
+      toast.success("User role updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["hq-users"] });
+      queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to update user role");
+    },
+  });
+}
+
 export function useCreateHeadquarters() {
   const queryClient = useQueryClient();
 
@@ -68,7 +85,7 @@ export function useCreateHeadquarters() {
               createdAt: new Date(),
               userHeadquarters: [],
             },
-          ]
+          ],
         );
       }
 
@@ -78,7 +95,7 @@ export function useCreateHeadquarters() {
       toast.success("Headquarters created successfully");
       queryClient.setQueryData<Headquarters[]>(
         ["master-headquarters-list"],
-        [...(context.previousHeadquarters || []), result]
+        [...(context.previousHeadquarters || []), result],
       );
 
       queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
@@ -90,7 +107,7 @@ export function useCreateHeadquarters() {
       if (context?.previousHeadquarters) {
         queryClient.setQueryData(
           ["master-headquarters-list"],
-          context.previousHeadquarters
+          context.previousHeadquarters,
         );
       }
     },
@@ -122,7 +139,7 @@ export function useUpdateHeadquarters() {
             createdAt: new Date(),
             userHeadquarters: [],
           },
-        ]
+        ],
       );
 
       return { previousHeadquarters };
@@ -131,7 +148,7 @@ export function useUpdateHeadquarters() {
       toast.success("Headquarters updated successfully");
       queryClient.setQueryData<Headquarters[]>(
         ["master-headquarters-list"],
-        [...(context.previousHeadquarters || []), result]
+        [...(context.previousHeadquarters || []), result],
       );
 
       queryClient.invalidateQueries({ queryKey: ["master-headquarters-list"] });
@@ -152,7 +169,7 @@ export function useUpdateHeadquarters() {
       if (context?.previousHeadquarters) {
         queryClient.setQueryData(
           ["master-headquarters-list"],
-          context.previousHeadquarters
+          context.previousHeadquarters,
         );
       }
     },

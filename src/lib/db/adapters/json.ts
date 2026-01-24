@@ -198,6 +198,21 @@ export class JsonAdapter implements DatabaseAdapter {
     await writeDB(db);
   }
 
+  async updateUserRoleInHeadquarters(
+    userId: string,
+    hqId: string,
+    role: UserRole,
+  ): Promise<void> {
+    const db = await readDB();
+    const index = db.userHeadquarters.findIndex(
+      (uh) => uh.userId === userId && uh.headquartersId === hqId,
+    );
+    if (index !== -1) {
+      db.userHeadquarters[index].role = role;
+      await writeDB(db);
+    }
+  }
+
   async getHeadquartersById(id: string): Promise<Headquarters | undefined> {
     const db = await readDB();
     return db.headquarters.find((hq) => hq.headquartersId === id);
