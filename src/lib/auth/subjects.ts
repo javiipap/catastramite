@@ -1,4 +1,4 @@
-import { object, string, optional, array, number } from "valibot";
+import { object, string, optional } from "valibot";
 import { createSubjects } from "@openauthjs/openauth/subject";
 
 export const subjects = createSubjects({

@@ -34,17 +34,11 @@ export const metadata: Metadata = {
   },
 };
 
-import { auth } from '@/lib/auth/server';
-
-// ...
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn(

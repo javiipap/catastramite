@@ -1,6 +1,5 @@
 import { SESv2, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { createTransport } from "nodemailer";
-import type { Attachment } from "nodemailer/lib/mailer";
 
 const sesClient = new SESv2();
 

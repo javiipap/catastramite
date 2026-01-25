@@ -1,5 +1,4 @@
 import { auth } from "@/lib/auth/server";
-import { headers } from "next/headers";
 import { useCases } from "@/use-cases";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";

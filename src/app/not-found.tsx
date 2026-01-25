@@ -13,7 +13,7 @@ export default function NotFound() {
       <h1 className="text-9xl font-black text-primary/10">404</h1>
       <div className="absolute flex flex-col items-center gap-4">
         <h2 className="text-2xl font-bold">Page Not Found</h2>
-        <p className="text-muted-foreground">This page has been filed under "Missing".</p>
+        <p className="text-muted-foreground">This page has been filed under &quot;Missing&quot;.</p>
         <Button asChild>
           <Link href="/">Return Home</Link>
         </Button>
