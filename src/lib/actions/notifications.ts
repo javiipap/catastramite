@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { Notification as AppNotification } from "@/lib/schemas/notifications";
+import type { Notification as AppNotification } from "@/lib/schemas/notifications";
 import { mutateHeadquartersAction, slaveAction } from "@/lib/safe-action";
 import {
   createNotificationSchema,

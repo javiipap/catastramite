@@ -2,7 +2,7 @@
 
 import { createQueryStore } from '@/lib/store/create-query';
 import { getMasterDashboardDataAction, getSlaveDashboardDataAction } from '@/lib/actions/dashboard';
-import { DashboardData } from '@/lib/types';
+import type { DashboardData } from '@/lib/types';
 
 export const { Provider: MasterDashboardProvider, useStore: useMasterDashboardStore } =
   createQueryStore<DashboardData, { headquartersId: string }>({

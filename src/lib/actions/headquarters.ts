@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { Headquarters } from "@/lib/schemas/headquarters";
+import type { Headquarters } from "@/lib/schemas/headquarters";
 import {
   mutateAction,
   mutateHeadquartersAction,

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addNotificationAction } from "@/lib/actions/notifications";
-import { Notification } from "@/lib/types";
+import type { Notification } from "@/lib/types";
 import { useAuth } from "@/lib/auth/context";
 
 export function useCreateNotification() {

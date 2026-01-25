@@ -1,7 +1,7 @@
 import type { DatabaseAdapter } from "@/lib/db/types";
 import type { User } from "@/lib/types";
 import { generateToken, verifyToken } from "@/services/jwt";
-import { UserRole } from "@/lib/types";
+import type { UserRole } from "@/lib/types";
 
 export interface InvitationPayload {
   headquartersId: string;

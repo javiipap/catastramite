@@ -1,4 +1,4 @@
-import { UserHeadquarters } from "@/lib/types";
+import type { UserHeadquarters } from "@/lib/types";
 import { cookies as getCookies } from "next/headers";
 import { generateToken, verifyToken } from "@/services/jwt";
 

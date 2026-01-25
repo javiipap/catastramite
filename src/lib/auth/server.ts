@@ -4,7 +4,7 @@ import { subjects } from "@/lib/auth/subjects";
 import { redirect } from "next/navigation";
 import { headers as getHeaders } from "next/headers";
 import { InferOutput } from "valibot";
-import { UserHeadquarters } from "@/lib/types";
+import type { UserHeadquarters } from "@/lib/types";
 import {
   setHeadquartersCookie,
   verifyHeadquartersToken,

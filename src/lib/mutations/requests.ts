@@ -4,7 +4,7 @@ import {
   addRequestAction,
   updateRequestStatusAction,
 } from "@/lib/actions/requests";
-import { Request } from "@/lib/types";
+import type { Request } from "@/lib/types";
 
 export function useCreateRequest() {
   const queryClient = useQueryClient();
@@ -37,7 +37,7 @@ export function useCreateRequest() {
             createdAt: new Date(),
             updatedAt: new Date(),
           },
-        ]
+        ],
       );
 
       return { previousRequests };
@@ -48,7 +48,7 @@ export function useCreateRequest() {
 
       queryClient.setQueryData<Request[]>(
         ["requests", vars.headquartersId],
-        [...context.previousRequests, result]
+        [...context.previousRequests, result],
       );
 
       queryClient.invalidateQueries({
@@ -67,7 +67,7 @@ export function useCreateRequest() {
 
       queryClient.setQueryData<Request[]>(
         ["requests", vars.headquartersId],
-        context?.previousRequests ?? []
+        context?.previousRequests ?? [],
       );
     },
   });
@@ -91,8 +91,8 @@ export function useUpdateRequestStatus() {
       queryClient.setQueryData<Request[]>(
         ["requests", vars.headquartersId],
         previousRequests.map((r) =>
-          r.requestId === vars.requestId ? { ...r, status: vars.status } : r
-        )
+          r.requestId === vars.requestId ? { ...r, status: vars.status } : r,
+        ),
       );
 
       return { previousRequests };
@@ -102,7 +102,7 @@ export function useUpdateRequestStatus() {
 
       queryClient.setQueryData<Request[]>(
         ["requests", vars.headquartersId],
-        [...context.previousRequests, result]
+        [...context.previousRequests, result],
       );
 
       queryClient.invalidateQueries({
@@ -122,7 +122,7 @@ export function useUpdateRequestStatus() {
       if (context?.previousRequests) {
         queryClient.setQueryData(
           ["requests", vars.headquartersId],
-          context.previousRequests
+          context.previousRequests,
         );
       }
     },

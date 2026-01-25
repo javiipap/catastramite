@@ -1,7 +1,7 @@
 'use client';
 
 import { createQueryStore } from '@/lib/store/create-query';
-import { Notification } from '@/lib/types';
+import type { Notification } from '@/lib/types';
 import { getNotificationsAction } from "@/lib/actions/notifications"
 
 export const { Provider: NotificationsProvider, useStore: useNotificationsStore } =

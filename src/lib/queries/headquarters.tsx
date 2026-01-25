@@ -3,7 +3,7 @@
 import { createQueryStore } from '@/lib/store/create-query';
 import { getHeadquartersAction } from '@/lib/actions/headquarters';
 import { getUserHeadquartersAction, getMasterHeadquartersAction } from '@/lib/actions/headquarters';
-import { Headquarters } from '@/lib/types';
+import type { Headquarters } from '@/lib/types';
 
 export const { Provider: HeadquartersListProvider, useStore: useHeadquartersListStore } =
   createQueryStore<Headquarters[]>({

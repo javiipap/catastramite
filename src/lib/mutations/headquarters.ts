@@ -9,7 +9,7 @@ import {
   removeUserFromHeadquartersAction,
   updateUserRoleInHeadquartersAction,
 } from "@/lib/actions/headquarters-users";
-import { Headquarters } from "@/lib/types";
+import type { Headquarters } from "@/lib/types";
 
 export function useAddUserToHeadquarters() {
   const queryClient = useQueryClient();

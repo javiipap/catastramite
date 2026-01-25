@@ -2,7 +2,7 @@
 
 import { getHeadquartersUsersAction } from '@/lib/actions/headquarters-users';
 import { createQueryStore } from '@/lib/store/create-query';
-import { User, UserRole } from '@/lib/types';
+import type { User, UserRole } from '@/lib/types';
 
 export const { Provider: UserHeadquartersProvider, useStore: useUserHeadquartersStore } =
   createQueryStore<(User & { role: UserRole })[], { headquartersId: string }>({

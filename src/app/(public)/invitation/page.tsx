@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { acceptInvitationAction } from "@/lib/actions/invitations";
 import { verifyToken } from "@/services/jwt";
-import { InvitationPayload } from "@/use-cases/invitations";
+import type { InvitationPayload } from "@/use-cases/invitations";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Metadata } from "next";
 import { db } from "@/lib/db";

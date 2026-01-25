@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
-import { DatabaseAdapter } from "../types";
-import {
+import type { DatabaseAdapter } from "../types";
+import type {
   Headquarters,
   UserHeadquarters,
   Procedure,

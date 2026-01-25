@@ -1,5 +1,5 @@
-import { DatabaseAdapter } from "../types";
-import {
+import type { DatabaseAdapter } from "../types";
+import type {
   Headquarters,
   UserHeadquarters,
   UserRole,

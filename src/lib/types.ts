@@ -4,9 +4,9 @@ export * from "./schemas/procedures";
 export * from "./schemas/requests";
 export * from "./schemas/notifications";
 
-import { Headquarters } from "./schemas/headquarters";
-import { Procedure } from "./schemas/procedures";
-import { Request } from "./schemas/requests";
+import type { Headquarters } from "./schemas/headquarters";
+import type { Procedure } from "./schemas/procedures";
+import type { Request } from "./schemas/requests";
 
 export interface DashboardData {
   headquarters: Headquarters | undefined;

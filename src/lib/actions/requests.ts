@@ -1,7 +1,7 @@
 "use server";
 
 import { useCases } from "@/use-cases";
-import { Request as AppRequest } from "@/lib/schemas/requests";
+import type { Request as AppRequest } from "@/lib/schemas/requests";
 import { mutateHeadquartersAction, slaveAction } from "@/lib/safe-action";
 import {
   createRequestSchema,

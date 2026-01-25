@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addProcedure } from "@/lib/actions/procedures";
-import { Procedure } from "@/lib/types";
+import type { Procedure } from "@/lib/types";
 import { useAuth } from "@/lib/auth/context";
 
 export function useCreateProcedure() {

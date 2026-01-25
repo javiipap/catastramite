@@ -1,7 +1,7 @@
 "use client"
 
 import { createQueryStore } from "@/lib/store/create-query"
-import { Request } from "@/lib/types"
+import type { Request } from "@/lib/types"
 
 import { getRequestsAction } from "@/lib/actions/requests"
 
