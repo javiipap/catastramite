@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { MasterNav } from "@/components/master-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -39,7 +39,8 @@ export function MasterHeader() {
               <div className="px-2 py-6">
                 <div className="flex items-center gap-2 mb-8">
                   <Building2 className="h-6 w-6" />
-                  <span className="font-bold text-lg">E-Government Portal</span>
+                  <SheetTitle className="font-bold text-lg">E-Government Portal</SheetTitle>
+                  <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                 </div>
                 <MasterNav />
                 <div className="mt-8 pt-6 border-t">
