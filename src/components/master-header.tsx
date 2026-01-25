@@ -64,7 +64,9 @@ export function MasterHeader() {
         </div>
 
         <div className="flex items-center gap-2">
-          <ModeToggle />
+          <div className="hidden md:block">
+            <ModeToggle />
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
@@ -72,10 +74,13 @@ export function MasterHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
+              <DropdownMenuLabel className="flex items-center justify-between font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{user?.name}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                </div>
+                <div className="md:hidden">
+                  <ModeToggle />
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
