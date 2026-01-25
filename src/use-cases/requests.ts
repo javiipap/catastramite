@@ -43,17 +43,16 @@ export class RequestsUseCases {
       );
     }
 
-    for (const master of masters) {
-      // Avoid sending double email if master is also applicant (unlikely but possible)
-      if (master.userId !== user.userId) {
-        await sendRequestCreatedEmail(
+    await Promise.allSettled(
+      masters.map((master) =>
+        sendRequestCreatedEmail(
           master.name,
           master.email,
           request.procedureName,
           newRequest.requestId,
-        );
-      }
-    }
+        ),
+      ),
+    );
 
     return newRequest;
   }
@@ -105,14 +104,18 @@ export class RequestsUseCases {
     );
 
     if (applicant) {
-      await sendRequestStatusUpdatedEmail(
-        applicant.name,
-        applicant.email,
-        updatedRequest.procedureName,
-        updatedRequest.requestId,
-        status,
-        feedback,
-      );
+      try {
+        await sendRequestStatusUpdatedEmail(
+          applicant.name,
+          applicant.email,
+          updatedRequest.procedureName,
+          updatedRequest.requestId,
+          status,
+          feedback,
+        );
+      } catch (error) {
+        console.error("Error sending email:", error);
+      }
     }
 
     return updatedRequest;

@@ -67,7 +67,7 @@ const generateEmailTemplate = (title: string, content: string) => {
     <table class="container" cellspacing="0" cellpadding="0">
         <tr>
             <td class="header">
-                <img src="https://www.catastramite.com/logo.png" alt="Catastramite" width="200">
+                <img src="https://www.catastramite.com/catastramite.png" alt="Catastramite" width="200">
             </td>
         </tr>
         <tr>
@@ -104,13 +104,6 @@ const sendMail = async (
     to: `${name} <${email}>`,
     subject,
     html,
-    attachments: [
-      {
-        filename: "hero-image.jpg",
-        path: process.cwd() + "/public/hero-image.jpg",
-        cid: "logo",
-      },
-    ],
   });
 };
 

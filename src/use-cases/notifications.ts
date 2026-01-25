@@ -25,14 +25,16 @@ export class NotificationsUseCases {
       notification.headquartersId,
     );
 
-    for (const member of hqUsers) {
-      await sendNotificationCreatedEmail(
-        member.name,
-        member.email,
-        notification.title,
-        notification.message,
-      );
-    }
+    await Promise.allSettled(
+      hqUsers.map((member) =>
+        sendNotificationCreatedEmail(
+          member.name,
+          member.email,
+          notification.title,
+          notification.message,
+        ),
+      ),
+    );
 
     return newNotification;
   }
