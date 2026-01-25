@@ -39,7 +39,7 @@ export function MasterHeader() {
               <div className="px-2 py-6">
                 <div className="flex items-center gap-2 mb-8">
                   <Building2 className="h-6 w-6" />
-                  <SheetTitle className="font-bold text-lg">E-Government Portal</SheetTitle>
+                  <SheetTitle className="font-bold text-lg">Catastramite</SheetTitle>
                   <SheetDescription className="sr-only">Main navigation menu</SheetDescription>
                 </div>
                 <MasterNav />
@@ -55,8 +55,8 @@ export function MasterHeader() {
           <div className="flex items-center gap-3">
             <Building2 className="h-8 w-8 text-primary hidden md:block" />
             <div>
-              <h1 className="text-xl font-bold text-foreground">E-Government Portal</h1>
-              <p className="text-xs text-muted-foreground">Master Panel</p>
+              <h1 className="text-lg lg:text-xl font-bold text-foreground">Catastramite</h1>
+              <p className="text-[10px] lg:text-xs text-muted-foreground">Master Panel</p>
             </div>
           </div>
           <div className="hidden md:block ml-4 pl-4 border-l">

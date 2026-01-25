@@ -76,14 +76,14 @@ export default function MasterProceduresPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Procedures</h2>
           <p className="text-muted-foreground">Manage available procedures for slaves</p>
         </div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="w-full md:w-auto">
               <Plus className="mr-2 h-4 w-4" />
               New Procedure Type
             </Button>

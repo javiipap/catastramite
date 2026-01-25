@@ -23,7 +23,7 @@ export function HeadquartersHeader() {
         <div className="flex items-center gap-3">
           <Building2 className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-xl font-bold text-foreground">E-Government Portal</h1>
+            <h1 className="text-xl font-bold text-foreground">Catastramite</h1>
             <p className="text-xs text-muted-foreground">Headquarters Selection</p>
           </div>
         </div>

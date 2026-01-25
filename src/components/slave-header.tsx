@@ -41,7 +41,7 @@ export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
               <div className="px-2 py-6">
                 <div className="flex items-center gap-2 mb-8 px-2">
                   <Building2 className="h-6 w-6 text-primary" />
-                  <span className="font-bold text-lg">E-Government Portal</span>
+                  <span className="font-bold text-lg">Catastramite</span>
                 </div>
                 <SlaveNav headquartersId={headquartersId} />
                 <div className="mt-8 pt-6 border-t">
@@ -56,7 +56,7 @@ export function SlaveHeader({ headquartersId }: SlaveHeaderProps) {
           <div className="flex items-center gap-3">
             <Building2 className="h-8 w-8 text-primary hidden md:block" />
             <div>
-              <h1 className="text-xl font-bold text-foreground">E-Government Portal</h1>
+              <h1 className="text-xl font-bold text-foreground">Catastramite</h1>
               <p className="text-xs text-muted-foreground">Slave Portal</p>
             </div>
           </div>

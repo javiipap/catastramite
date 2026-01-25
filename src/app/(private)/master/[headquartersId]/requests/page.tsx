@@ -72,14 +72,14 @@ export default function MasterRequestsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Requests</h2>
           <p className="text-muted-foreground">Manage and review all submitted requests</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full md:w-auto">
           <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full md:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -108,7 +108,7 @@ export default function MasterRequestsPage() {
           {filteredRequests.map((request) => (
             <Card key={request.requestId} className="hover:shadow-md transition-shadow">
               <CardHeader>
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col md:flex-row items-start justify-between gap-2 md:gap-0">
                   <div className="flex-1">
                     <CardTitle className="text-lg">{request.procedureName}</CardTitle>
                     <CardDescription>
@@ -127,7 +127,7 @@ export default function MasterRequestsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button variant="outline" size="sm" onClick={() => setSelectedRequest(request)}>
                     View Details
                   </Button>

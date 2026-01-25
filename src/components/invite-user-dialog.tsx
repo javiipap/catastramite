@@ -27,9 +27,10 @@ import { toast } from "sonner";
 interface InviteUserDialogProps {
   headquartersId: string;
   icon?: React.ReactNode;
+  className?: string; // Add className prop
 }
 
-export function InviteUserDialog({ headquartersId, icon }: InviteUserDialogProps) {
+export function InviteUserDialog({ headquartersId, icon, className }: InviteUserDialogProps) {
   const [role, setRole] = useState("slave");
   const [inviteLink, setInviteLink] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +64,7 @@ export function InviteUserDialog({ headquartersId, icon }: InviteUserDialogProps
       if (!open) resetState();
     }}>
       <DialogTrigger asChild>
-        <Button variant="secondary">
+        <Button variant="secondary" className={className}>
           {icon ? icon :
             <>
               <UserPlus className="mr-2 h-4 w-4" />
