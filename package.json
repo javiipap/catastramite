@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "lint": "eslint",
-    "deploy": "sst deploy --stage=prod"
+    "deploy": "sst deploy --stage=prod",
+    "build": "next build"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.966.0",
