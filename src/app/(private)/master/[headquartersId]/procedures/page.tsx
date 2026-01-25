@@ -121,15 +121,15 @@ export default function MasterProceduresPage() {
                 </div>
 
                 <div className="border rounded-lg p-4 space-y-3 bg-muted/30">
-                  <div className="grid grid-cols-12 gap-2">
-                    <div className="col-span-5">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
+                    <div className="col-span-1 md:col-span-12 lg:col-span-5">
                       <Input
                         placeholder="Field name"
                         value={newField.name}
                         onChange={(e) => setNewField({ ...newField, name: e.target.value })}
                       />
                     </div>
-                    <div className="col-span-4">
+                    <div className="col-span-1 md:col-span-8 lg:col-span-4">
                       <Select
                         value={newField.type}
                         onValueChange={(value) =>
@@ -148,7 +148,7 @@ export default function MasterProceduresPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="col-span-3">
+                    <div className="col-span-1 md:col-span-4 lg:col-span-3">
                       <Button onClick={handleAddField} className="w-full" size="sm">
                         <Plus className="h-4 w-4 mr-1" />
                         Add
