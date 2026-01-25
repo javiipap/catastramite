@@ -19,7 +19,7 @@ const fetcher = async (params: { headquartersId: string }) => {
   }
 
   return {
-    headquarters: headquarters.data as Headquarters,
+    data: headquarters.data as Headquarters,
     serverError: headquarters.serverError,
     validationErrors: headquarters.validationErrors,
   }
@@ -35,6 +35,7 @@ export default async function MasterLayout({
   params: Promise<{ headquartersId: string }>
 }) {
   const { headquartersId } = await params;
+
   return (
     <MasterGuard headquartersId={headquartersId}>
       <DataProvider params={params}>

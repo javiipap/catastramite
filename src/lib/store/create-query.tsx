@@ -56,7 +56,7 @@ export function createQueryStore<TData, TArgs extends {} = {}, TQuery = undefine
     const query = useQuery({
       queryKey: [...options.baseQueryKey, ...queryKeyArgs],
       queryFn: () => options.clientFetcher(args as TArgs, queryOptions),
-      initialData: initialData,
+      initialData,
       staleTime: 1000 * 60 * 5,
       placeholderData: keepPreviousData,
     });

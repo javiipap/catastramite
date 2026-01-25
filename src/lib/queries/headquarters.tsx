@@ -29,7 +29,6 @@ export const { Provider: HeadquartersProvider, useStore: useHeadquartersStore } 
     clientFetcher: async ({ headquartersId }) => {
       const result = await getHeadquartersAction({ headquartersId });
       if (!result?.data) {
-        // redirect to /headquarters
         throw new Error('Headquarters not found');
       }
 

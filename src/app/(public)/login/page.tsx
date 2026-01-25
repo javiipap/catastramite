@@ -23,12 +23,7 @@ export default async function LoginPage({
       redirect(redirectUrl);
     }
 
-    if (session.authorized && session.subject.age) {
-      redirect(`/headquarters`);
-    }
-
-    const validRedirectUrl = isValidRedirect(redirectUrl) ? redirectUrl : undefined;
-    redirect(validRedirectUrl ?? '/headquarters');
+    redirect('/headquarters');
   }
 
   return (
