@@ -83,24 +83,30 @@ export default function HomePage() {
           <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
               <div className="flex flex-col gap-4 p-6 bg-background rounded-2xl border hover:shadow-lg transition-shadow">
-                <div className="h-12 w-12 rounded-lg bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center text-pink-600 dark:text-pink-400">
-                  <Scroll className="h-6 w-6" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-lg bg-pink-100 dark:bg-pink-900/20 flex items-center justify-center text-pink-600 dark:text-pink-400">
+                    <Scroll className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Rapid Processing</h3>
                 </div>
-                <h3 className="text-xl font-semibold">Rapid Processing</h3>
                 <p className="text-muted-foreground">Submit permission requests for dates, purchases, or freetime and get approval in record time.</p>
               </div>
               <div className="flex flex-col gap-4 p-6 bg-background rounded-2xl border hover:shadow-lg transition-shadow">
-                <div className="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                  <Lock className="h-6 w-6" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                    <Lock className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Total Privacy</h3>
                 </div>
-                <h3 className="text-xl font-semibold">Total Privacy</h3>
                 <p className="text-muted-foreground">Your secrets, contracts, and disciplinary records are locked away from prying eyes.</p>
               </div>
               <div className="flex flex-col gap-4 p-6 bg-background rounded-2xl border hover:shadow-lg transition-shadow">
-                <div className="h-12 w-12 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400">
-                  <Gavel className="h-6 w-6" />
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400">
+                    <Gavel className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Strict Enforcement</h3>
                 </div>
-                <h3 className="text-xl font-semibold">Strict Enforcement</h3>
                 <p className="text-muted-foreground">Never miss a deadline or duty. Our system automatically issues demerits for non-compliance.</p>
               </div>
             </div>
