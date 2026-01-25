@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
 import { InviteUserDialog } from '@/components/invite-user-dialog'
 import { stringToColor } from '@/lib/colors'
+import { HeadquartersCard } from './headquarters-card'
 
 export default function HeadquartersPage() {
   const { data: headquarters } = useHeadquartersListStore()
@@ -46,15 +47,7 @@ export default function HeadquartersPage() {
     }
   }
 
-  const handleEnterHeadquarters = (headquartersId: string) => {
-    // Check role to determine destination
-    const relation = headquarters.find(h => h.headquartersId === headquartersId)?.userHeadquarters?.find(uh => uh.userId === subject?.userId)
-    if (relation?.role === 'master') {
-      router.push(`/master/${headquartersId}/dashboard`)
-    } else {
-      router.push(`/slave/${headquartersId}/dashboard`)
-    }
-  }
+
 
   if (!subject) return null
 
@@ -125,44 +118,10 @@ export default function HeadquartersPage() {
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {headquarters.map((h) => {
-            const relation = h.userHeadquarters?.find(uh => uh.userId === subject.userId)
-            const role = relation?.role || 'slave' // Fallback to slave if logic fails but relation should exist
-            const isMaster = role === 'master'
-
-            return (
-              <Card key={h.headquartersId} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
-                <div className={`h-2 w-full bg-gradient-to-r ${stringToColor(h.name)}`} />
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="line-clamp-1 text-xl">{h.name}</CardTitle>
-                    {isMaster ? (
-                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">Master</span>
-                    ) : (
-                      <span className="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium">User</span>
-                    )}
-                  </div>
-                  <CardDescription>Electronic Headquarters</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                  <div className="text-sm text-muted-foreground space-y-2">
-                    <p className="flex items-center gap-2">
-                      <Building2 className="h-4 w-4" />
-                      ID: <span className="font-mono text-xs">{h.headquartersId.substring(0, 8)}...</span>
-                    </p>
-                  </div>
-                </CardContent>
-                <div className="p-6 pt-0 mt-auto flex gap-2">
-                  <Button className={`flex-1 bg-gradient-to-r text-background ${stringToColor(h.name)}`} onClick={() => handleEnterHeadquarters(h.headquartersId)}>
-                    Access <ExternalLink className="ml-2 h-3 w-3" />
-                  </Button>
-                  {isMaster && (
-                    <InviteUserDialog headquartersId={h.headquartersId} icon={<LinkIcon className="h-4 w-4" />} />
-                  )}
-                </div>
-              </Card>
-            )
-          })}
+          {headquarters.map((h) => (
+            <HeadquartersCard key={h.headquartersId} headquarters={h} currentUser={subject} />
+          )
+          )}
         </div>
       )}
     </div>
