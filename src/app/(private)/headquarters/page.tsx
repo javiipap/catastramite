@@ -22,6 +22,7 @@ import {
 import { useRouter } from "next/navigation"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
 import { InviteUserDialog } from '@/components/invite-user-dialog'
+import { stringToColor } from '@/lib/colors'
 
 export default function HeadquartersPage() {
   const { data: headquarters } = useHeadquartersListStore()
@@ -131,7 +132,7 @@ export default function HeadquartersPage() {
 
             return (
               <Card key={h.headquartersId} className="flex flex-col overflow-hidden hover:shadow-md transition-shadow">
-                <div className={`h-2 w-full ${isMaster ? 'bg-primary' : 'bg-secondary'}`} />
+                <div className={`h-2 w-full bg-gradient-to-r ${stringToColor(h.name)}`} />
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="line-clamp-1 text-xl">{h.name}</CardTitle>
@@ -152,7 +153,7 @@ export default function HeadquartersPage() {
                   </div>
                 </CardContent>
                 <div className="p-6 pt-0 mt-auto flex gap-2">
-                  <Button className="flex-1" onClick={() => handleEnterHeadquarters(h.headquartersId)}>
+                  <Button className={`flex-1 bg-gradient-to-r text-background ${stringToColor(h.name)}`} onClick={() => handleEnterHeadquarters(h.headquartersId)}>
                     Access <ExternalLink className="ml-2 h-3 w-3" />
                   </Button>
                   {isMaster && (
