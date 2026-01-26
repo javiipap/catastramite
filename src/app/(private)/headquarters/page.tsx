@@ -47,10 +47,6 @@ export default function HeadquartersPage() {
     }
   }
 
-
-
-  if (!subject) return null
-
   return (
     <div className="py-10 mx-auto p-6 container">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
