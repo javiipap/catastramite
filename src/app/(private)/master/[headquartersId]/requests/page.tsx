@@ -228,7 +228,7 @@ export default function MasterRequestsPage() {
                 </div>
               )}
 
-              <div className="border-t pt-4">
+              <div className="border-t pt-4 overflow-hidden">
                 <h4 className="font-medium mb-3">Form Data</h4>
                 <div className="space-y-3">
                   {Object.entries(selectedRequest.data).map(([key, value]) => {
@@ -246,7 +246,7 @@ export default function MasterRequestsPage() {
                               href={value as string}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-primary underline hover:text-primary/80"
+                              className="text-primary underline overflow-hidden text-ellipsis hover:text-primary/80"
                             >
                               {value as string}
                             </a>

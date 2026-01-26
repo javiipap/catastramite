@@ -44,12 +44,12 @@ export function HeadquartersSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2 min-w-[200px] justify-between bg-transparent">
-          <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4" />
-            <span className="text-sm font-medium">{currentHeadquarters ? currentHeadquarters.name : "Select Headquarters"}</span>
+        <Button variant="outline" className="gap-2 w-full md:w-[200px] justify-between bg-transparent">
+          <div className="flex items-center gap-2 min-w-0">
+            <Building2 className="h-4 w-4 shrink-0" />
+            <span className="text-sm font-medium truncate">{currentHeadquarters ? currentHeadquarters.name : "Select Headquarters"}</span>
           </div>
-          <ChevronDown className="h-4 w-4 opacity-50" />
+          <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[280px]">
