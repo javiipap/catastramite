@@ -116,8 +116,7 @@ export default function HeadquartersPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {headquarters.map((h) => (
             <HeadquartersCard key={h.headquartersId} headquarters={h} currentUser={subject} />
-          )
-          )}
+          ))}
         </div>
       )}
     </div>

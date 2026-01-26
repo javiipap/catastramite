@@ -19,3 +19,12 @@ export const DEFAULT_PROCEDURE_TEMPLATE = {
     },
   ] as FormField[],
 };
+
+export const FIELD_LABELS = {
+  text: "Text",
+  number: "Number",
+  date: "Date",
+  email: "Email",
+  textarea: "Text Area",
+  link: "Link",
+};

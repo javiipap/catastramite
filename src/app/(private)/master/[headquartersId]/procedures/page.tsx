@@ -4,9 +4,9 @@ import { useState } from "react"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { useProceduresStore } from "@/lib/queries/procedures"
 import { useAuth } from "@/lib/auth/context"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 import type { FormField } from "@/lib/types"
 import { useCreateProcedure } from "@/lib/mutations/procedures"
+import ProcedureField from '@/app/(private)/master/[headquartersId]/procedures/procedure-field'
+import { FIELD_LABELS } from '@/lib/constants/procedures'
+import ProcedureCard from '@/app/(private)/master/[headquartersId]/procedures/procedure-card'
 
 export default function MasterProceduresPage() {
   const { data: headquarters } = useHeadquartersStore()
@@ -140,12 +143,11 @@ export default function MasterProceduresPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="text">Text</SelectItem>
-                          <SelectItem value="number">Number</SelectItem>
-                          <SelectItem value="date">Date</SelectItem>
-                          <SelectItem value="email">Email</SelectItem>
-                          <SelectItem value="textarea">Text Area</SelectItem>
-                          <SelectItem value="link">Link</SelectItem>
+                          {Object.entries(FIELD_LABELS).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
@@ -160,15 +162,7 @@ export default function MasterProceduresPage() {
                   {fields.length > 0 && (
                     <div className="space-y-2 pt-2 border-t">
                       {fields.map((field, index) => (
-                        <div key={`procedure_${headquarters.headquartersId}-${index}`} className="flex items-center justify-between p-2 rounded bg-background border">
-                          <div className="flex-1">
-                            <span className="text-sm font-medium">{field.name}</span>
-                            <span className="text-xs text-muted-foreground ml-2">({field.type})</span>
-                          </div>
-                          <Button variant="ghost" size="sm" onClick={() => handleRemoveField(index)}>
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
+                        <ProcedureField key={index} field={field} index={index} handleRemoveField={handleRemoveField} />
                       ))}
                     </div>
                   )}
@@ -200,31 +194,7 @@ export default function MasterProceduresPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {headquartersProcedures.map((procedure) => (
-            <Card key={procedure.procedureId} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-lg">{procedure.name}</CardTitle>
-                <CardDescription className="line-clamp-2">{procedure.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Form fields:</span>
-                    <span className="font-medium">{procedure.fields.length}</span>
-                  </div>
-                  <div className="space-y-1">
-                    {procedure.fields.slice(0, 3).map((field) => (
-                      <div key={field.id} className="text-xs text-muted-foreground flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-primary"></span>
-                        {field.name} ({field.type})
-                      </div>
-                    ))}
-                    {procedure.fields.length > 3 && (
-                      <p className="text-xs text-muted-foreground italic">+{procedure.fields.length - 3} more...</p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ProcedureCard key={procedure.procedureId} procedure={procedure} />
           ))}
         </div>
       )}
