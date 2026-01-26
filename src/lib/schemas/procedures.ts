@@ -1,9 +1,17 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const formFieldSchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.enum(['text', 'number', 'date', 'email', 'textarea', 'select']),
+  type: z.enum([
+    "text",
+    "number",
+    "date",
+    "email",
+    "textarea",
+    "select",
+    "link",
+  ]),
   required: z.boolean(),
   options: z.array(z.string()).optional(),
 });

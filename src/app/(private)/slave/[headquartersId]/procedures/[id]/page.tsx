@@ -105,7 +105,15 @@ export default function SlaveProcedurePage() {
                 ) : (
                   <Input
                     id={field.id}
-                    type={field.type === "number" ? "number" : field.type === "date" ? "date" : field.type}
+                    type={
+                      field.type === "number"
+                        ? "number"
+                        : field.type === "date"
+                          ? "date"
+                          : field.type === "link"
+                            ? "url"
+                            : field.type
+                    }
                     value={formData[field.name] || ""}
                     onChange={(e) => handleChange(field.name, e.target.value)}
                     required={field.required}

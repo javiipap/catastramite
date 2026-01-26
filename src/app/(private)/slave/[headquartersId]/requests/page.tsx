@@ -1,6 +1,7 @@
 "use client"
 
 import { useRequestsStore } from "@/lib/queries/requests"
+import { useProceduresStore } from "@/lib/queries/procedures"
 import { useAuth } from "@/lib/auth/context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -13,6 +14,7 @@ import { FileText, MessageSquare } from "lucide-react"
 
 export default function SlaveRequestsPage() {
   const { data: requests } = useRequestsStore()
+  const { data: procedures } = useProceduresStore()
   const { subject: user } = useAuth()
   const [filter, setFilter] = useState<string>("all")
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
@@ -151,12 +153,30 @@ export default function SlaveRequestsPage() {
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Submitted Information</h4>
                 <div className="space-y-3">
-                  {Object.entries(selectedRequest.data).map(([key, value]) => (
-                    <div key={key} className="grid grid-cols-3 gap-2 text-sm">
-                      <span className="font-medium text-muted-foreground">{key}:</span>
-                      <span className="col-span-2">{value as string}</span>
-                    </div>
-                  ))}
+                  {Object.entries(selectedRequest.data).map(([key, value]) => {
+                    const procedure = procedures.find(p => p.procedureId === selectedRequest.procedureId);
+                    const field = procedure?.fields.find(f => f.name === key);
+
+                    return (
+                      <div key={key} className="grid grid-cols-3 gap-2 text-sm">
+                        <span className="font-medium text-muted-foreground">{key}:</span>
+                        <span className="col-span-2">
+                          {field?.type === "link" ? (
+                            <a
+                              href={value as string}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary underline hover:text-primary/80"
+                            >
+                              {value as string}
+                            </a>
+                          ) : (
+                            value as string
+                          )}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 

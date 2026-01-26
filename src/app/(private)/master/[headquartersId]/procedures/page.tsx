@@ -145,6 +145,7 @@ export default function MasterProceduresPage() {
                           <SelectItem value="date">Date</SelectItem>
                           <SelectItem value="email">Email</SelectItem>
                           <SelectItem value="textarea">Text Area</SelectItem>
+                          <SelectItem value="link">Link</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

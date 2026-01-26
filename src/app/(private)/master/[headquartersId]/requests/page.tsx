@@ -2,6 +2,7 @@
 
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { useRequestsStore } from "@/lib/queries/requests"
+import { useProceduresStore } from "@/lib/queries/procedures"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +18,7 @@ import { Label } from "@/components/ui/label"
 export default function MasterRequestsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: requests } = useRequestsStore()
+  const { data: procedures } = useProceduresStore()
 
   const { subject: user } = useAuth()
 
@@ -229,12 +231,32 @@ export default function MasterRequestsPage() {
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Form Data</h4>
                 <div className="space-y-3">
-                  {Object.entries(selectedRequest.data).map(([key, value]) => (
-                    <div key={key} className="grid grid-cols-3 gap-2 text-sm">
-                      <span className="font-medium text-muted-foreground">{key}:</span>
-                      <span className="col-span-2">{value as string}</span>
-                    </div>
-                  ))}
+                  {Object.entries(selectedRequest.data).map(([key, value]) => {
+                    const procedure = requests.find(r => r.requestId === selectedRequest.requestId)?.procedureId
+                      ? procedures.find(p => p.procedureId === selectedRequest.procedureId)
+                      : null;
+                    const field = procedure?.fields.find(f => f.name === key);
+
+                    return (
+                      <div key={key} className="grid grid-cols-3 gap-2 text-sm">
+                        <span className="font-medium text-muted-foreground">{key}:</span>
+                        <span className="col-span-2">
+                          {field?.type === "link" ? (
+                            <a
+                              href={value as string}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary underline hover:text-primary/80"
+                            >
+                              {value as string}
+                            </a>
+                          ) : (
+                            value as string
+                          )}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
