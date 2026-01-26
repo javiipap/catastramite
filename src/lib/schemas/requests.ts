@@ -15,7 +15,13 @@ export const requestSchema = z.object({
   applicantId: z.string(),
   applicantName: z.string(),
   status: requestStatusSchema,
-  data: z.record(z.string(), z.unknown()),
+  data: z.array(
+    z.object({
+      fieldName: z.string(),
+      fieldValue: z.unknown(),
+      fieldType: z.string(),
+    }),
+  ),
   feedback: z.string().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
