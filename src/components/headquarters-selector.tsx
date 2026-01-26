@@ -14,13 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useQuery } from "@tanstack/react-query"
 import { getUserHeadquartersObjectsAction } from "@/lib/actions/headquarters"
-import { useParams, useRouter, usePathname } from "next/navigation"
+import { useParams } from "next/navigation"
+import HeadquartersMenuItem from '@/components/headquarters-menu-item'
 
 export function HeadquartersSelector() {
   const { subject: user } = useAuth()
   const params = useParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   // Get current headquartersId from URL params if available
   const currentHeadquartersId = params?.headquartersId as string | undefined
@@ -56,27 +55,7 @@ export function HeadquartersSelector() {
         <DropdownMenuLabel>My Headquarters</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {userHeadquarters.map((headquarters) => (
-          <DropdownMenuItem
-            key={headquarters.headquartersId}
-            className="gap-2"
-            onSelect={() => {
-              // Determine destination based on current context
-              if (pathname?.startsWith("/master")) {
-                router.push(`/master/${headquarters.headquartersId}/dashboard`)
-              } else if (pathname?.startsWith("/slave")) {
-                router.push(`/slave/${headquarters.headquartersId}/dashboard`)
-              } else {
-                // Default fallback
-                router.push(`/master/${headquarters.headquartersId}/dashboard`)
-              }
-            }}
-          >
-            <Building2 className="h-4 w-4" />
-            <div className="flex-1">
-              <div className="font-medium">{headquarters.name}</div>
-            </div>
-            {currentHeadquartersId === headquarters.headquartersId && <Check className="h-4 w-4 text-primary" />}
-          </DropdownMenuItem>
+          <HeadquartersMenuItem key={headquarters.headquartersId} headquarters={headquarters} />
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
