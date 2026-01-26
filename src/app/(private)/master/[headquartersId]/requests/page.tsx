@@ -8,16 +8,7 @@ import type { Request } from "@/lib/types"
 import DetailsDialog from '@/app/(private)/master/[headquartersId]/requests/details-dialog'
 import ConfirmationDialog from '@/app/(private)/master/[headquartersId]/requests/confirmation-dialog'
 import RequestCard from '@/app/(private)/master/[headquartersId]/requests/request-card'
-
-export const getStatusBadge = (status: Request["status"]) => {
-  const styles = {
-    pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-    in_review: "bg-orange-100 text-orange-800 hover:bg-orange-200",
-    approved: "bg-green-100 text-green-800 hover:bg-green-200",
-    rejected: "bg-red-100 text-red-800 hover:bg-red-200",
-  }
-  return styles[status]
-}
+import { REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
 
 export type ActionType = "approved" | "rejected";
 
@@ -51,11 +42,11 @@ export default function MasterRequestsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_review">In Review</SelectItem>
-              <SelectItem value="approved">Approved</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
+              {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

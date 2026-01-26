@@ -4,7 +4,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { type Request } from '@/lib/types';
-import { ActionType, getStatusBadge } from '@/app/(private)/master/[headquartersId]/requests/page';
+import { ActionType } from '@/app/(private)/master/[headquartersId]/requests/page';
+import { REQUEST_STATUS_BADGES, REQUEST_STATUS_LABELS } from '@/lib/constants/requests';
+import { stringifyDate } from '@/lib/utils';
 
 interface Props {
   selectedRequest: Request | null;
@@ -34,33 +36,21 @@ export default function DetailsDialog({
               <div>
                 <span className="font-medium">Status:</span>
                 <p>
-                  <Badge className={getStatusBadge(selectedRequest.status)}>
-                    {selectedRequest.status.replace("_", " ")}
+                  <Badge className={REQUEST_STATUS_BADGES[selectedRequest.status]}>
+                    {REQUEST_STATUS_LABELS[selectedRequest.status]}
                   </Badge>
                 </p>
               </div>
               <div>
                 <span className="font-medium">Submission Date:</span>
                 <p className="text-muted-foreground">
-                  {new Date(selectedRequest.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {stringifyDate(selectedRequest.createdAt)}
                 </p>
               </div>
               <div>
                 <span className="font-medium">Last Updated:</span>
                 <p className="text-muted-foreground">
-                  {new Date(selectedRequest.updatedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {stringifyDate(selectedRequest.updatedAt)}
                 </p>
               </div>
             </div>
@@ -75,27 +65,25 @@ export default function DetailsDialog({
             <div className="border-t pt-4 overflow-hidden">
               <h4 className="font-medium mb-3">Form Data</h4>
               <div className="space-y-3">
-                {Array.isArray(selectedRequest.data) ? (
-                  selectedRequest.data.map((item) => (
-                    <div key={item.fieldName} className="grid grid-cols-3 gap-2 text-sm">
-                      <span className="font-medium text-muted-foreground">{item.fieldName}:</span>
-                      <span className="col-span-2">
-                        {item.fieldType === "link" ? (
-                          <a
-                            href={item.fieldValue as string}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary underline overflow-hidden text-ellipsis hover:text-primary/80"
-                          >
-                            {item.fieldValue as string}
-                          </a>
-                        ) : (
-                          item.fieldValue as string
-                        )}
-                      </span>
-                    </div>
-                  ))
-                ) : ''}
+                {selectedRequest.data.map((item) => (
+                  <div key={item.fieldName} className="grid grid-cols-3 gap-2 text-sm">
+                    <span className="font-medium text-muted-foreground">{item.fieldName}:</span>
+                    <span className="col-span-2">
+                      {item.fieldType === "link" ? (
+                        <a
+                          href={item.fieldValue as string}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary underline overflow-hidden text-ellipsis hover:text-primary/80"
+                        >
+                          {item.fieldValue as string}
+                        </a>
+                      ) : (
+                        item.fieldValue as string
+                      )}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 

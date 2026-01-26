@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { type Request } from '@/lib/types'
-import { type ActionType, getStatusBadge } from '@/app/(private)/master/[headquartersId]/requests/page'
+import { type ActionType } from '@/app/(private)/master/[headquartersId]/requests/page'
 import { useHeadquartersStore } from '@/lib/queries/headquarters'
 import { useUpdateRequestStatus } from '@/lib/mutations/requests'
+import { REQUEST_STATUS_BADGES, REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
 
 interface Props {
   request: Request;
@@ -41,8 +42,8 @@ export default function RequestCard({ request, setSelectedRequest, handleActionC
               })}
             </CardDescription>
           </div>
-          <Badge className={getStatusBadge(request.status)}>
-            {request.status.replace("_", " ")}
+          <Badge className={REQUEST_STATUS_BADGES[request.status]}>
+            {REQUEST_STATUS_LABELS[request.status]}
           </Badge>
         </div>
       </CardHeader>
