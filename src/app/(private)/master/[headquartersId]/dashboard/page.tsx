@@ -1,8 +1,11 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, FolderOpen, Clock, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
+import { FileText, FolderOpen, Clock, CheckCircle2, XCircle, Eye } from "lucide-react"
 import { useMasterDashboardStore } from '@/lib/queries/dashboard'
+import { StatCard } from "./stat-card"
+import { DashboardList } from "./dashboard-list"
+import { DashboardListElement } from "./dashboard-list-element"
+import { Badge } from '@/components/ui/badge'
 
 export default function MasterDashboardPage() {
   const store = useMasterDashboardStore();
@@ -19,131 +22,159 @@ export default function MasterDashboardPage() {
       value: headquartersProcedures.length,
       description: "Available procedures",
       icon: FileText,
-      color: "text-blue-600",
+      color: "text-blue-500",
+      bg: "bg-blue-500/5",
+      iconBg: "bg-blue-500/10",
+      borderColor: "border-blue-500/20"
     },
     {
       title: "Total Requests",
       value: headquartersRequests.length,
       description: "All requests",
       icon: FolderOpen,
-      color: "text-gray-600",
+      color: "text-slate-500",
+      bg: "bg-slate-500/5",
+      iconBg: "bg-slate-500/10",
+      borderColor: "border-slate-500/20"
     },
     {
       title: "Pending",
       value: pending,
       description: "Waiting for review",
       icon: Clock,
-      color: "text-yellow-600",
+      color: "text-amber-500",
+      bg: "bg-amber-500/5",
+      iconBg: "bg-amber-500/10",
+      borderColor: "border-amber-500/20"
     },
     {
       title: "In Review",
       value: reviewing,
       description: "Being processed",
-      icon: AlertCircle,
-      color: "text-orange-600",
+      icon: Eye,
+      color: "text-blue-400",
+      bg: "bg-blue-400/5",
+      iconBg: "bg-blue-400/10",
+      borderColor: "border-blue-400/20"
     },
     {
       title: "Approved",
       value: approved,
       description: "Requests approved",
       icon: CheckCircle2,
-      color: "text-green-600",
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/5",
+      iconBg: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/20"
     },
     {
       title: "Rejected",
       value: rejected,
       description: "Requests rejected",
       icon: XCircle,
-      color: "text-red-600",
+      color: "text-red-500",
+      bg: "bg-red-500/5",
+      iconBg: "bg-red-500/10",
+      borderColor: "border-red-500/20"
     },
   ]
 
+  const recentRequests = headquartersRequests.slice(0, 5).reverse();
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground">Summary for {currentHeadquarters?.name || "the headquarters"}</p>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {stats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground">{stat.description}</p>
-              </CardContent>
-            </Card>
-          )
-        })}
+        {stats.map((stat) => (
+          <StatCard
+            key={stat.title}
+            {...stat}
+          />
+        ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Requests</CardTitle>
-            <CardDescription>Latest submitted requests</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {headquartersRequests.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No requests yet</p>
-            ) : (
-              <div className="space-y-3">
-                {headquartersRequests
-                  .slice(0, 5)
-                  .reverse()
-                  .map((request) => (
-                    <div key={request.requestId} className="flex items-center justify-between border-b pb-2">
-                      <div>
-                        <p className="text-sm font-medium">{request.procedureName}</p>
-                        <p className="text-xs text-muted-foreground">{request.applicantName}</p>
-                      </div>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${request.status === "pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : request.status === "in_review"
-                            ? "bg-orange-100 text-orange-800"
-                            : request.status === "approved"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                      >
-                        {request.status.replace("_", " ")}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Active Procedures</CardTitle>
-            <CardDescription>Procedures available in the system</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {headquartersProcedures.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No procedures configured</p>
-            ) : (
-              <div className="space-y-3">
-                {headquartersProcedures.map((procedure) => (
-                  <div key={procedure.procedureId} className="flex items-start justify-between border-b pb-2">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{procedure.name}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{procedure.description}</p>
-                    </div>
-                    <span className="text-xs text-muted-foreground ml-2">{procedure.fields.length} fields</span>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <DashboardList
+          title="Recent Requests"
+          description="Latest submitted requests"
+          actionLink={{
+            href: `/master/${currentHeadquarters?.headquartersId}/requests`,
+            label: "View all"
+          }}
+          isEmpty={recentRequests.length === 0}
+          emptyState={{
+            icon: FolderOpen,
+            text: "No requests yet"
+          }}
+        >
+          {recentRequests.map((request) => (
+            <DashboardListElement
+              key={request.requestId}
+              icon={FileText}
+              iconColor="text-blue-500"
+              iconBg="bg-blue-500/10"
+              title={request.procedureName}
+              subtitle={`${request.requestId.slice(0, 7)} • ${request.applicantName}`}
+              endContent={
+                <>
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(request.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  <span
+                    className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${request.status === "pending"
+                      ? "bg-amber-500/10 text-amber-500"
+                      : request.status === "in_review"
+                        ? "bg-blue-500/10 text-blue-500"
+                        : request.status === "approved"
+                          ? "bg-emerald-500/10 text-emerald-500"
+                          : "bg-red-500/10 text-red-500"
+                      }`}
+                  >
+                    {request.status === "in_review" ? "In Review" :
+                      request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                  </span>
+                </>
+              }
+            />
+          ))}
+        </DashboardList>
+
+        <DashboardList
+          title="Active Procedures"
+          description="Procedures available in the system"
+          actionLink={{
+            href: `/master/${currentHeadquarters?.headquartersId}/procedures`,
+            label: "Manage"
+          }}
+          isEmpty={headquartersProcedures.length === 0}
+          emptyState={{
+            icon: FileText,
+            text: "No procedures configured"
+          }}
+        >
+          {headquartersProcedures.map((procedure) => (
+            <DashboardListElement
+              key={procedure.procedureId}
+              icon={FileText}
+              iconColor="text-emerald-500"
+              iconBg="bg-emerald-500/10"
+              title={procedure.name}
+              subtitle={
+                <span className="line-clamp-1 max-w-[200px]">
+                  {procedure.description}
+                </span>
+              }
+              endContent={
+                <Badge variant="outline">
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {procedure.fields.length} field{procedure.fields.length !== 1 ? 's' : ''}
+                  </span>
+                </Badge>
+              }
+            />
+          ))}
+        </DashboardList>
       </div>
     </div>
   )
