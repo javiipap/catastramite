@@ -1,15 +1,11 @@
 "use client"
 
 import { useProceduresStore } from "@/lib/queries/procedures"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { useParams } from "next/navigation"
+import { Card, CardContent } from "@/components/ui/card"
+import ProcedureCard from '@/app/(private)/slave/[headquartersId]/procedures/procedure-card'
 
 export default function SlaveProceduresPage() {
   const { data: procedures } = useProceduresStore()
-  const params = useParams()
-  const headquartersId = params.headquartersId
 
   return (
     <div className="space-y-6">
@@ -27,20 +23,7 @@ export default function SlaveProceduresPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {procedures.map((procedure) => (
-            <Card key={procedure.procedureId} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle>{procedure.name}</CardTitle>
-                <CardDescription className="line-clamp-2">{procedure.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-sm text-muted-foreground">
-                  <p>Requirements: {procedure.fields.length} fields to complete</p>
-                </div>
-                <Button className="w-full" asChild>
-                  <Link href={`/slave/${headquartersId}/procedures/${procedure.procedureId}`}>Start Procedure</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            <ProcedureCard key={procedure.procedureId} procedure={procedure} />
           ))}
         </div>
       )}
