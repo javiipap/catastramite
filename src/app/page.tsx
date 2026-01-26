@@ -21,17 +21,9 @@ export default function HomePage() {
           </div>
           <span className="font-bold text-xl tracking-tight">Catastramite</span>
         </div>
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link href="#features" className="hover:text-foreground transition-colors">Protocols</Link>
-          <Link href="#testimonials" className="hover:text-foreground transition-colors">Testimonials</Link>
-          <Link href="#pricing" className="hover:text-foreground transition-colors">Tributes</Link>
-        </nav>
         <div className="flex items-center gap-4">
           <Link href="/login">
-            <Button variant="ghost" size="sm">Member Login</Button>
-          </Link>
-          <Link href="/login">
-            <Button size="sm" className="hidden sm:flex">Begin Registration</Button>
+            <Button size="sm" className="hidden sm:flex">Login</Button>
           </Link>
         </div>
       </header>

@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Providers from '@/lib/providers';
 import { cn } from '@/lib/utils';
+import NextTopLoader from 'nextjs-toploader';
 
 const _geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 const _geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -47,6 +48,8 @@ export default async function RootLayout({
         _geistMono.variable
       )}>
         <Providers>
+          <NextTopLoader />
+
           {children}
         </Providers>
         {/* <Analytics /> */}
