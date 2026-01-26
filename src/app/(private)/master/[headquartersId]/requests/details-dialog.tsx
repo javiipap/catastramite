@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { type Request } from '@/lib/types';
 import { ActionType } from '@/app/(private)/master/[headquartersId]/requests/page';
-import { REQUEST_STATUS_BADGES, REQUEST_STATUS_LABELS } from '@/lib/constants/requests';
+import { STATUS_BADGES, STATUS_LABELS } from '@/lib/constants/requests';
 import { stringifyDate } from '@/lib/utils';
 
 interface Props {
@@ -36,8 +36,8 @@ export default function DetailsDialog({
               <div>
                 <span className="font-medium">Status:</span>
                 <p>
-                  <Badge className={REQUEST_STATUS_BADGES[selectedRequest.status]}>
-                    {REQUEST_STATUS_LABELS[selectedRequest.status]}
+                  <Badge className={STATUS_BADGES[selectedRequest.status]}>
+                    {STATUS_LABELS[selectedRequest.status]}
                   </Badge>
                 </p>
               </div>

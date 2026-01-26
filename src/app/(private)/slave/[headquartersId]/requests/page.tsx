@@ -10,7 +10,7 @@ import type { Request } from "@/lib/types"
 import { FileText } from "lucide-react"
 import RequestCard from "./request-card"
 import DetailsDialog from "./details-dialog"
-import { REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
+import { STATUS_LABELS } from '@/lib/constants/requests'
 
 export default function SlaveRequestsPage() {
   const { data: requests } = useRequestsStore()
@@ -34,7 +34,7 @@ export default function SlaveRequestsPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
+            {Object.entries(STATUS_LABELS).map(([value, label]) => (
               <SelectItem key={value} value={value}>
                 {label}
               </SelectItem>

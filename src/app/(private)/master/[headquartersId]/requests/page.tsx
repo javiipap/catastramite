@@ -8,7 +8,7 @@ import type { Request } from "@/lib/types"
 import DetailsDialog from '@/app/(private)/master/[headquartersId]/requests/details-dialog'
 import ConfirmationDialog from '@/app/(private)/master/[headquartersId]/requests/confirmation-dialog'
 import RequestCard from '@/app/(private)/master/[headquartersId]/requests/request-card'
-import { REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
+import { STATUS_LABELS } from '@/lib/constants/requests'
 
 export type ActionType = "approved" | "rejected";
 
@@ -42,7 +42,7 @@ export default function MasterRequestsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(REQUEST_STATUS_LABELS).map(([value, label]) => (
+              {Object.entries(STATUS_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
                 </SelectItem>

@@ -7,7 +7,7 @@ import { type Request } from '@/lib/types'
 import { type ActionType } from '@/app/(private)/master/[headquartersId]/requests/page'
 import { useHeadquartersStore } from '@/lib/queries/headquarters'
 import { useUpdateRequestStatus } from '@/lib/mutations/requests'
-import { REQUEST_STATUS_BADGES, REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
+import { STATUS_BADGES, STATUS_LABELS } from '@/lib/constants/requests'
 
 interface Props {
   request: Request;
@@ -42,8 +42,8 @@ export default function RequestCard({ request, setSelectedRequest, handleActionC
               })}
             </CardDescription>
           </div>
-          <Badge className={REQUEST_STATUS_BADGES[request.status]}>
-            {REQUEST_STATUS_LABELS[request.status]}
+          <Badge className={STATUS_BADGES[request.status]}>
+            {STATUS_LABELS[request.status]}
           </Badge>
         </div>
       </CardHeader>

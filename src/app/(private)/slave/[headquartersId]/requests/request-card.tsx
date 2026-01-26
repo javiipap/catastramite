@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import type { Request } from "@/lib/types"
 import { MessageSquare } from "lucide-react"
 import { getStatusBadge, stringifyDate } from "@/lib/utils"
-import { REQUEST_STATUS_LABELS } from '@/lib/constants/requests'
+import { STATUS_LABELS } from '@/lib/constants/requests'
 
 interface Props {
   request: Request
@@ -27,7 +27,7 @@ export default function RequestCard({ request, setSelectedRequest }: Props) {
             </CardDescription>
           </div>
           <Badge className={getStatusBadge(request.status)}>
-            {REQUEST_STATUS_LABELS[request.status]}
+            {STATUS_LABELS[request.status]}
           </Badge>
         </div>
       </CardHeader>
