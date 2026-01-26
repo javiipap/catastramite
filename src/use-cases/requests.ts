@@ -104,18 +104,14 @@ export class RequestsUseCases {
     );
 
     if (applicant) {
-      try {
-        await sendRequestStatusUpdatedEmail(
-          applicant.name,
-          applicant.email,
-          updatedRequest.procedureName,
-          updatedRequest.requestId,
-          status,
-          feedback,
-        );
-      } catch (error) {
-        console.error("Error sending email:", error);
-      }
+      await sendRequestStatusUpdatedEmail(
+        applicant.name,
+        applicant.email,
+        updatedRequest.procedureName,
+        updatedRequest.requestId,
+        status,
+        feedback,
+      );
     }
 
     return updatedRequest;

@@ -94,17 +94,25 @@ const sendMail = async (
   email: string,
   subject: string,
   html: string,
+  throwError: boolean = false,
 ) => {
   const transporter = createTransport({
     SES: { sesClient, SendEmailCommand },
   });
+  try {
+    await transporter.sendMail({
+      from: "Catastramite <info@catastramite.com>",
+      to: `${name} <${email}>`,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error("Error sending email");
 
-  await transporter.sendMail({
-    from: "Catastramite <info@catastramite.com>",
-    to: `${name} <${email}>`,
-    subject,
-    html,
-  });
+    if (throwError) {
+      throw error;
+    }
+  }
 };
 
 export const sendRequestCreatedEmail = async (
@@ -112,6 +120,7 @@ export const sendRequestCreatedEmail = async (
   toEmail: string,
   requestTitle: string,
   requestId: string,
+  throwError: boolean = false,
 ) => {
   const subject = `New Request Created: ${requestTitle}`;
   const html = generateEmailTemplate(
@@ -124,7 +133,7 @@ export const sendRequestCreatedEmail = async (
     <p>Please log in to the dashboard to view more details.</p>
     `,
   );
-  await sendMail(toName, toEmail, subject, html);
+  await sendMail(toName, toEmail, subject, html, throwError);
 };
 
 export const sendNotificationCreatedEmail = async (
@@ -132,6 +141,7 @@ export const sendNotificationCreatedEmail = async (
   toEmail: string,
   notificationTitle: string,
   notificationMessage: string,
+  throwError: boolean = false,
 ) => {
   const subject = `New Notification: ${notificationTitle}`;
   const html = generateEmailTemplate(
@@ -142,7 +152,7 @@ export const sendNotificationCreatedEmail = async (
     <p>Please log in to the dashboard to view more details.</p>
     `,
   );
-  await sendMail(toName, toEmail, subject, html);
+  await sendMail(toName, toEmail, subject, html, throwError);
 };
 
 export const sendRequestStatusUpdatedEmail = async (
@@ -152,6 +162,7 @@ export const sendRequestStatusUpdatedEmail = async (
   requestId: string,
   newStatus: string,
   feedback?: string,
+  throwError: boolean = false,
 ) => {
   const subject = `Request Status Updated: ${requestTitle}`;
   const html = generateEmailTemplate(
@@ -166,5 +177,5 @@ export const sendRequestStatusUpdatedEmail = async (
     <p>Please log in to the dashboard to view more details.</p>
     `,
   );
-  await sendMail(toName, toEmail, subject, html);
+  await sendMail(toName, toEmail, subject, html, throwError);
 };
