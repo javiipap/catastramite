@@ -22,6 +22,8 @@ import { Bell, Plus, Calendar } from "lucide-react"
 import type { Priority } from "@/lib/types"
 import { useCreateNotification } from "@/lib/mutations/notifications"
 
+import NotificationCard from "@/components/notifications/notification-card"
+
 export default function MasterNotificationsPage() {
   const { data: headquarters } = useHeadquartersStore()
   const { data: notifications } = useNotificationsStore()
@@ -144,32 +146,11 @@ export default function MasterNotificationsPage() {
             .slice()
             .reverse()
             .map((notification) => (
-              <Card key={`notification_${notification.notificationId}`}>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      {notification.title}
-                      {notification.priority === "high" && <span className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">High</span>}
-                    </CardTitle>
-                    <span className="text-xs font-normal text-muted-foreground flex items-center">
-                      <Calendar className="mr-1 h-3 w-3" />
-                      {new Date(notification.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{notification.message}</p>
-                </CardContent>
-              </Card>
+              <NotificationCard key={notification.notificationId} notification={notification} />
             ))}
         </div>
       )}
     </div>
   )
 }
+
