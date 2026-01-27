@@ -10,7 +10,9 @@ export default async function RootLayout({
 
   return (
     <AuthProvider session={session}>
-      {children}
+      <div className="min-h-screen bg-muted/30">
+        {children}
+      </div>
     </AuthProvider>
   );
 }

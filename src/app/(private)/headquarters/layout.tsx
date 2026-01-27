@@ -1,7 +1,7 @@
 import { withServerData } from "@/lib/store/with-server-data"
 import { getUserHeadquartersAction } from "@/lib/actions/headquarters"
 import { HeadquartersListProvider } from "@/lib/queries/headquarters"
-import { HeadquartersHeader } from "@/components/headquarters-header";
+import { HeadquartersHeader } from "@/app/(private)/headquarters/components/header";
 
 import { Metadata } from "next";
 

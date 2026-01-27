@@ -6,10 +6,10 @@ import type React from "react"
 import { useHeadquartersListStore } from "@/lib/queries/headquarters"
 import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Building2, ExternalLink, Link as LinkIcon } from "lucide-react"
+import { Plus, Building2 } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -19,16 +19,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useRouter } from "next/navigation"
 import { useCreateHeadquarters } from "@/lib/mutations/headquarters"
-import { InviteUserDialog } from '@/components/invite-user-dialog'
-import { stringToColor } from '@/lib/colors'
-import { HeadquartersCard } from './headquarters-card'
+import { HeadquartersCard } from './components/headquarters-card'
 
 export default function HeadquartersPage() {
   const { data: headquarters } = useHeadquartersListStore()
   const { subject } = useAuth()
-  const router = useRouter()
 
   const [isOpen, setIsOpen] = useState(false)
   const [newHeadquartersName, setNewHeadquartersName] = useState("")
