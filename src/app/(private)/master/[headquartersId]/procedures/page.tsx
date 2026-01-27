@@ -24,7 +24,7 @@ import type { FormField } from "@/lib/types"
 import { useCreateProcedure } from "@/lib/mutations/procedures"
 import ProcedureField from '@/app/(private)/master/[headquartersId]/procedures/procedure-field'
 import { FIELD_LABELS } from '@/lib/constants/procedures'
-import ProcedureCard from '@/app/(private)/master/[headquartersId]/procedures/procedure-card'
+import ProcedureCard from '@/components/procedures/procedure-card'
 
 export default function MasterProceduresPage() {
   const { data: headquarters } = useHeadquartersStore()

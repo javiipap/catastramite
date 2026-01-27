@@ -2,7 +2,7 @@
 
 import { useProceduresStore } from "@/lib/queries/procedures"
 import { Card, CardContent } from "@/components/ui/card"
-import ProcedureCard from '@/app/(private)/slave/[headquartersId]/procedures/procedure-card'
+import ProcedureCard from '@/components/procedures/procedure-card'
 
 export default function SlaveProceduresPage() {
   const { data: procedures } = useProceduresStore()
@@ -23,7 +23,7 @@ export default function SlaveProceduresPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {procedures.map((procedure) => (
-            <ProcedureCard key={procedure.procedureId} procedure={procedure} />
+            <ProcedureCard key={procedure.procedureId} procedure={procedure} variant="actionable" />
           ))}
         </div>
       )}
