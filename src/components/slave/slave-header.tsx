@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SlaveNav } from "@/components/slave-nav"
+import { SlaveNav } from "@/components/slave/slave-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { logoutAction } from "@/lib/actions/auth"

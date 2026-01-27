@@ -6,8 +6,8 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useHeadquartersStore } from "@/lib/queries/headquarters"
 import { getUserRoleAction } from "@/lib/actions/users"
-import { SlaveHeader } from "@/components/slave-header"
-import { SlaveNav } from "@/components/slave-nav"
+import { SlaveHeader } from "@/components/slave/slave-header"
+import { SlaveNav } from "@/components/slave/slave-nav"
 
 export function SlaveLayoutClient({
   children,

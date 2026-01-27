@@ -46,22 +46,33 @@ export default function SlaveProcedurePage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (user && procedure) {
-      addMutation.mutate({
-        procedureId: procedure.procedureId,
-        procedureName: procedure.name,
-        headquartersId: procedure.headquartersId,
-        applicantId: user.userId,
-        applicantName: user.name || "Unknown",
-        status: "pending",
-        data: formData,
-
-      }, {
-        onSuccess: () => {
-          router.push(`/slave/${params.headquartersId}/requests`)
-        }
-      })
+    if (!procedure) {
+      return;
     }
+
+    const requestData = Object.entries(formData).map(([key, value]) => {
+      const field = procedure.fields.find((f) => f.name === key)
+      return {
+        fieldName: key,
+        fieldValue: value,
+        fieldType: field?.type || "text",
+      }
+    })
+
+    addMutation.mutate({
+      procedureId: procedure.procedureId,
+      procedureName: procedure.name,
+      headquartersId: procedure.headquartersId,
+      applicantId: user.userId,
+      applicantName: user.name || "Unknown",
+      status: "pending",
+      data: requestData,
+
+    }, {
+      onSuccess: () => {
+        router.push(`/slave/${params.headquartersId}/requests`)
+      }
+    })
   }
 
   const handleChange = (name: string, value: string) => {
@@ -105,15 +116,7 @@ export default function SlaveProcedurePage() {
                 ) : (
                   <Input
                     id={field.id}
-                    type={
-                      field.type === "number"
-                        ? "number"
-                        : field.type === "date"
-                          ? "date"
-                          : field.type === "link"
-                            ? "url"
-                            : field.type
-                    }
+                    type={field.type === 'link' ? 'url' : field.type}
                     value={formData[field.name] || ""}
                     onChange={(e) => handleChange(field.name, e.target.value)}
                     required={field.required}
