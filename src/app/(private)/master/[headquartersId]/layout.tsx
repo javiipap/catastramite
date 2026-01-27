@@ -2,7 +2,7 @@ import { withServerData } from "@/lib/store/with-server-data"
 import { getHeadquartersAction } from "@/lib/actions/headquarters"
 import { HeadquartersProvider } from "@/lib/queries/headquarters"
 import { MasterGuard } from "@/components/master-guard"
-import { MasterNav } from '@/components/master-nav'
+import { MasterNav } from '@/components/master/master-nav'
 import { Metadata } from "next";
 import { redirect } from 'next/navigation'
 import { Headquarters } from '@/lib/types'

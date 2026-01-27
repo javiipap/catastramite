@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
-import { MasterNav } from "@/components/master-nav"
+import { MasterNav } from "@/components/master/master-nav"
 import { Menu } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { logoutAction } from "@/lib/actions/auth"

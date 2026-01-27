@@ -1,5 +1,5 @@
 import type React from "react"
-import { MasterHeader } from "@/components/master-header"
+import { MasterHeader } from "@/components/master/master-header"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
